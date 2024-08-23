@@ -1,0 +1,294 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Main Title Bar */
+header {
+  /*   border: 1px solid black; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 40px;
+  background-color: rgb(20, 35, 50);
+  color: rgb(255, 255, 255);
+  margin: 0;
+  padding: 0;
+}
+
+header div.title-name {
+  margin: 0 0 0 10px;
+}
+
+header div.window-functions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header div.window-functions button {
+  border: none;
+  height: 40px;
+  width: 45px;
+  background-color: rgba(255, 255, 255, 0);
+  color: rgb(255, 255, 255);
+}
+header div.window-functions button:nth-child(1):hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: 0.2s ease-out;
+}
+header div.window-functions button:nth-child(2):hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: 0.2s ease-out;
+}
+header div.window-functions button:nth-child(3):hover {
+  background-color: rgba(241, 33, 31, 1);
+  transition: 0.2s ease-out;
+}
+
+/* Second Navbar */
+nav {
+  border-bottom: 1px solid rgba(20, 35, 50, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin: 0;
+  height: 80px;
+}
+
+div.nav2-title {
+  margin: 0 0 0 0;
+}
+
+div.searchbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+div.searchbar input {
+  background-color: inherit;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 0 10px 0 0;
+  height: 40px;
+  width: 500px;
+  border: 1px solid rgba(20, 35, 50, 0.5);
+}
+div.searchbar input:focus {
+  border: 2px solid rgba(20, 35, 50, 0.8);
+}
+div.searchbar button {
+  border: none;
+  height: 40px;
+  width: 50px;
+  border-radius: 5px;
+  background-color: rgb(20, 35, 50);
+  color: rgb(255, 255, 255);
+}
+div.searchbar button:hover {
+  background-color: rgba(20, 35, 50, 0.9);
+  transition: 0.3s ease-out;
+}
+
+nav div.nav2-functions {
+  display: flex;
+  align-items: center;
+  justify: center;
+}
+nav div.nav2-functions button {
+  background: none;
+  margin: 0 0 0 5px;
+  border: none;
+  padding: 5px 0;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  color: rgb(20, 35, 50);
+}
+nav div.nav2-functions button:hover {
+  background-color: rgba(20, 35, 50, 0.1);
+  transition: 0.3s ease-out;
+}
+
+/* Ful Main Container */
+.fullMain {
+  display: flex;
+}
+
+/* Sidebar Navigation  */
+aside {
+  border-right: 2px solid rgba(20, 35, 50, 0.1);
+  width: 300px;
+  background-color: rgba(20, 35, 50, 0.1);
+  height: calc(100vh - 120px);
+  overflow: hidden;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+aside div.sidebar-menu-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /*   border: 1px solid; */
+}
+.user-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.username {
+  margin: 0 0 0 10px;
+  /*   border: 1px solid; */
+}
+.username div:nth-child(1) {
+  color: rgb(20, 35, 50);
+  font-weight: 700;
+}
+.username div:nth-child(2) {
+  color: rgba(20, 35, 50, 0.8);
+  font-weight: 500;
+  font-size: 10.5pt;
+}
+
+.dropdown-icon {
+  font-weight: bold;
+  /*   border:1px solid black; */
+  border-radius: 50%;
+  height: 26px;
+  width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dropdown-icon:hover {
+  background-color: rgba(20, 35, 50, 0.1);
+  cursor: pointer;
+}
+
+div.sidebar-menu-list {
+  /*   border: 1px solid; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*position: relative;
+  top: -100px; */
+}
+
+.submenu-list {
+  background: inherit;
+  border: none;
+  border-radius: 5px;
+}
+.submenu-list:hover {
+  background-color: rgba(20, 35, 50, 0.1);
+}
+.submenu-list:active {
+  background-color: rgba(20, 35, 50, 0.3);
+  color: white;
+}
+.submenu-list:focus {
+  background-color: rgba(20, 35, 50, 0.3);
+  color: white;
+}
+
+.divider {
+  height: 1px;
+  width: 100%;
+  background-color: rgba(20, 35, 50, 0.1);
+}
+/* .top-div {
+  position: absolute;
+  top: 210px;
+} */
+/* .down-div {
+  position: absolute;
+  top: 750px;
+} */
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.menu-list {
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.hover {
+  background-color: #e2e6ea;
+}
+.active {
+  color: white;
+  background-color: rgb(20, 30, 52);
+}
+.focus {
+  color: white;
+  background-color: rgb(20, 30, 52);
+}
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  margin-left: 20px;
+}
+
+.submenu li {
+  padding: 5px 0;
+}
+
+.sidebar-sign-out {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(20, 35, 50);
+  color: white;
+  padding: 8px;
+  width: 125px;
+  border-radius: 5px;
+  border: none;
+}
+.sidebar-sign-out:hover {
+  background-color: rgba(20, 35, 50, 0.9);
+}
+.sidebar-sign-out:focus {
+  background-color: rgba(20, 35, 50, 0.9);
+  /*   border: 3px solid gray; */
+}
+.sidebar-sign-out:active {
+  background-color: rgba(20, 35, 50, 0.9);
+}
+
+.sidebar-sign-out svg {
+  margin: 0 10px 0 0;
+}
+
+/* Main Content Container */
+main {
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  height: 100vh;
+}

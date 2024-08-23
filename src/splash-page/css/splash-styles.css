@@ -1,0 +1,300 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+  background-color: transparent !important;;
+}
+
+.splash-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 600px;
+  width: 900px;
+  border-radius: 10px;
+  background: rgb(20, 35, 50);
+  background: linear-gradient(
+    43deg,
+    rgba(20, 35, 50, 1) 0%,
+    rgba(20, 35, 50, 0.9164040616246498) 60%,
+    rgba(25, 70, 112, 1) 100%
+  );
+}
+
+.splash-contentContainer {
+  width: 828px;
+  height: 512px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+/*   border: 1px solid green; */
+}
+
+/* Content Title with Demo inscription  */
+.splashContent-title {
+  display: flex;
+  justify-content: space-between;
+/*   border: 1px solid black; */
+  width: 828px;
+  margin: 0 0 0 0;
+  position:relative;
+  top:35px;
+}
+
+.splashContent-title h1 {
+  color: rgba(255, 255, 255, 0.1);
+  opacity: 40%;
+  font-size: 150pt;
+  font-weight: 100;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: -45px;
+  /*   border: 1px solid white; */
+}
+
+.splashContent-title p {
+  color: rgba(255, 255, 255, 1);
+  font-size: 14pt;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 0 3px 0;
+  border-bottom: 2px solid white;
+  position: relative;
+  top: -8px;
+}
+
+/* Splash Main Title Inscription  */
+.splashContent-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+/*   border: 1px red solid; */
+  position: relative;
+  top: -50px;
+}
+
+.splashContent-main p {
+  text-align: center;
+  color: white;
+  font-size: 32pt;
+  font-weight: 400;
+}
+
+/* Main Splash Footer And Loader  */
+.splashContent-end {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 828px;
+  margin: 50px 0 0 0;
+  /*   border: 1px solid pink; */
+}
+
+.splashContent-end p {
+  color: white;
+  /*   border:1px solid white; */
+  position: relative;
+  top: -10px;
+}
+
+.splashContent-end p:nth-child(1) {
+  font-size: 16pt;
+  font-weight: 400;
+}
+
+#loader {
+    position: relative;
+  top: -3px;
+  right: -15px;
+  opacity: 70%;
+}
+
+.splashContent-end p:nth-last-child(1) {
+  font-size: 14pt;
+  font-weight: 400;
+  opacity: 40%;
+}
+
+.divider {
+  position: absolute;
+  top: 505px;
+  color: white;
+  height: 94px;
+  width: 2px;
+  background-color: rgba(255, 255, 255, 1);
+  opacity: 40%;
+  z-index: 100;
+}
+
+
+/* LOGIN MODAL */
+/* Modal Container */
+
+.login-modalPosition {
+  position:absolute;
+  top:100px;
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  width:900px;
+  /* border:1px solid black; */
+
+}
+
+#login-modal {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index:500;
+}
+
+/* Hidden state (initial state) */
+/* .fade-in {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+/* Visible state (after fade-in) 
+.fade-in.show {
+  opacity: 1;
+} */
+
+
+div.login-modalContainer {
+  margin: 0;
+  padding: 0;
+  height: 400px;
+  width: 600px;
+  border-radius: 10px;
+  background-color: white;
+  /* border: 1px solid black; */
+}
+
+/* Modal Content  */
+.login-modalContent {
+  width: 510px;
+  height: 318px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /*   border: 1px solid green; */
+}
+
+/* Modal Content Header and Icons */
+.modalContent-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /*   border: 1px solid red; */
+  width: 510px;
+  margin: 0 0 30px 0;
+}
+
+.modalContent-title h1 {
+  /*   border: 1px solid gray; */
+  font-weight: 700;
+  font-size: 36pt;
+}
+
+/* Modal Content Form */
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 510px;
+  height: 225px;
+  /*   border: 1px solid pink; */
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /*   border: 1px solid black; */
+  margin: 0;
+  padding: 0;
+}
+
+/* Modal Content Form Inputs */
+.modalContent-main {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 22px 0;
+  padding: 0;
+}
+
+.modalContent-main input {
+  width: 510px;
+  height: 60px;
+  padding: 0 0 0 20px;
+  color: rgba(20, 35, 50, 0.5);
+  border: none;
+  border-radius: 5px;
+  background-color: #d9d9d9;
+  font-size: 14pt;
+}
+input.error {
+  border: 2px solid red;
+  outline: none;
+}
+
+.modalContent-main input:focus {
+  border: 1px solid #142332;
+  background-color: white;
+  color: rgba(20, 35, 50, 1);
+}
+.modalContent-main input.filled {
+  background-color: rgba(214, 230, 244, 0.6);
+  color: rgba(20, 35, 50, 1);
+}
+
+.modalContent-main input[placeholder="Username"] {
+  margin: 0 0 22px 0;
+}
+
+/* Modal Content Button and Forgot password feature */
+.modalContent-end {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  width: 510px;
+}
+
+.modalContent-end button {
+  height: 60px;
+  width: 133px;
+  font-size: 16pt;
+  font-weight: 600;
+  color: white;
+  background-color: #142332;
+  border-radius: 5px;
+  border: none;
+}
+.modalContent-end button:hover {
+  background-color: rgba(20, 35, 50, 0.95);
+}
+.modalContent-end button:active {
+  border: 3px solid rgba(20, 35, 50, 0.5);
+}
+
+.modalContent-end a {
+  text-decoration: none;
+  color: rgba(20, 35, 50, 0.5);
+}
+.modalContent-end a:hover {
+  color: rgba(20, 35, 50, 1);
+}
