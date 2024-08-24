@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <!-- Main Title Bar -->
+    <!-- Main Title Bar
     <header>
         <div class="title-name" style="display: flex; align-items: center; justify-content: center;">
             <img src="../assets/icons/Icon-exe.png"
@@ -46,7 +46,7 @@
                 </svg>
             </button>
         </div>
-    </header>
+    </header> -->
 
     <!--Second NavBar-->
     <nav>
@@ -135,10 +135,10 @@
                         <div class="fileMgmt-link menu-list" onclick="toggleMenu('fileMgmt-menu')">
                             File Management
                         </div>
-                        <ul id="fileMgmt-menu" class="submenu">
+                        <!-- <ul id="fileMgmt-menu" class="submenu">
                             <li><button type="button" class="submenu-list">Outgoing Files</button></li>
                             <li><button type="button" class="submenu-list">Add New File</button></li>
-                        </ul>
+                        </ul> -->
                     </li>
 
                     <!-- List Item For Letter Management -->
@@ -146,11 +146,11 @@
                         <div class="letterMgmt-link menu-list" onclick="toggleMenu('letterMgmt-menu')">
                             Letter Management
                         </div>
-                        <ul id="letterMgmt-menu" class="submenu">
+                        <!-- <ul id="letterMgmt-menu" class="submenu">
                             <li><button type="button" class="submenu-list">Incoming Letters</button></li>
                             <li><button type="button" class="submenu-list">Add New Letter</button></li>
                             <li><button type="button" class="submenu-list">Filed Letters</button></li>
-                        </ul>
+                        </ul> -->
                     </li>
 
                     <!-- List Item For Report Management -->
@@ -158,12 +158,12 @@
                         <div class="reports-link menu-list" onclick="toggleMenu('reports-menu')">
                             Report Management
                         </div>
-                        <ul id="reports-menu" class="submenu">
+                        <!-- <ul id="reports-menu" class="submenu">
                             <li><button type="button" class="submenu-list">Generate Reports</button></li>
                             <li><button type="button" class="submenu-list">View Reports</button></li>
                             <li><button type="button" class="submenu-list">Export Data</button></li>
                             <li><button type="button" class="submenu-list">Custom Reports</button></li>
-                        </ul>
+                        </ul> -->
                     </li>
                 </ul>
 
@@ -188,10 +188,13 @@
         </aside>
 
         <!--Main Content Container-->
-        <main>
+        <main class="main-blur-effect">
             <!-- Main content area -->
-            <div id="content">
+            <div id="content" class="">
                 <!-- Dynamic content will be displayed here -->
+            </div>
+            <div>
+                <span class="spinner-border spinner-border-sm" id="loader"></span>
             </div>
     </div>
     </main>
