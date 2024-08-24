@@ -7,50 +7,6 @@ body {
   height: 100vh;
 }
 
-/* Main Title Bar */
-/* header {
-  /*   border: 1px solid black; 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 40px;
-  background-color: rgb(20, 35, 50);
-  color: rgb(255, 255, 255);
-  margin: 0;
-  padding: 0;
-}
-
-header div.title-name {
-  margin: 0 0 0 10px;
-}
-
-header div.window-functions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-header div.window-functions button {
-  border: none;
-  height: 40px;
-  width: 45px;
-  background-color: rgba(255, 255, 255, 0);
-  color: rgb(255, 255, 255);
-}
-header div.window-functions button:nth-child(1):hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transition: 0.2s ease-out;
-}
-header div.window-functions button:nth-child(2):hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transition: 0.2s ease-out;
-}
-header div.window-functions button:nth-child(3):hover {
-  background-color: rgba(241, 33, 31, 1);
-  transition: 0.2s ease-out;
-} */
-
 /* Second Navbar */
 nav {
   border-bottom: 1px solid rgba(20, 35, 50, 0.1);
@@ -72,6 +28,7 @@ div.searchbar {
   justify-content: center;
   margin: 0;
 }
+
 div.searchbar input {
   background-color: inherit;
   border-radius: 5px;
@@ -81,9 +38,11 @@ div.searchbar input {
   width: 500px;
   border: 1px solid rgba(20, 35, 50, 0.5);
 }
+
 div.searchbar input:focus {
   border: 2px solid rgba(20, 35, 50, 0.8);
 }
+
 div.searchbar button {
   border: none;
   height: 40px;
@@ -92,6 +51,7 @@ div.searchbar button {
   background-color: rgb(20, 35, 50);
   color: rgb(255, 255, 255);
 }
+
 div.searchbar button:hover {
   background-color: rgba(20, 35, 50, 0.9);
   transition: 0.3s ease-out;
@@ -102,6 +62,7 @@ nav div.nav2-functions {
   align-items: center;
   justify: center;
 }
+
 nav div.nav2-functions button {
   background: none;
   margin: 0 0 0 5px;
@@ -112,6 +73,7 @@ nav div.nav2-functions button {
   width: 40px;
   color: rgb(20, 35, 50);
 }
+
 nav div.nav2-functions button:hover {
   background-color: rgba(20, 35, 50, 0.1);
   transition: 0.3s ease-out;
@@ -141,19 +103,23 @@ aside div.sidebar-menu-title {
   justify-content: space-between;
   /*   border: 1px solid; */
 }
+
 .user-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .username {
   margin: 0 0 0 10px;
   /*   border: 1px solid; */
 }
+
 .username div:nth-child(1) {
   color: rgb(20, 35, 50);
   font-weight: 700;
 }
+
 .username div:nth-child(2) {
   color: rgba(20, 35, 50, 0.8);
   font-weight: 500;
@@ -170,6 +136,7 @@ aside div.sidebar-menu-title {
   align-items: center;
   justify-content: center;
 }
+
 .dropdown-icon:hover {
   background-color: rgba(20, 35, 50, 0.1);
   cursor: pointer;
@@ -206,14 +173,16 @@ div.sidebar-menu-list {
   width: 100%;
   background-color: rgba(20, 35, 50, 0.1);
 }
- .top-div {
+
+.top-div {
   position: relative;
   top: -90px;
 }
- .down-div {
+
+.down-div {
   position: relative;
   top: 90px;
-} 
+}
 
 ul {
   list-style-type: none;
@@ -237,10 +206,12 @@ li {
 .hover {
   background-color: #e2e6ea;
 }
+
 .active {
   color: white;
   background-color: rgb(20, 30, 52);
 }
+
 .focus {
   color: white;
   background-color: rgb(20, 30, 52);
@@ -268,13 +239,16 @@ li {
   border-radius: 5px;
   border: none;
 }
+
 .sidebar-sign-out:hover {
   background-color: rgba(20, 35, 50, 0.9);
 }
+
 .sidebar-sign-out:focus {
   background-color: rgba(20, 35, 50, 0.9);
   /*   border: 3px solid gray; */
 }
+
 .sidebar-sign-out:active {
   background-color: rgba(20, 35, 50, 0.9);
 }
@@ -291,6 +265,7 @@ li {
 .sidebar-footer-icons li:focus {
   font-weight: 200;
 }
+
 .sidebar-footer-icons li:active {
   font-weight: 200;
 }
@@ -308,17 +283,17 @@ main {
 
 .spinner-container {
   /*   border: 1px solid black; */
-    width: fit-content;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: rgb(20, 35, 50);
-    color:white;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  }
+  width: fit-content;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgb(20, 35, 50);
+  color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
 
 .spinner-display-halfscreen {
@@ -327,20 +302,10 @@ main {
   align-items: center;
   height: 100vh;
   width: auto;
- position: absolute;
- right: 30%;
- top: -5px;
-}
-
-/* .spinner-display-fullscreen{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   position: absolute;
-  top: 0;
-right: 60%;
-} */
+  right: 30%;
+  top: -5px;
+}
 
 .spinner-display {
   display: none;
