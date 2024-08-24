@@ -16,37 +16,6 @@
 </head>
 
 <body>
-    <!-- Main Title Bar
-    <header>
-        <div class="title-name" style="display: flex; align-items: center; justify-content: center;">
-            <img src="../assets/icons/Icon-exe.png"
-                style="height: 30px; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 5px;"
-                alt="title-bar-icon">
-            <div style="margin: 0 0 0 5px;">Records Management System</div>
-        </div>
-        <div class="window-functions">
-            <button type="button" class="" id="minimize-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-lg"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
-                </svg>
-            </button>
-            <button type="button" class="" id="maximize-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-fullscreen" viewBox="0 0 16 16">
-                    <path
-                        d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5" />
-                </svg>
-            </button>
-            <button type="button" class="" id="close-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg"
-                    viewBox="0 0 16 16">
-                    <path
-                        d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                </svg>
-            </button>
-        </div>
-    </header> -->
 
     <!--Second NavBar-->
     <nav>
@@ -125,14 +94,14 @@
                 <ul>
                     <!-- List Item For Dashboard -->
                     <li>
-                        <div class="dashboard-link menu-list" onclick="toggleMenu('dashboard-menu')">
+                        <div class="dashboard-link menu-list">
                             Dashboard
                         </div>
                     </li>
 
                     <!-- List Item For File Management -->
                     <li>
-                        <div class="fileMgmt-link menu-list" onclick="toggleMenu('fileMgmt-menu')">
+                        <div class="fileMgmt-link menu-list">
                             File Management
                         </div>
                         <!-- <ul id="fileMgmt-menu" class="submenu">
@@ -143,7 +112,7 @@
 
                     <!-- List Item For Letter Management -->
                     <li>
-                        <div class="letterMgmt-link menu-list" onclick="toggleMenu('letterMgmt-menu')">
+                        <div class="letterMgmt-link menu-list">
                             Letter Management
                         </div>
                         <!-- <ul id="letterMgmt-menu" class="submenu">
@@ -155,7 +124,7 @@
 
                     <!-- List Item For Report Management -->
                     <li>
-                        <div class="reports-link menu-list" onclick="toggleMenu('reports-menu')">
+                        <div class="reports-link menu-list">
                             Report Management
                         </div>
                         <!-- <ul id="reports-menu" class="submenu">
@@ -175,9 +144,9 @@
                 <ul>
                     <li>Account</li>
                     <li>Help & Support</li>
-                    <li><button type="button" class="sidebar-sign-out" id=""> <svg xmlns="http://www.w3.org/2000/svg"
-                                width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-left"
-                                viewBox="0 0 16 16">
+                    <li><button type="button" class="sidebar-sign-out" id="sign-out-button"> <svg
+                                xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
                                     d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0z" />
                                 <path fill-rule="evenodd"
@@ -188,16 +157,20 @@
         </aside>
 
         <!--Main Content Container-->
-        <main class="main-blur-effect">
+        <main class="">
             <!-- Main content area -->
-            <div id="content" class="">
+            <div id="content">
                 <!-- Dynamic content will be displayed here -->
+                <h1>Peter</h1>
             </div>
-            <div>
-                <span class="spinner-border spinner-border-sm" id="loader"></span>
+        </main>
+        <!-- Spinner Display -->
+        <div class="spinner-container spinner-display" id="spinner-event">
+            <div class="spinner-title h3">Loading</div>
+            <div class="spinner">
+                <span class="spinner-border spinner-border-sm m-2" id="loader"></span>
             </div>
-    </div>
-    </main>
+        </div>
     </div>
 
     <footer>

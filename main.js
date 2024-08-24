@@ -34,18 +34,30 @@ function createMainWindow() {
       enableRemoteModule: false,
       nodeIntegration: true,
     },
+    autoHideMenuBar: true, // This hides the menu bar by default
     icon: path.join(__dirname, "assets/icons/ico/icon-exe.ico"),
+
   });
 
   mainWindow.loadFile("src/index.html");
 }
 
+// Handle Log In Authentication
 ipcMain.on("login-success", () => {
   if (splashWindow) {
     splashWindow.close();
   }
 
   createMainWindow();
+});
+
+// Handle sign out request
+ipcMain.on("sign-out", () => {
+  if (mainWindow) {
+    mainWindow.close();
+    mainWindow = null;
+  }
+  createSplashWindow(); // Reopen the splash screen
 });
 
 app.whenReady().then(createSplashWindow);

@@ -3,7 +3,8 @@ body {
   padding: 0;
   font-family: "Poppins", sans-serif;
   overflow: hidden;
-  background-color: transparent !important;;
+  background-color: transparent !important;
+  ;
 }
 
 .splash-container {
@@ -14,12 +15,10 @@ body {
   width: 900px;
   border-radius: 10px;
   background: rgb(20, 35, 50);
-  background: linear-gradient(
-    43deg,
-    rgba(20, 35, 50, 1) 0%,
-    rgba(20, 35, 50, 0.9164040616246498) 60%,
-    rgba(25, 70, 112, 1) 100%
-  );
+  background: linear-gradient(43deg,
+      rgba(20, 35, 50, 1) 0%,
+      rgba(20, 35, 50, 0.9164040616246498) 60%,
+      rgba(25, 70, 112, 1) 100%);
 }
 
 .splash-contentContainer {
@@ -31,18 +30,18 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-/*   border: 1px solid green; */
+  /*   border: 1px solid green; */
 }
 
 /* Content Title with Demo inscription  */
 .splashContent-title {
   display: flex;
   justify-content: space-between;
-/*   border: 1px solid black; */
+  /*   border: 1px solid black; */
   width: 828px;
   margin: 0 0 0 0;
-  position:relative;
-  top:35px;
+  position: relative;
+  top: 35px;
 }
 
 .splashContent-title h1 {
@@ -75,7 +74,7 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 100;
-/*   border: 1px red solid; */
+  /*   border: 1px red solid; */
   position: relative;
   top: -50px;
 }
@@ -110,7 +109,7 @@ body {
 }
 
 #loader {
-    position: relative;
+  position: relative;
   top: -3px;
   right: -15px;
   opacity: 70%;
@@ -138,12 +137,12 @@ body {
 /* Modal Container */
 
 .login-modalPosition {
-  position:absolute;
-  top:100px;
+  position: absolute;
+  top: 100px;
   display: flex;
-  align-items:center;
+  align-items: center;
   justify-content: center;
-  width:900px;
+  width: 900px;
   /* border:1px solid black; */
 
 }
@@ -152,7 +151,7 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  z-index:500;
+  z-index: 500;
 }
 
 /* Hidden state (initial state) */
@@ -245,6 +244,7 @@ div.login-modalContainer {
   background-color: #d9d9d9;
   font-size: 14pt;
 }
+
 input.error {
   border: 2px solid red;
   outline: none;
@@ -255,6 +255,7 @@ input.error {
   background-color: white;
   color: rgba(20, 35, 50, 1);
 }
+
 .modalContent-main input.filled {
   background-color: rgba(214, 230, 244, 0.6);
   color: rgba(20, 35, 50, 1);
@@ -284,9 +285,11 @@ input.error {
   border-radius: 5px;
   border: none;
 }
+
 .modalContent-end button:hover {
   background-color: rgba(20, 35, 50, 0.95);
 }
+
 .modalContent-end button:active {
   border: 3px solid rgba(20, 35, 50, 0.5);
 }
@@ -295,6 +298,7 @@ input.error {
   text-decoration: none;
   color: rgba(20, 35, 50, 0.5);
 }
+
 .modalContent-end a:hover {
   color: rgba(20, 35, 50, 1);
 }
