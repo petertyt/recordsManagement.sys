@@ -43,3 +43,26 @@ document.querySelectorAll(".menu-list").forEach((item) => {
     this.classList.add("active");
   });
 });
+
+    // Function to change class based on window size
+    function checkWindowSize() {
+      // Get the current window width and screen width
+      const windowWidth = window.innerWidth;
+      const screenWidth = window.screen.width;
+
+      // Find the element
+      const myElement = document.getElementById('spinner-event');
+
+      // Check if the window width is less than or equal to 50% of the screen width
+      if (windowWidth <= screenWidth / 2) {
+          myElement.className = 'spinner-display-halfscreen'; // Change to your desired class
+      } else {
+          myElement.className = 'spinner-display'; // Revert to the default class
+      }
+  }
+
+  // Listen for window resize event
+  window.addEventListener('resize', checkWindowSize);
+
+  // Run the function once on initial load
+  checkWindowSize();

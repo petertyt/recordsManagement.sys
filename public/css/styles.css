@@ -295,5 +295,38 @@ main {
 }
 
 .main-blur-effect {
+    /* Add the blur effect */
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    /* border: 1px solid pink; */
+}
 
+.spinner-display-halfscreen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+right: 38%;
+}
+
+/* .spinner-display-fullscreen{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+right: 60%;
+} */
+
+.spinner-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+right: 43%;
 }
