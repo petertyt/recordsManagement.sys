@@ -1,4 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+  const signOutButton = document.getElementById("sign-out-button");
+  if (signOutButton) {
+    signOutButton.addEventListener("click", () => {
+      window.electronAPI.signOut();
+    });
+  }
+  
   // Get the element with the class 'dashboard-link'
   var dashboardLink = document.querySelector(".dashboard-link");
 
@@ -8,29 +16,37 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-function toggleMenu(menuId) {
-  // Get all submenu elements
-  var allSubmenus = document.querySelectorAll(".submenu");
+// Add a click event listener to the 'dashboard-link' element
+document.addEventListener('DOMContentLoaded', () => {
+  // Get all submenu buttons
+  const submenuButtons = document.querySelectorAll('.menu-list');
+  // Get the spinner element
+  const spinner = document.getElementById('spinner-event');
 
-  // Loop through all submenu elements
-  allSubmenus.forEach(function (submenu) {
-    // If the submenu is open and it's not the one that was clicked, close it
-    if (
-      submenu !== document.getElementById(menuId) &&
-      getComputedStyle(submenu).maxHeight !== "0px"
-    ) {
-      submenu.style.maxHeight = null;
-    }
+  submenuButtons.forEach(button => {
+      button.addEventListener('click', () => {
+          // Show the spinner
+          spinner.style.display = 'flex';
+
+          // Hide the spinner after 1 second
+          setTimeout(() => {
+              spinner.style.display = 'none';
+          }, 1000); // Hide after 1 second
+      });
   });
+});
 
-  // Toggle the clicked submenu
-  var menu = document.getElementById(menuId);
-  if (getComputedStyle(menu).maxHeight !== "0px") {
-    menu.style.maxHeight = null;
-  } else {
-    menu.style.maxHeight = menu.scrollHeight + "px";
-  }
-}
+
+  // dashboardLink.addEventListener("click", function (event) {
+  //   // Prevent the default link behavior
+  //   event.preventDefault();
+
+  //   // Get the target URL from the 'href' attribute of the link
+  //   var targetUrl = this.getAttribute("href");
+
+  //   // Open the target URL in a new browser tab
+  //   window.open(targetUrl, "_blank");
+  // });
 
 document.querySelectorAll(".menu-list").forEach((item) => {
   item.addEventListener("click", function () {

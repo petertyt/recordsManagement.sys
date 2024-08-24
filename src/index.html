@@ -125,14 +125,14 @@
                 <ul>
                     <!-- List Item For Dashboard -->
                     <li>
-                        <div class="dashboard-link menu-list" onclick="toggleMenu('dashboard-menu')">
+                        <div class="dashboard-link menu-list">
                             Dashboard
                         </div>
                     </li>
 
                     <!-- List Item For File Management -->
                     <li>
-                        <div class="fileMgmt-link menu-list" onclick="toggleMenu('fileMgmt-menu')">
+                        <div class="fileMgmt-link menu-list">
                             File Management
                         </div>
                         <!-- <ul id="fileMgmt-menu" class="submenu">
@@ -143,7 +143,7 @@
 
                     <!-- List Item For Letter Management -->
                     <li>
-                        <div class="letterMgmt-link menu-list" onclick="toggleMenu('letterMgmt-menu')">
+                        <div class="letterMgmt-link menu-list">
                             Letter Management
                         </div>
                         <!-- <ul id="letterMgmt-menu" class="submenu">
@@ -155,7 +155,7 @@
 
                     <!-- List Item For Report Management -->
                     <li>
-                        <div class="reports-link menu-list" onclick="toggleMenu('reports-menu')">
+                        <div class="reports-link menu-list">
                             Report Management
                         </div>
                         <!-- <ul id="reports-menu" class="submenu">
@@ -175,7 +175,7 @@
                 <ul>
                     <li>Account</li>
                     <li>Help & Support</li>
-                    <li><button type="button" class="sidebar-sign-out" id=""> <svg xmlns="http://www.w3.org/2000/svg"
+                    <li><button type="button" class="sidebar-sign-out" id="sign-out-button"> <svg xmlns="http://www.w3.org/2000/svg"
                                 width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-left"
                                 viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
@@ -190,15 +190,18 @@
         <!--Main Content Container-->
         <main class="">
             <!-- Main content area -->
-            <div id="content" class="main-blur-effect">
+            <div id="content">
                 <!-- Dynamic content will be displayed here -->
-                 <!-- <h1>Peter</h1> -->
+                <h1>Peter</h1>
             </div>
-            <div class="spinner-display" id="spinner-event">
-                <span class="spinner-border spinner-border-sm" id="loader"></span>
+        </main>
+        <!-- Spinner Display -->
+        <div class="spinner-container spinner-display" id="spinner-event">
+            <div class="spinner-title h3">Loading</div>
+            <div class="spinner">
+                <span class="spinner-border spinner-border-sm m-2" id="loader"></span>
             </div>
-    </div>
-    </main>
+        </div>
     </div>
 
     <footer>
