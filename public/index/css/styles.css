@@ -256,7 +256,7 @@ aside li {
 
 /* Main Content Container */
 main {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   display: flex;
   flex-direction: column;
   align-items: left;
@@ -298,4 +298,15 @@ main {
   position: absolute;
   right: 26%;
   top: 455px;
+}
+
+#main-content {
+  border: 1px solid black;
+  width: 100%;
+  height: 100%;
+}
+
+.blur-effect {
+  filter: blur(10px);
+  transition: filter 0.1s ease;
 }

@@ -22,15 +22,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const submenuButtons = document.querySelectorAll('.menu-list');
   // Get the spinner element
   const spinner = document.getElementById('spinner-event');
+  // Get the Main content element ID
+  const mainContentElementId = 'main-content';
 
   submenuButtons.forEach(button => {
     button.addEventListener('click', () => {
       // Show the spinner
       spinner.style.display = 'flex';
+      // Add classname to main content element
+      document.getElementById('main-content').className = 'blur-effect'
 
       // Hide the spinner after 1 second
       setTimeout(() => {
         spinner.style.display = 'none';
+        // Remove classname from main content element
+        document.getElementById('main-content').className = ''
       }, 1000); // Hide after 1 second
     });
   });
