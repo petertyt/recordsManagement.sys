@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const ejs = require("ejs-electron");
 
 let splashWindow;
 let mainWindow;
@@ -39,7 +40,7 @@ function createMainWindow() {
 
   });
 
-  mainWindow.loadFile("src/index.html");
+  mainWindow.loadFile("src/index.ejs");
 }
 
 // Handle Log In Authentication
