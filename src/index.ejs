@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
     <!-- Custom Fonts (Poppins) -->
-    <link rel="stylesheet" href="../public/css/font.css">
+    <link rel="stylesheet" href="../public/index/css/font.css">
     <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="../public/css/styles.css">
+    <link rel="stylesheet" href="../public/index/css/styles.css">
 </head>
 
 <body>
@@ -142,9 +142,9 @@
         </aside>
 
         <!--Main Content Container-->
-        <main class="">
+        <main class="" id="main-section">
             <!-- Main content area -->
-            <div id="content">
+            <div id="main-content" class="">
                 <!-- Dynamic content will be displayed here -->
                 <%- include('../views/pages/dashboard.ejs') %> <!-- Load dashboard content by default -->
             </div>
@@ -163,7 +163,7 @@
     </footer>
 
     <!-- JavaScript -->
-    <script type="text/javascript" src="../public/js/renderer.js"></script>
+    <script type="text/javascript" src="../public/index/js/renderer.js"></script>
     <script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
