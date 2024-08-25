@@ -3,7 +3,7 @@ body {
   padding: 0;
   font-family: "Poppins", sans-serif;
   box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
   height: 100vh;
 }
 
@@ -98,6 +98,8 @@ aside {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  z-index: 500;
 }
 
 aside div.sidebar-menu-title {
