@@ -82,6 +82,9 @@ nav div.nav2-functions button:hover {
 /* Ful Main Container */
 .fullMain {
   display: flex;
+  width: 100%;
+  height: calc(100vh - 80px);
+  /* border: 1px solid blue; */
 }
 
 /* Sidebar Navigation  */
@@ -151,23 +154,6 @@ div.sidebar-menu-list {
   top: -100px; */
 }
 
-/* .submenu-list {
-  background: inherit;
-  border: none;
-  border-radius: 5px;
-}
-.submenu-list:hover {
-  background-color: rgba(20, 35, 50, 0.1);
-}
-.submenu-list:active {
-  background-color: rgba(20, 35, 50, 0.3);
-  color: white;
-}
-.submenu-list:focus {
-  background-color: rgba(20, 35, 50, 0.3);
-  color: white;
-} */
-
 .divider {
   height: 1px;
   width: 100%;
@@ -184,13 +170,15 @@ div.sidebar-menu-list {
   top: 90px;
 }
 
-ul {
+aside ul {
   list-style-type: none;
   padding: 0;
+  /* border: 1px solid red; */
 }
 
-li {
+aside li {
   margin-bottom: 10px;
+  /* border: 1px solid blue; */
 }
 
 .menu-list {
@@ -201,10 +189,6 @@ li {
   background-color: #f8f9fa;
   border-radius: 5px;
   transition: background-color 0.3s ease;
-}
-
-.hover {
-  background-color: #e2e6ea;
 }
 
 .active {
@@ -276,16 +260,16 @@ main {
   display: flex;
   flex-direction: column;
   align-items: left;
-  width: calc(100vh - 300px);
+  width: calc(100vw - 300px);
   height: 100vh;
   padding: 20px;
 }
 
-.spinner-container {
+.spinner-display {
   /*   border: 1px solid black; */
   width: fit-content;
   height: 100px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 10px;
@@ -293,27 +277,25 @@ main {
   background-color: rgb(20, 35, 50);
   color: white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: absolute;
+  right: 40%;
+  top: 455px;
 }
 
 
 .spinner-display-halfscreen {
+  /*   border: 1px solid black; */
+  width: fit-content;
+  height: 100px;
   display: none;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: auto;
-  position: absolute;
-  right: 30%;
-  top: -5px;
-}
-
-.spinner-display {
-  display: none;
   justify-content: center;
-  align-items: center;
-  height: calc(100vh - 80px);
-  width: auto;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgb(20, 35, 50);
+  color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   position: absolute;
-  right: 42%;
-  top: 10px;
+  right: 26%;
+  top: 455px;
 }
