@@ -1,90 +1,80 @@
 document.addEventListener("DOMContentLoaded", function () {
-
+  // Handle Sign Out Button Click
   const signOutButton = document.getElementById("sign-out-button");
   if (signOutButton) {
-    signOutButton.addEventListener("click", () => {
-      window.electronAPI.signOut();
-    });
+      signOutButton.addEventListener("click", () => {
+          window.electronAPI.signOut();
+      });
   }
 
   // Get the element with the class 'dashboard-link'
-  var dashboardLink = document.querySelector(".dashboard-link");
+  const dashboardLink = document.querySelector(".dashboard-link");
 
-  // Add the 'active' class to it
+  // Add the 'active' class to it on load
   if (dashboardLink) {
-    dashboardLink.classList.add("active");
+      dashboardLink.classList.add("active");
   }
-});
 
-// Add a click event listener to the 'dashboard-link' element
-document.addEventListener('DOMContentLoaded', () => {
-  // Get all submenu buttons
-  const submenuButtons = document.querySelectorAll('.menu-list');
-  // Get the spinner element
-  const spinner = document.getElementById('spinner-event');
-  // Get the Main content element ID
-  const mainContentElementId = 'main-content';
+  // Add click event listener to all menu items
+  document.querySelectorAll(".menu-list").forEach((item) => {
+      item.addEventListener("click", function (event) {
+          event.preventDefault();
 
-  submenuButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Show the spinner
+          // Remove active class from all menu items
+          document.querySelectorAll(".menu-list").forEach((menu) => menu.classList.remove("active"));
+          // Add active class to the clicked menu item
+          this.classList.add("active");
+
+          // Load the corresponding content
+          const contentUrl = this.getAttribute("data-content-url");
+          loadContent(contentUrl);
+      });
+  });
+
+  // Function to load content dynamically
+  function loadContent(view) {
+      const spinner = document.getElementById('spinner-event');
+      const mainContent = document.getElementById('main-content');
+
+      // Show the spinner and apply blur effect
       spinner.style.display = 'flex';
-      // Add classname to main content element
-      document.getElementById('main-content').className = 'blur-effect'
+      mainContent.className = 'blur-effect';
 
-      // Hide the spinner after 1 second
-      setTimeout(() => {
-        spinner.style.display = 'none';
-        // Remove classname from main content element
-        document.getElementById('main-content').className = ''
-      }, 1000); // Hide after 1 second
-    });
-  });
-});
+      // Fetch and load the content
+      fetch(`../views/pages/${view}.ejs`)
+          .then(response => response.text())
+          .then(html => {
+              mainContent.innerHTML = html;
 
-
-// dashboardLink.addEventListener("click", function (event) {
-//   // Prevent the default link behavior
-//   event.preventDefault();
-
-//   // Get the target URL from the 'href' attribute of the link
-//   var targetUrl = this.getAttribute("href");
-
-//   // Open the target URL in a new browser tab
-//   window.open(targetUrl, "_blank");
-// });
-
-document.querySelectorAll(".menu-list").forEach((item) => {
-  item.addEventListener("click", function () {
-    // Remove active class from all menu items
-    document
-      .querySelectorAll(".menu-list")
-      .forEach((menu) => menu.classList.remove("active"));
-
-    // Add active class to the clicked menu item
-    this.classList.add("active");
-  });
-});
-
-// Function to change class based on window size
-function checkWindowSize() {
-  // Get the current window width and screen width
-  const windowWidth = window.innerWidth;
-  const screenWidth = window.screen.width;
-
-  // Find the element
-  const myElement = document.getElementById('spinner-event');
-
-  // Check if the window width is less than or equal to 50% of the screen width
-  if (windowWidth <= screenWidth / 2) {
-    myElement.className = 'spinner-display-halfscreen'; // Change to your desired class
-  } else {
-    myElement.className = 'spinner-display'; // Revert to the default class
+              // Hide the spinner and remove blur effect
+              setTimeout(() => {
+                  spinner.style.display = 'none';
+                  mainContent.className = '';
+              }, 500); // Adjust timing as needed
+          })
+          .catch(error => {
+              console.error('Error loading content:', error);
+              // Optionally, hide the spinner and remove blur effect in case of error
+              spinner.style.display = 'none';
+              mainContent.className = '';
+          });
   }
-}
 
-// Listen for window resize event
-window.addEventListener('resize', checkWindowSize);
+  // Function to check window size and adjust spinner class
+  function checkWindowSize() {
+      const windowWidth = window.innerWidth;
+      const screenWidth = window.screen.width;
+      const spinner = document.getElementById('spinner-event');
 
-// Run the function once on initial load
-checkWindowSize();
+      if (windowWidth <= screenWidth / 2) {
+          spinner.className = 'spinner-display-halfscreen';
+      } else {
+          spinner.className = 'spinner-display';
+      }
+  }
+
+  // Listen for window resize events
+  window.addEventListener('resize', checkWindowSize);
+  // Run the function once on initial load
+  checkWindowSize();
+});
