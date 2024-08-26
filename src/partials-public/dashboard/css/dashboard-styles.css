@@ -1,271 +1,290 @@
     .dashboard-content {
-    /* border: 1px solid black; */
-    width: 100%;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    align-items: ;
-    justify-content: space-between;
-    padding: 0;
-    margin: 0;
-  }
-  
-  /* Activities */
-  
-  .section1-container {
-    /* border: 1px blue solid; */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0;
-    margin: 0;
-  }
-  
-  /* Activity Container 1 */
-  .activity1 {
-    /* border: 1px solid red; */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0;
-    height: fit-content;
-    width: 100%;
-  }
-  
-  .avg-activity {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    /*   border: 1px solid black; */
-    height: 250px;
-    width: 100%;
-    border-radius: 5px;
-    padding: 20px;
-    color: white;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
-  }
-  .activity-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .activity-title h6 {
-    font-size: 12pt;
-    font-weight: 800;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  .activity-title h4 {
-    font-weight: 700;
-    font-size: 24pt;
-  }
-  .activity-divider {
-    background-color: white;
-    height: 2px;
-    width: 100%;
-    margin: 0 0 0 0;
-    border-radius: 5px;
-    opacity: 20%;
-  }
-  .activity-sum {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .activity-int {
-    font-size: 46pt;
-    font-weight: 700;
-  }
-  .activity-view-btn button {
-    height: ;
-    width: 60px;
-    border-radius: 10px;
-    border: none;
-    padding: 5px;
-    font-size: 10pt;
-    font-weight: ;
-    opacity: 70%;
-  }
-  .activity-view-btn button:hover {
-    opacity: 90%;
-    border: 2px solid #fff;
-    transition: all 60ms ease-out;
-  }
-  
-  /* ENTRIES */
-  
-  /* LETTERS */
-  #total-letters {
-    margin: 0 0 0 40px;
-  }
-  
-  /* FILES */
-  #total-files {
-    margin: 0 0 0 40px;
-  }
-  
-  /* Activity Container 2 */
-  .activity2 {
-    /* border: 1px solid pink; */
-    height: fit-content;
-    width: 100%;
-    padding: 20px 0;
-    /*   border-radius:5px; */
-  }
-  
-  .table-container {
-    width: 100%;
-    /* border: 1px solid blue; */
-    height: fit-content;
-    border-radius: 5px;
-  }
-  .table-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    /* border:1px solid red; */
-    border-radius:5px 5px 0 0;
-  }
-  
-  .table1-title {
-    width: ;
-  }
+      /* border: 1px solid black; */
+      width: 100%;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      align-items: ;
+      justify-content: space-between;
+      padding: 0;
+      margin: 0;
+    }
 
-  table {
-    margin:0;
-    padding: 2px;
-    position: inherit;
-    border-radius: 5px;
-    width: 100vh;
-    height: auto;
-    border: 1px solid blue;
-  }
-  
-  /* Dropdown */
-  /* Dropdown Button */
-  .dropbtn {
-    color: white;
-    padding: 5px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  /* Dropdown button on hover & focus */
-  .dropbtn:hover,
-  .dropbtn:focus {
-    background-color: #2980b9;
-  }
-  
-  /* The container <div> - needed to position the dropdown content */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Dropdown Content (Hidden by Default) */
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    right: 6px;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-  }
-  
-  /* Links inside the dropdown */
-  .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  
-  /* Change color of dropdown links on hover */
-  .dropdown-content a:hover {
-    background-color: #ddd;
-  }
-  
-  /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-  .show {
-    display: block;
-  }
+    /* Activities */
+
+    .section1-container {
+      /* border: 1px blue solid; */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Activity Container 1 */
+    .activity1 {
+      /* border: 1px solid red; */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      height: fit-content;
+      width: 100%;
+    }
+
+    .avg-activity {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      /*   border: 1px solid black; */
+      height: 250px;
+      width: 100%;
+      border-radius: 5px;
+      padding: 20px;
+      color: white;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .activity-title h6 {
+      font-size: 12pt;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .activity-title h4 {
+      font-weight: 700;
+      font-size: 24pt;
+    }
+
+    .activity-divider {
+      background-color: white;
+      height: 2px;
+      width: 100%;
+      margin: 0 0 0 0;
+      border-radius: 5px;
+      opacity: 20%;
+    }
+
+    .activity-sum {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .activity-int {
+      font-size: 46pt;
+      font-weight: 700;
+    }
+
+    .activity-view-btn button {
+      height: ;
+      width: 60px;
+      border-radius: 10px;
+      border: none;
+      padding: 5px;
+      font-size: 10pt;
+      font-weight: ;
+      opacity: 70%;
+    }
+
+    .activity-view-btn button:hover {
+      opacity: 90%;
+      border: 2px solid #fff;
+      transition: all 60ms ease-out;
+    }
+
+    /* ENTRIES */
+
+    /* LETTERS */
+    #total-letters {
+      margin: 0 0 0 40px;
+    }
+
+    /* FILES */
+    #total-files {
+      margin: 0 0 0 40px;
+    }
+
+    /* Activity Container 2 */
+    .activity2 {
+      border: 1px solid pink;
+      height: fit-content;
+      width: 100%;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container {
+      width: 100%;
+      /* border: 1px solid blue; */
+      height: fit-content;
+      border-radius: 5px;
+    }
+
+    .table-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      /* border:1px solid red; */
+      border-radius: 5px 5px 0 0;
+    }
+
+    .table1-title {
+      width: ;
+    }
+
+    table {
+      margin: 0;
+      padding: 2px;
+      position: inherit;
+      border-radius: 5px;
+      width: 100vh;
+      height: auto;
+      color: rgb(20, 35, 50);
+      /* border: 1px solid blue; */
+      overflow: auto;
+    }
+
+    /* Dropdown */
+    /* Dropdown Button */
+    .dropbtn {
+      color: white;
+      padding: 5px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    /* Dropdown button on hover & focus */
+    .dropbtn:hover,
+    .dropbtn:focus {
+      background-color: #2980b9;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 6px;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+
+    /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+    .show {
+      display: block;
+    }
 
 
-  /* Dropdown */
-/* Dropdown Button */
-.dropbtn {
-    color: white;
-    padding: 5px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  /* Dropdown button on hover & focus */
-  .dropbtn:hover,
-  .dropbtn:focus {
-    background-color: #2980b9;
-  }
-  
-  /* The container <div> - needed to position the dropdown content */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Dropdown Content (Hidden by Default) */
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    right: 6px;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-  }
-  
-  /* Links inside the dropdown */
-  .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  
-  /* Change color of dropdown links on hover */
-  .dropdown-content a:hover {
-    background-color: #ddd;
-  }
-  
-  /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-  .show {
-    display: block;
-  }
-  
-  thead {
-    position: sticky;
-  }
-  tbody {
-    overflow-y: auto;
-    height: 35px;
+    /* Dropdown */
+    /* Dropdown Button */
+    .dropbtn {
+      color: white;
+      padding: 5px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
 
-  }
-  /* Define status color classes */
-  .status-filed {
-    background-color: #d4edda; /* Light green for FILED */
-  }
-  .status-pending {
-    background-color: #fff3cd; /* Light yellow for PENDING */
-  }
-  .status-out {
-    background-color: #f8d7da; /* Light red for OUT */
-  }
-  .status-in {
-    background-color: #d1ecf1; /* Light blue for IN */
-  }
-  
+    /* Dropdown button on hover & focus */
+    .dropbtn:hover,
+    .dropbtn:focus {
+      background-color: #2980b9;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 6px;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    /* Change color of dropdown links on hover */
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+
+    /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+    .show {
+      display: block;
+    }
+
+    thead {
+      position: sticky;
+    }
+
+    tbody {
+      overflow-y: auto;
+      height: 35px;
+
+    }
+
+    /* Define status color classes */
+    .status-filed {
+      background-color: #d4edda;
+      /* Light green for FILED */
+    }
+
+    .status-pending {
+      background-color: #fff3cd;
+      /* Light yellow for PENDING */
+    }
+
+    .status-out {
+      background-color: #f8d7da;
+      /* Light red for OUT */
+    }
+
+    .status-in {
+      background-color: #d1ecf1;
+      /* Light blue for IN */
+    }
