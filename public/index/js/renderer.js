@@ -93,6 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handling different menu items based on the view
     let menuItem = null;
     switch (view) {
+      case "dashboard":
+        menuItem = document.querySelector("#menu-dashboard");
+        break;
       case "letter-management":
         menuItem = document.querySelector("#menu-letters");
         break;
@@ -101,6 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
       case "file-management":
         menuItem = document.querySelector("#menu-files");
+        break;
+      case "reports":
+        menuItem = document.querySelector("#menu-reports");
         break;
       // Add more cases as needed for additional views
       default:
