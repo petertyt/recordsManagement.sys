@@ -131,6 +131,16 @@
   .table1-title {
     width: ;
   }
+
+  table {
+    margin:0;
+    padding: 2px;
+    position: inherit;
+    border-radius: 5px;
+    width: 100vh;
+    height: auto;
+    border: 1px solid blue;
+  }
   
   /* Dropdown */
   /* Dropdown Button */
@@ -159,6 +169,7 @@
   .dropdown-content {
     display: none;
     position: absolute;
+    right: 6px;
     background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -181,5 +192,80 @@
   /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
   .show {
     display: block;
+  }
+
+
+  /* Dropdown */
+/* Dropdown Button */
+.dropbtn {
+    color: white;
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  /* Dropdown button on hover & focus */
+  .dropbtn:hover,
+  .dropbtn:focus {
+    background-color: #2980b9;
+  }
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 6px;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+  
+  /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+  .show {
+    display: block;
+  }
+  
+  thead {
+    position: sticky;
+  }
+  tbody {
+    overflow-y: auto;
+    height: 35px;
+
+  }
+  /* Define status color classes */
+  .status-filed {
+    background-color: #d4edda; /* Light green for FILED */
+  }
+  .status-pending {
+    background-color: #fff3cd; /* Light yellow for PENDING */
+  }
+  .status-out {
+    background-color: #f8d7da; /* Light red for OUT */
+  }
+  .status-in {
+    background-color: #d1ecf1; /* Light blue for IN */
   }
   
