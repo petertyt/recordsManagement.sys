@@ -4,7 +4,7 @@
   "description": "Records Management System",
   "main": "main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "concurrently \"node server.js\" \"electron .\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make",
@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "body-parser": "^1.20.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "datatables.net": "^2.1.4",
@@ -30,6 +31,7 @@
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.2.1",
+    "express": "^4.19.2",
     "jquery": "^3.7.1",
     "sql.js": "^1.11.0",
     "sqlite3": "^5.1.7"
@@ -44,6 +46,7 @@
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron-forge/publisher-github": "^7.4.0",
     "@electron/fuses": "^1.8.0",
+    "concurrently": "^8.2.2",
     "electron": "^32.0.0",
     "webpack-bundle-analyzer": "^4.10.2"
   }

@@ -1,125 +1,55 @@
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-  }
-  
-  // Close the dropdown menu if the user clicks outside of it
-  window.onclick = function (event) {
-    if (!event.target.matches(".dropbtn")) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains("show")) {
-          openDropdown.classList.remove("show");
-        }
-      }
-    }
-  };
+$(document).ready(function () {
+  // Initialize the DataTable
+  $('#recentEntriesTable').DataTable({
+      "ajax": {
+          "url": "http://localhost:3000/api/recent-entries",
+          "dataSrc": function (json) {
+              console.log("AJAX Response:", json); // Log the AJAX response for debugging
+              return json.data;
+          }
+      },
+      "columns": [
+          { "data": "entry_id" },
+          { "data": "entry_date" },
+          { "data": "file_number" },
+          { "data": "file_subject" },
+          { "data": "officer_assigned" },
+          { "data": "status" }
+      ]
+  });
 
-  /* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-  }
-  
-  // Close the dropdown menu if the user clicks outside of it
-  window.onclick = function (event) {
-    if (!event.target.matches(".dropbtn")) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains("show")) {
-          openDropdown.classList.remove("show");
-        }
-      }
-    }
-  };
-  
-  // Example function to simulate fetching data from a database
-  function fetchRecentEntries() {
-    // Simulate database fetch with a static array of objects
-    return [
-      {
-        entryID: "8",
-        type: "Letter",
-        number: "LVD 6060",
-        title: "Invitation to Seminar",
-        dateAdded: "2024-08-20",
-        status: "FILED"
-      },
-      {
-        entryID: "20",
-        type: "File",
-        number: "LVD 5971",
-        title: "Project Report Q3",
-        dateAdded: "2024-08-18",
-        status: "OUT"
-      },
-      {
-        entryID: "78",
-        type: "Letter",
-        number: "LVD 350",
-        title: "Meeting Minutes",
-        dateAdded: "2024-08-15",
-        status: "FILED"
-      }
-    ];
-  }
-  
-  // Function to get the status class based on the entry status
-  function getStatusClass(status) {
-    switch (status.toUpperCase()) {
-      case "FILED":
-        return "status-filed";
-      case "PENDING":
-        return "status-pending";
-      case "OUT":
-        return "status-out";
-      case "IN":
-        return "status-in";
-      default:
-        return "";
-    }
-  }
-  
-  // Function to render the entries in the table
-  function renderRecentEntries() {
-    const entries = fetchRecentEntries(); // This will be replaced by actual DB fetch
-    const tbody = document.getElementById("recent-entries-body");
-  
-    // Clear existing table rows
-    tbody.innerHTML = "";
-  
-    // Loop through entries and create table rows
-    entries.forEach((entry, index) => {
-      const row = document.createElement("tr");
-      const tdata = document.createElement("td")
-      const statusClass = getStatusClass(entry.status);
-      tdata.classList.add(statusClass);
-      row.innerHTML = `
-                  <td>${entry.entryID}</td>
-                  <td>${entry.dateAdded}</td>
-                  <td>${entry.number}</td>
-                  <td>${entry.dateAdded}</td>
-                  <td>${entry.type}</td>
-                  <td>${entry.status}</td>
-              `;
-      tbody.appendChild(row);
-    });
-  
-    // Show message if no entries are found
-    if (entries.length === 0) {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-                  <td colspan="5" class="text-center">No recent entries found.</td>
-              `;
-      tbody.appendChild(row);
-    }
-  }
-  
-  // Call the function to render entries on page load
-  document.addEventListener("DOMContentLoaded", renderRecentEntries);
-  
+  // CRUD Operations: Update entry
+  $('#entryForm').on('submit', function (e) {
+      e.preventDefault();
+
+      const entryData = {
+          entry_id: $('#entry_id').val(),
+          file_number: $('#file_number').val(),
+          status: $('#status').val()
+      };
+
+      $.ajax({
+          url: 'http://localhost:3000/api/update-entry',
+          type: 'POST',
+          data: JSON.stringify(entryData),
+          contentType: 'application/json',
+          success: function (response) {
+              console.log("Entry updated successfully:", response);
+              $('#entryModal').modal('hide');
+              $('#recentEntriesTable').DataTable().ajax.reload();
+          },
+          error: function (xhr, status, error) {
+              console.error("Error updating entry:", error);
+          }
+      });
+  });
+
+  // Add event listener for opening the modal with the data of the selected row
+  $('#recentEntriesTable tbody').on('click', 'tr', function () {
+      const data = $('#recentEntriesTable').DataTable().row(this).data();
+      $('#entry_id').val(data.entry_id);
+      $('#file_number').val(data.file_number);
+      $('#status').val(data.status);
+      $('#entryModal').modal('show');
+  });
+});

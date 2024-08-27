@@ -1,47 +1,46 @@
 <div class="dashboard-content container-fluid" id="dashboard">
-
     <div class="dashboard-title" id="menu-list-title">
         <div class="h1 title">Dashboard | Overview</div>
     </div>
 
     <div class="section1-container container-fluid" id="dash-section1">
-
         <div class="activity1" id="first-activities">
-
-            <!--  ENTRIES      -->
+            <!-- Entries -->
             <div class="avg-activity entries bg-primary bg-gradient" id="total-entries">
                 <div class="entries-title activity-title">
                     <div>
                         <h6>TOTAL</h6>
                         <h4>ENTRIES</h4>
                     </div>
-                    <div class="actvity-title-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                    <div class="activity-title-icon">
+                        <!-- SVG Icon -->
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-graph-up" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
                                 d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07" />
                         </svg>
+
                     </div>
                 </div>
                 <div class="activity-divider"></div>
                 <div class="entries-sum activity-sum">
-                    <div class="entries-int activity-int">56
-                    </div>
+                    <div class="entries-int activity-int" id="entries-count">0</div>
                     <div class="entries-view-btn activity-view-btn">
                         <button type="button" class="view-btn" data-content-url="entries">View</button>
                     </div>
                 </div>
             </div>
 
-            <!--   LETTERS     -->
+            <!-- Letters -->
             <div class="avg-activity letters bg-success bg-gradient" id="total-letters">
                 <div class="entries-title activity-title">
                     <div>
                         <h6>TOTAL</h6>
                         <h4>LETTERS</h4>
                     </div>
-                    <div class="actvity-title-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                    <div class="activity-title-icon">
+                        <!-- SVG Icon -->
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-file-text-fill" viewBox="0 0 16 16">
                             <path
                                 d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1" />
@@ -50,23 +49,23 @@
                 </div>
                 <div class="activity-divider"></div>
                 <div class="entries-sum activity-sum">
-                    <div class="entries-int activity-int">36
-                    </div>
+                    <div class="entries-int activity-int" id="letters-count">0</div>
                     <div class="entries-view-btn activity-view-btn">
-    <button type="button" class="view-btn" data-content-url="letter-management">View</button>
-</div>
+                        <button type="button" class="view-btn" data-content-url="letter-management">View</button>
+                    </div>
                 </div>
             </div>
 
-            <!--  FILES      -->
+            <!-- Files -->
             <div class="avg-activity files bg-danger bg-gradient" id="total-files">
                 <div class="entries-title activity-title">
                     <div>
                         <h6>TOTAL</h6>
                         <h4>FILES</h4>
                     </div>
-                    <div class="actvity-title-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                    <div class="activity-title-icon">
+                        <!-- SVG Icon -->
+ <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-folder-fill" viewBox="0 0 16 16">
                             <path
                                 d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3m-8.322.12q.322-.119.684-.12h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981z" />
@@ -75,8 +74,7 @@
                 </div>
                 <div class="activity-divider"></div>
                 <div class="entries-sum activity-sum">
-                    <div class="entries-int activity-int">20
-                    </div>
+                    <div class="entries-int activity-int" id="files-count">0</div>
                     <div class="entries-view-btn activity-view-btn">
                         <button type="button" class="view-btn" data-content-url="file-management">View</button>
                     </div>
@@ -91,45 +89,53 @@
         <div class="h3 fw-regular text-muted">Recent Entries:</div>
     </div>
 
-    <!-- FILES RECENT   -->
     <div class="table2-container table-container">
-        <div class="table2-title table-title">
-            <div class="fw-regular fs-5">Incoming Files <strong>|</strong> Outgoing Files <strong>|</strong> Incoming
-                Letters</div>
-            <div>
-                <div class="dropdown">
-                    <button onclick="myFunction()" class="dropbtn bg-secondary bg-gradient">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-funnel-fill" viewBox="0 0 16 16">
-                            <path
-                                d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z" />
-                        </svg>Filter</button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <a href="#">Incoming Files</a>
-                        <a href="#">Outgoing Files</a>
-                        <a href="#">Incoming Letter</a>
-                    </div>
-                </div>
-                <!--         <button type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707m4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707" />
-            </svg>
-          </button> -->
-            </div>
-        </div>
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover display" id="recentEntriesTable">
             <thead class="thead-dark">
-                <th scope="col">#</th>
-                <th scope="col">Entry Date</th>
-                <th scope="col">File No</th>
-                <th scope="col">Subject</th>
-                <th scope="col">Officer</th>
-                <th scope="col">Status</th>
+                <tr>
+                    <th>ID</th>
+                    <th>Entry Date</th>
+                    <th>File Number</th>
+                    <th>Subject</th>
+                    <th>Officer</th>
+                    <th>Status</th>
+                </tr>
             </thead>
-            <tbody id="recent-entries-body">
-
+            <tbody>
+                <!-- Data will be dynamically populated -->
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- CRUD Operations with modals -->
+<div class="modal fade" id="entryModal" tabindex="-1" role="dialog" aria-labelledby="entryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="entryModalLabel">Entry Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="entryForm">
+                    <div class="form-group">
+                        <label for="file_number">File Number</label>
+                        <input type="text" class="form-control" id="file_number" name="file_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="FILED">FILED</option>
+                            <option value="PENDING">PENDING</option>
+                            <option value="OUT">OUT</option>
+                            <option value="IN">IN</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
