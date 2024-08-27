@@ -59,30 +59,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Fetch and load the content
     fetch(`../views/pages/${view}.ejs`)
-      .then((response) => response.text())
-      .then((html) => {
-        mainContent.innerHTML = html;
+        .then((response) => response.text())
+        .then((html) => {
+            mainContent.innerHTML = html;
 
-        // Re-apply active class to the correct menu item
-        applyActiveClass(view);
+            // Re-apply active class to the correct menu item
+            applyActiveClass(view);
 
-        // Re-attach event listeners after loading new content
-        addMenuEventListeners();
-        addActivityViewEventListeners();
+            // Re-attach event listeners after loading new content
+            addMenuEventListeners();
+            addActivityViewEventListeners();
 
-        // Hide the spinner and remove blur effect
-        setTimeout(() => {
-          spinner.style.display = "none";
-          mainContent.classList.remove("blur-effect");
-        }, 500); // Adjust timing as needed
-      })
-      .catch((error) => {
-        console.error("Error loading content:", error);
-        // Optionally, hide the spinner and remove blur effect in case of error
-        spinner.style.display = "none";
-        mainContent.classList.remove("blur-effect");
-      });
-  }
+            // Re-initialize the DataTable if dashboard is loaded
+            if (view === 'dashboard') {
+                initializeDataTable();
+            }
+
+            // Hide the spinner and remove blur effect
+            setTimeout(() => {
+                spinner.style.display = "none";
+                mainContent.classList.remove("blur-effect");
+            }, 500); // Adjust timing as needed
+        })
+        .catch((error) => {
+            console.error("Error loading content:", error);
+            // Optionally, hide the spinner and remove blur effect in case of error
+            spinner.style.display = "none";
+            mainContent.classList.remove("blur-effect");
+        });
+}
 
   function applyActiveClass(view) {
     // Remove active class from all menu items
