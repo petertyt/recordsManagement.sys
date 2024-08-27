@@ -16,6 +16,39 @@ const db = new sqlite3.Database(dbPath, (err) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+   // Route to get summations for total entries, letters, and files from entries_tbl
+   app.get('/api/summations', (req, res) => {
+    const totalEntriesQuery = `SELECT COUNT(*) AS total_entries FROM entries_tbl`;
+    const totalLettersQuery = `SELECT COUNT(*) AS total_letters FROM entries_tbl WHERE entry_category = 'Letter'`;
+    const totalFilesQuery = `SELECT COUNT(*) AS total_files FROM entries_tbl WHERE entry_category = 'File'`;
+  
+    db.serialize(() => {
+        db.get(totalEntriesQuery, (err, totalEntriesRow) => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+  
+            db.get(totalLettersQuery, (err, totalLettersRow) => {
+                if (err) {
+                    return res.status(500).json({ error: err.message });
+                }
+  
+                db.get(totalFilesQuery, (err, totalFilesRow) => {
+                    if (err) {
+                        return res.status(500).json({ error: err.message });
+                    }
+  
+                    res.json({
+                        total_entries: totalEntriesRow.total_entries,
+                        total_letters: totalLettersRow.total_letters,
+                        total_files: totalFilesRow.total_files
+                    });
+                });
+            });
+        });
+    });
+  });
+
 app.get('/api/recent-entries', (req, res) => {
     const query = `
         SELECT entry_id, entry_date, file_number, file_subject, officer_assigned, status
@@ -61,6 +94,6 @@ app.get('/api/entries', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(5454, () => {
+    console.log('Server is running on port 5454');
 });
