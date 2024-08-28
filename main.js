@@ -13,7 +13,7 @@ function startServer() {
   const PORT = process.env.PORT || 49200;
 
   // Path to the SQLite database
-  const dbPath = path.resolve(__dirname, 'database/recordsmgmtsys.db');
+  const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
   const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
       console.error('Error connecting to the database:', err.message);

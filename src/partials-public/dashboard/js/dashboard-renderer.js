@@ -34,28 +34,6 @@ $(document).ready(function () {
             status: $('#status').val()
         };
 
-        // Fetch summations when the page loads
-        fetchSummations();
-
-        function fetchSummations() {
-            $.ajax({
-                url: 'http://localhost:49200/api/summations',
-                type: 'GET',
-                success: function (data) {
-                    // Update the card elements with the fetched data
-                    $('#entries-count').text(data.total_entries);
-                    $('#letters-count').text(data.total_letters);
-                    $('#files-count').text(data.total_files);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error fetching summations:", error);
-                    $('#entries-count').text('Error');
-                    $('#letters-count').text('Error');
-                    $('#files-count').text('Error');
-                }
-            });
-        }
-
         $.ajax({
             url: 'http://localhost:49200/api/update-entry',
             type: 'POST',
