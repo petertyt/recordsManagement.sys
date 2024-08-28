@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const ejs = require("ejs-electron");
-const { spawn } = require("child_process");
 
 // Import the Express server directly
 const express = require("express");
@@ -14,7 +13,7 @@ function startServer() {
   const PORT = process.env.PORT || 49200;
 
   // Path to the SQLite database
-  const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
+  const dbPath = path.resolve(__dirname, 'database/recordsmgmtsys.db');
   const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
       console.error('Error connecting to the database:', err.message);

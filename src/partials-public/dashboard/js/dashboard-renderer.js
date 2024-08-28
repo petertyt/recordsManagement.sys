@@ -86,6 +86,7 @@ function initializeDataTable() {
         "columns": [
             { "data": "entry_id" },
             { "data": "entry_date" },
+            { "data": "entry_category" },
             { "data": "file_number" },
             { "data": "subject" },
             { "data": "officer_assigned" },
