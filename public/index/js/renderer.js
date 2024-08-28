@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Re-initialize the DataTable if dashboard is loaded
             if (view === 'dashboard') {
                 initializeDataTable();
+                fetchSummations();
             }
 
             // Hide the spinner and remove blur effect
