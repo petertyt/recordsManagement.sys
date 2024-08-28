@@ -30,7 +30,7 @@ function startServer() {
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
     const query = `
-            SELECT entry_id, entry_date, entry_category, file_number, file_subject, officer_assigned, status
+            SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
             FROM entries_tbl
             ORDER BY entry_date DESC
             LIMIT 6;
@@ -39,6 +39,24 @@ function startServer() {
       if (err) {
         return res.status(500).json({ error: err.message });
       }
+      res.json({ data: rows });
+    });
+  });
+
+  app.get('/api/all-entries', (req, res) => {
+    const query = `
+      SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
+      FROM entries_tbl
+      ORDER BY entry_date DESC;
+    `;
+  
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        console.error("Error executing SQL query:", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+  
+      // console.log("Retrieved rows:", rows); // Debugging output
       res.json({ data: rows });
     });
   });
@@ -97,22 +115,6 @@ function startServer() {
         return res.status(404).json({ error: 'Entry not found' });
       }
       res.json({ message: 'Entry updated successfully' });
-    });
-  });
-
-
-  app.get('/api/entries', (req, res) => {
-    const { category } = req.query;
-    const query = `
-            SELECT *
-            FROM entries_tbl
-            WHERE entry_category = ?;
-        `;
-    db.all(query, [category], (err, rows) => {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ data: rows });
     });
   });
 

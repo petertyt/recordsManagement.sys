@@ -51,7 +51,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/recent-entries', (req, res) => {
     const query = `
-        SELECT entry_id, entry_date, file_number, file_subject, officer_assigned, status
+        SELECT entry_id, entry_date, file_number, subject, officer_assigned, status
         FROM entries_tbl
         ORDER BY entry_date DESC
         LIMIT 6;
@@ -63,6 +63,21 @@ app.get('/api/recent-entries', (req, res) => {
         res.json({ data: rows });
     });
 });
+
+app.get('/api/all-entries', (req, res) => {
+    const query = `
+            SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
+            FROM entries_tbl
+            ORDER BY entry_date DESC
+            ;
+        `;
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ data: rows });
+    });
+  });
 
 app.post('/api/update-entry', (req, res) => {
     const { entry_id, file_number, status } = req.body;

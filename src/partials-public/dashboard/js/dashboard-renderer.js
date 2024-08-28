@@ -87,7 +87,7 @@ function initializeDataTable() {
             { "data": "entry_id" },
             { "data": "entry_date" },
             { "data": "file_number" },
-            { "data": "file_subject" },
+            { "data": "subject" },
             { "data": "officer_assigned" },
             { "data": "status" }
         ],
