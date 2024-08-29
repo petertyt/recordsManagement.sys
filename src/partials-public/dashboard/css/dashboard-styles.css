@@ -4,7 +4,6 @@
       height: fit-content;
       display: flex;
       flex-direction: column;
-      align-items: ;
       justify-content: space-between;
       padding: 0;
       margin: 0;
@@ -114,13 +113,11 @@
     }
 
     .activity-view-btn button {
-      height: ;
       width: 60px;
       border-radius: 10px;
       border: none;
       padding: 5px;
       font-size: 10pt;
-      font-weight: ;
       opacity: 70%;
     }
 
@@ -168,9 +165,9 @@
       border-radius: 5px 5px 0 0;
     }
 
-    .table1-title {
-      width: ;
-    }
+    /* .table1-title {
+      /* width: ;
+    } */
 
     table {
       margin: 0;
