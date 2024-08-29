@@ -4,6 +4,24 @@ function truncate(str, maxlength) {
         str.slice(0, maxlength - 1) + '…' : str;
 }
 
+function fetchSummations() {
+    $.ajax({
+        url: 'http://localhost:49200/api/summations',
+        type: 'GET',
+        success: function (data) {
+            $('#entries-count').text(data.total_entries);
+            $('#letters-count').text(data.total_letters);
+            $('#files-count').text(data.total_files);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error fetching summations:", error);
+            $('#entries-count').text('Error');
+            $('#letters-count').text('Error');
+            $('#files-count').text('Error');
+        }
+    });
+}
+
 $(document).ready(function () {
     // Initialize components on page load
     initializeDataTable();
@@ -19,24 +37,6 @@ $(document).ready(function () {
             location.reload(); // Reload the entire page
         }, 500); // Timeout matches the CSS transition duration
     });
-
-    function fetchSummations() {
-        $.ajax({
-            url: 'http://localhost:49200/api/summations',
-            type: 'GET',
-            success: function (data) {
-                $('#entries-count').text(data.total_entries);
-                $('#letters-count').text(data.total_letters);
-                $('#files-count').text(data.total_files);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching summations:", error);
-                $('#entries-count').text('Error');
-                $('#letters-count').text('Error');
-                $('#files-count').text('Error');
-            }
-        });
-    }
 
     $('#entryForm').on('submit', function (e) {
         e.preventDefault();

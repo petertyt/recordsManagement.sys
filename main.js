@@ -42,6 +42,45 @@ function startServer() {
     });
   });
 
+  app.get('/api/make-reports', (req, res) => {
+    const { start_date, end_date, officer_assigned, file_number } = req.query;
+    let query = `
+      SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
+      FROM entries_tbl
+      WHERE 1=1
+    `;
+    
+    const params = [];
+    
+    if (start_date) {
+        query += ' AND entry_date >= ?';
+        params.push(start_date);
+    }
+    if (end_date) {
+        query += ' AND entry_date <= ?';
+        params.push(end_date);
+    }
+    if (officer_assigned) {
+        query += ' AND officer_assigned LIKE ?';
+        params.push(`%${officer_assigned}%`);
+    }
+    if (file_number) {
+        query += ' AND file_number = ?';
+        params.push(file_number);
+    }
+  
+    query += ' ORDER BY entry_date DESC;';
+  
+    db.all(query, params, (err, rows) => {
+        if (err) {
+            console.error("Error executing SQL query:", err.message);
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ data: rows });
+    });
+});
+
+
   app.get('/api/all-entries', (req, res) => {
     const query = `
       SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
