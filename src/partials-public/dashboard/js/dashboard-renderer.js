@@ -1,16 +1,30 @@
-$(document).ready(function () {
-    // Initialize DataTable on page load
-    initializeDataTable();
+// Define the truncate function
+function truncate(str, maxlength) {
+    return (str.length > maxlength) ?
+        str.slice(0, maxlength - 1) + '…' : str;
+}
 
-    // Fetch summations when the page loads
+$(document).ready(function () {
+    // Initialize components on page load
+    initializeDataTable();
     fetchSummations();
+
+    // Attach refresh button click event dynamically
+    $(document).on('click', '#refresh-btn', function () {
+        $(this).addClass('rotate'); // Add the rotation class on click
+
+        // Trigger the page reload after the rotation animation
+        setTimeout(() => {
+            $(this).removeClass('rotate');
+            location.reload(); // Reload the entire page
+        }, 500); // Timeout matches the CSS transition duration
+    });
 
     function fetchSummations() {
         $.ajax({
             url: 'http://localhost:49200/api/summations',
             type: 'GET',
             success: function (data) {
-                // Update the card elements with the fetched data
                 $('#entries-count').text(data.total_entries);
                 $('#letters-count').text(data.total_letters);
                 $('#files-count').text(data.total_files);
@@ -24,7 +38,6 @@ $(document).ready(function () {
         });
     }
 
-    // CRUD Operations: Update entry
     $('#entryForm').on('submit', function (e) {
         e.preventDefault();
 
@@ -52,12 +65,11 @@ $(document).ready(function () {
 });
 
 function initializeDataTable() {
-    // Initialize the DataTable
     $('#recentEntriesTable').DataTable({
         "ajax": {
             "url": "http://localhost:49200/api/recent-entries",
             "dataSrc": function (json) {
-                console.log("AJAX Response:", json); // Log the AJAX response for debugging
+                console.log("AJAX Response:", json);
                 return json.data;
             }
         },
@@ -66,23 +78,28 @@ function initializeDataTable() {
             { "data": "entry_date" },
             { "data": "entry_category" },
             { "data": "file_number" },
-            { "data": "subject" },
+            { 
+                "data": "subject",
+                "render": function(data, type, row) {
+                    return truncate(data, 60);
+                }
+            },
             { "data": "officer_assigned" },
             { "data": "status" }
         ],
         "initComplete": function () {
-            // Attach event listener after the table is fully initialized
             attachRowClickListener();
         }
     });
 }
 
 function attachRowClickListener() {
-    // Attach the event listener for the row click event
     $('#recentEntriesTable tbody').off('click', 'tr').on('click', 'tr', function () {
         const data = $('#recentEntriesTable').DataTable().row(this).data();
-        $('#entry_id').val(data.entry_id);
         $('#file_number').val(data.file_number);
+        $('#subject').val(data.subject);
+        $('#officer_assigned').val(data.officer_assigned);
+        $('#entry_id').val(data.entry_id);
         $('#status').val(data.status);
         $('#entryModal').modal('show');
     });

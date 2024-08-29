@@ -6,16 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';"> -->
   <title>Records Management System</title>
-  <!-- Bootstrap CSS -->
+
+  <!-- CDNs CSS -->
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="../node_modules/daterangepicker/daterangepicker.css" />
   <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="../node_modules/datatables.net-dt/css/dataTables.dataTables.css">
-  <!-- Custom Fonts
-    (Poppins) -->
+ 
+  <!-- Custom Fonts (Poppins) -->
   <link rel="stylesheet" href="../public/index/css/font.css" />
-  <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="../public/index/css/styles.css" />
+ 
+  <!-- Custom Stylesheet (Partials EJS)-->
   <link rel="stylesheet" href="./partials-public/dashboard/css/dashboard-styles.css" />
+  <link rel="stylesheet" href="./partials-public/entries/css/entries-styles.css" />
+  <link rel="stylesheet" href="./partials-public/file-management/css/files-styles.css" />
+  <link rel="stylesheet" href="./partials-public/letter-management/css/letters-styles.css" />
+  <link rel="stylesheet" href="./partials-public/reports/css/report-styles.css" />
+
+  <!-- Index EJS CSS -->
+  <link rel="stylesheet" href="../public/index/css/styles.css" />
 </head>
 
 <body>
@@ -167,10 +176,24 @@
   <footer></footer>
 
   <!-- JavaScript -->
+  <!-- CDNs -->
   <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="../node_modules/datatables.net/js/dataTables.min.js"></script>
+  <script type="text/javascript" src="../node_modules/moment/min/moment.min.js"></script>
+  <script type="text/javascript" src="../node_modules/daterangepicker/daterangepicker.js"></script>
+  <script type="text/javascript" src="../node_modules/jspdf/dist/jspdf.umd.min.js"></script>
+  <script type="text/javascript" src="../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.min.js"></script>
+  <script type="text/javascript" src="../node_modules/print-this/printThis.js"></script>
   <script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Scripts (Partials EJS) -->
   <script type="text/javascript" src="./partials-public/dashboard/js/dashboard-renderer.js"></script>
+  <script type="text/javascript" src="./partials-public/reports/js/report-renderer.js"></script>
+  <script type="text/javascript" src="./partials-public/entries/js/entries-renderer.js"></script>
+  <script type="text/javascript" src="./partials-public/letter-management/js/letters-renderer.js"></script>
+  <script type="text/javascript" src="./partials-public/file-management/js/files-renderer.js"></script>"
+
+  <!-- Index EJS Script -->
   <script type="text/javascript" src="../public/index/js/renderer.js"></script>
 </body>
 
