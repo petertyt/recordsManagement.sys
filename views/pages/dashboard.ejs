@@ -1,6 +1,15 @@
 <div class="dashboard-content container-fluid" id="dashboard">
     <div class="dashboard-title" id="menu-list-title">
         <div class="h1 title">Dashboard | Overview</div>
+        <div class="refresh-dashboard">
+            <button class="dashboard-reload" id="refresh-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9" />
+                <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z" />
+              </svg>
+            </button>
+            <div class="mr-3 disabled">Refresh</div>
+          </div>
     </div>
 
     <div class="section1-container container-fluid" id="dash-section1">
@@ -14,7 +23,7 @@
                     </div>
                     <div class="activity-title-icon">
                         <!-- SVG Icon -->
-<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-graph-up" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
                                 d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07" />
@@ -40,7 +49,7 @@
                     </div>
                     <div class="activity-title-icon">
                         <!-- SVG Icon -->
-<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-file-text-fill" viewBox="0 0 16 16">
                             <path
                                 d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5M5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1m0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1" />
@@ -65,7 +74,7 @@
                     </div>
                     <div class="activity-title-icon">
                         <!-- SVG Icon -->
- <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                             class="bi bi-folder-fill" viewBox="0 0 16 16">
                             <path
                                 d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a2 2 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3m-8.322.12q.322-.119.684-.12h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981z" />
@@ -95,6 +104,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Entry Date</th>
+                    <th>Category</th>
                     <th>File Number</th>
                     <th>Subject</th>
                     <th>Officer</th>
@@ -109,7 +119,8 @@
 </div>
 
 <!-- CRUD Operations with modals -->
-<div class="modal fade" id="entryModal" tabindex="-1" role="dialog" aria-labelledby="entryModalLabel" aria-hidden="true">
+<div class="modal fade" id="entryModal" tabindex="-1" role="dialog" aria-labelledby="entryModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -125,6 +136,26 @@
                         <input type="text" class="form-control" id="file_number" name="file_number">
                     </div>
                     <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <!-- <input type="text-area" class="form-control" id="subject" name="subject"> -->
+                        <textarea class="form-control" spellcheck="true" id="subject" name="subject" placeholder="Document Subject" rows="4" cols="50">
+
+                        </textarea>
+                        <small id="subjectHelp" class="form-text text-muted">Subject of the entry.</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="officer_assigned">Officer Assigned</label>
+                        <input type="text" class="form-control" id="officer_assigned" name="officer_assigned">
+                    </div>
+                    <!-- <div class="form-group">
+                        <label for="file_number">File Number</label>
+                        <input type="text" class="form-control" id="file_number" name="file_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="file_number">File Number</label>
+                        <input type="text" class="form-control" id="file_number" name="file_number">
+                    </div> -->
+                    <div class="form-group">
                         <label for="status">Status</label>
                         <select class="form-control" id="status" name="status">
                             <option value="FILED">FILED</option>
@@ -133,7 +164,7 @@
                             <option value="IN">IN</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary mt-3">Save changes</button>
                 </form>
             </div>
         </div>

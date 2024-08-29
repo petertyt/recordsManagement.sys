@@ -32,6 +32,37 @@
       width: 100%;
     }
 
+    .refresh-dashboard {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .dashboard-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    button.dashboard-reload {
+      background: none;
+      color: rgb(20, 35, 50);
+      border: none;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.5s ease-in-out; /* Smooth rotation */
+    }
+    
+    button.dashboard-reload:hover {
+      background-color: rgb(20, 35, 50);
+      color: white;
+    }
+    
+    button.dashboard-reload.rotate {
+      transform: rotate(360deg);
+    }
+
     .avg-activity {
       display: flex;
       flex-direction: column;
