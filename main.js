@@ -80,7 +80,66 @@ function startServer() {
     });
 });
 
+// ENTIRES EJS ROUTE
+app.get('/api/recent-entries-full', (req, res) => {
+  const query = `
+    SELECT *
+    FROM entries_tbl
+    ORDER BY entry_date DESC;
+  `;
 
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error("Error executing SQL query:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+
+    // console.log("Retrieved rows:", rows); // Debugging output
+    res.json({ data: rows });
+  });
+});
+
+// FILES MANAGEMENT ROUTE
+app.get('/api/get-files', (req, res) => {
+  const query = `
+    SELECT entry_id, entry_date, file_number, subject, officer_assigned, status
+    FROM entries_tbl WHERE entry_category = 'File'
+    ORDER BY entry_date DESC;
+  `;
+
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error("Error executing SQL query:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+
+    // console.log("Retrieved rows:", rows); // Debugging output
+    res.json({ data: rows });
+  });
+});
+
+
+// LETTER MANAGEMENT ROUTE
+app.get('/api/get-letters', (req, res) => {
+  const query = `
+    SELECT entry_id, entry_date, file_number, subject, officer_assigned, status
+    FROM entries_tbl WHERE entry_category = 'Letter'
+    ORDER BY entry_date DESC;
+  `;
+
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error("Error executing SQL query:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+
+    // console.log("Retrieved rows:", rows); // Debugging output
+    res.json({ data: rows });
+  });
+});
+
+
+// ALL ENTRIES ROUTE
   app.get('/api/all-entries', (req, res) => {
     const query = `
       SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
