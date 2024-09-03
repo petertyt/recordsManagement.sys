@@ -1,7 +1,7 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const ejs = require("ejs-electron");
-const { autoUpdater } = require('electron-updater')
+const { autoUpdater } = require("electron-updater");
 
 let splashWindow;
 let mainWindow;
@@ -23,6 +23,9 @@ function createSplashWindow() {
   });
 
   splashWindow.loadFile("src/splash-page/splash.html");
+
+  // Move the update check here to ensure it runs after the splash window is created
+  autoUpdater.checkForUpdatesAndNotify();
 }
 
 function createMainWindow() {
@@ -42,6 +45,30 @@ function createMainWindow() {
 
   mainWindow.loadFile("src/index.ejs");
 }
+
+// Listen for updates and show appropriate dialog messages
+autoUpdater.on("update-available", () => {
+  dialog.showMessageBox({
+    type: "info",
+    title: "Update Available",
+    message: "A new version is available. Downloading now...",
+  });
+});
+
+autoUpdater.on("update-downloaded", () => {
+  dialog.showMessageBox({
+    type: "info",
+    title: "Update Ready",
+    message: "A new version is ready. Restart the application to apply the updates.",
+    buttons: ["Restart", "Later"],
+  }).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
+autoUpdater.on("error", (error) => {
+  dialog.showErrorBox("Update Error", error == null ? "unknown" : (error.stack || error).toString());
+});
 
 ipcMain.on("login-success", () => {
   if (splashWindow) splashWindow.close();
