@@ -108,17 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Attach additional event listeners specific to letter management
         attachRowClickListener($('#files-table').DataTable()); // Assuming letters table uses DataTable
 
-        // Example: Event listener for adding new letter
-        $('#add-letter').off('click').on('click', function () {
-            // Logic to add a new letter (e.g., open a modal with a form)
-            alert('Add New Letter functionality not implemented yet.');
-        });
-
-        // // Search functionality specific to letter management
-        // $('#letter-search').off('keyup').on('keyup', function () {
-        //     $('#files-table').DataTable().search(this.value).draw();
-        // });
-
         // Additional setup or event listeners can be added here
     }
 
@@ -131,17 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Attach additional event listeners specific to letter management
         attachRowClickListener($('#entries-table').DataTable()); // Assuming letters table uses DataTable
 
-        // // Example: Event listener for adding new letter
-        // $('#add-letter').off('click').on('click', function () {
-        //     // Logic to add a new letter (e.g., open a modal with a form)
-        //     alert('Add New Letter functionality not implemented yet.');
-        // });
-
-        // // Search functionality specific to letter management
-        // $('#letter-search').off('keyup').on('keyup', function () {
-        //     $('#entries-table').DataTable().search(this.value).draw();
-        // });
-
         // Additional setup or event listeners can be added here
     }
 
@@ -153,17 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Attach additional event listeners specific to letter management
         attachRowClickListener($('#letters-table').DataTable()); // Assuming letters table uses DataTable
-
-        // Example: Event listener for adding new letter
-        $('#add-letter').off('click').on('click', function () {
-            // Logic to add a new letter (e.g., open a modal with a form)
-            alert('Add New Letter functionality not implemented yet.');
-        });
-
-        // Search functionality specific to letter management
-        $('#letter-search').off('keyup').on('keyup', function () {
-            $('#letters-table').DataTable().search(this.value).draw();
-        });
 
         // Additional setup or event listeners can be added here
     }

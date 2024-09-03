@@ -34,7 +34,7 @@
       <span class="h5">Files Office (LVD)</span>
     </div>
     <div class="searchbar">
-      <input type="text" placeholder="Search for files or letters..." name="search" />
+      <input type="text" id="system-search" placeholder="Search for files or letters..." name="search" />
       <button type="button">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
           viewBox="0 0 16 16">
@@ -188,15 +188,17 @@
   <script type="text/javascript" src="../node_modules/@popperjs/core/dist/umd/popper-base.min.js"></script>
   <script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
+  <!-- Index EJS Script -->
+  <script type="text/javascript" src="../public/index/js/renderer.js"></script>
+
   <!-- Custom Scripts (Partials EJS) -->
+  <script type="text/javascript" src="./partials-public/letter-management/js/letters-renderer.js"></script>
   <script type="text/javascript" src="./partials-public/dashboard/js/dashboard-renderer.js"></script>
   <script type="text/javascript" src="./partials-public/reports/js/report-renderer.js"></script>
   <script type="text/javascript" src="./partials-public/entries/js/entries-renderer.js"></script>
-  <script type="text/javascript" src="./partials-public/letter-management/js/letters-renderer.js"></script>
   <script type="text/javascript" src="./partials-public/file-management/js/files-renderer.js"></script>"
 
-  <!-- Index EJS Script -->
-  <script type="text/javascript" src="../public/index/js/renderer.js"></script>
+
 </body>
 
 </html>
