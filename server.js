@@ -95,24 +95,78 @@ function startServer() {
     });
   });
 
-  // FILES MANAGEMENT ROUTE
-  app.get('/api/get-files', (req, res) => {
-    const query = `
-      SELECT entry_id, entry_date, file_number, subject, officer_assigned, status
-      FROM entries_tbl WHERE entry_category = 'File'
+// FILES MANAGEMENT SECTION
+// GET FILE FROM TABLE
+app.get('/api/get-files', (req, res) => {
+  const query = `
+      SELECT *
+      FROM entries_tbl 
+      WHERE entry_category = 'File'
       ORDER BY entry_date DESC;
-    `;
-
-    db.all(query, [], (err, rows) => {
-      if (err) {
-        console.error("Error executing SQL query:", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-
-      // console.log("Retrieved rows:", rows); // Debugging output
-      res.json({ data: rows });
-    });
+  `;
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error("Error executing SQL query:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ data: rows });
   });
+});
+
+// ADD FILE TO TABLE
+app.post('/api/add-file', (req, res) => {
+  const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
+
+  // Check only for required fields
+  if (!entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Use null for optional fields if not provided
+  const reciepientValue = reciepient || null;
+  const recievedDateValue = recieved_date || null;
+  const descriptionValue = description || null;
+
+  const query = `
+    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status)
+    VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?);
+  `;
+  db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status], function (err) {
+    if (err) {
+      console.error("Error inserting new file:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(201).json({ message: 'File added successfully', entry_id: this.lastID });
+  });
+});
+
+// UPDATE FILE IN TABLE
+app.post('/api/update-file', (req, res) => {
+  const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, reciepient, file_type, folio_number, description } = req.body;
+
+  // Check only for required fields
+  if (!entry_id || !entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  // Use null for optional fields if not provided
+  const reciepientValue = reciepient || null;
+  const recievedDateValue = folio_number || null;
+  const descriptionValue = description || null;
+
+  const query = `
+    UPDATE entries_tbl
+    SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, date_sent = ?, reciepient = ?, file_type = ?, folio_number = ?, description = ?, status = ?
+    WHERE entry_id = ? AND entry_category = 'File';
+  `;
+  db.run(query, [entry_date, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, recievedDateValue,reciepientValue, descriptionValue, status, entry_id], function (err) {
+    if (err) {
+      console.error("Error updating file:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ message: 'File updated successfully' });
+  });
+});
 
   // LETTER MANAGEMENT SECTION
   // GET LETTERS FROM TABLE
