@@ -35,7 +35,7 @@ function initializeDataTableforEntries() {
             "url": "http://localhost:49200/api/recent-entries-full",
             "dataSrc": function (json) {
                 console.log("AJAX Response:", json);
-                return json.data; // Assuming json.data is the correct path to your array of data
+                return json.data; // Adjust based on your API response
             }
         },
         "columns": [
@@ -46,18 +46,23 @@ function initializeDataTableforEntries() {
             {
                 "data": "subject",
                 "render": function (data, type, row) {
-                    return truncate(data, 60); // Assuming truncate is a function defined elsewhere to shorten text
+                    return truncate(data, 100); // Shorten text for long subjects
                 }
             },
             { "data": "officer_assigned" },
             { "data": "status" }
         ],
-
         "initComplete": function () {
+            // Attach listeners on table initialization
+            attachRowClickListener(entriesTable);
+        },
+        "drawCallback": function () {
+            // Reattach listeners after every draw (reload or redraw)
             attachRowClickListener(entriesTable);
         }
     });
 }
+
 
 function attachRowClickListener(entriesTable) {
     // Unbinding and re-binding click events for table rows
@@ -72,15 +77,13 @@ function attachRowClickListener(entriesTable) {
     });
 
     // Search functionality for the Letter Management
-    $('#system-search').off('keyup').on('keyup', function () {
-        entriesTable.search(this.value).draw();
+    let debounceTimeout;
+    $('#system-search').on('keyup', function () {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            entriesTable.search(this.value).draw();
+        }, 300); // Adjust delay as necessary
     });
-
-    // // Handle the Add New Letter button click
-    // $('#add-entry').off('click').on('click', function () {
-    //     // Logic to add a new letter (e.g., open a modal with a form)
-    //     alert('Add New Letter functionality not implemented yet.');
-    // });
 
     // Handle the View and Delete actions
     $('#entries-table tbody').off('click', 'button').on('click', 'button', function (e) {

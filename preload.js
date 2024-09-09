@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+// Expose login functionality to renderer process
 contextBridge.exposeInMainWorld('electronAPI', {
-  sendLoginSuccess: () => ipcRenderer.send('login-success'),
-  signOut: () => ipcRenderer.send('sign-out'), // New function to handle sign-out
+    sendLoginAttempt: (credentials) => ipcRenderer.send('login-attempt', credentials),
+    onLoginResponse: (callback) => ipcRenderer.on('login-response', callback)
 });

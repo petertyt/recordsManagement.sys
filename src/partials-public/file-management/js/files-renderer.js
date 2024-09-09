@@ -1,6 +1,7 @@
 $(document).ready(function () {
+    setupFileModalActions();
     initializeDataTableforFiles();
-    setupModalActions();
+    
 });
 
 function initializeDataTableforFiles() {
@@ -15,7 +16,7 @@ function initializeDataTableforFiles() {
             { data: "entry_id" },
             { data: "entry_date" },
             { data: "file_number" },
-            { data: "subject", render: function (data) { return truncate(data, 60); } },
+            { data: "subject", render: function (data) { return truncate(data, 100); } },
             { data: "officer_assigned" },
             { data: "status" },
             {
@@ -46,7 +47,7 @@ function initializeDataTableforFiles() {
         const row = $(this).closest('tr');
         const data = $('#file-table').DataTable().row(row).data();
 
-        populateModalFields(data);
+        populateFileModalFields(data);
         $('#FileModalLabel').text('Edit Files');
         $('#save-file').addClass('d-none');
         $('#update-file').removeClass('d-none');
@@ -59,11 +60,12 @@ function initializeDataTableforFiles() {
 
         if (confirm('Are you sure you want to delete this entry?')) {
             $.ajax({
-                url: `http://localhost:49200/api/delete-entry/${data.entry_id}`,
+                url: `http://localhost:49200/api/delete-file/${data.entry_id}`,
                 type: 'DELETE',
                 success: function (response) {
                     console.log("Entry deleted successfully:", response);
                     $('#file-table').DataTable().ajax.reload();
+                    resetInputs();
                 },
                 error: function (xhr, status, error) {
                     console.error("Error deleting entry:", error);
@@ -73,9 +75,16 @@ function initializeDataTableforFiles() {
     });
 }
 
-function setupModalActions() {
+function resetInputs() {
+    document.querySelectorAll('input').forEach(input => {
+        input.value = '';
+        input.disabled = false;
+    });
+}
+
+function setupFileModalActions() {
     $('#new-file').on('click', function () {
-        clearModalFields();
+        clearFileModalFields();
         $('#fileModalLabel').text('Add New File');
         $('#save-file').removeClass('d-none');
         $('#update-file').addClass('d-none');
@@ -85,7 +94,7 @@ function setupModalActions() {
 
     // Remove existing event listeners and attach a new one for "Save"
     $('#save-file').off('click').on('click', function () {
-        const fileData = getFormData();
+        const fileData = getFileFormData();
         $.ajax({
             url: 'http://localhost:49200/api/add-file',
             type: 'POST',
@@ -104,7 +113,7 @@ function setupModalActions() {
 
     // Remove existing event listeners and attach a new one for "Update"
     $('#update-file').off('click').on('click', function () {
-        const fileData = getFormData();
+        const fileData = getFileFormData();
         $.ajax({
             url: 'http://localhost:49200/api/update-file',
             type: 'POST',
@@ -122,7 +131,7 @@ function setupModalActions() {
     });
 }
 
-function populateModalFields(data) {
+function populateFileModalFields(data) {
     $('#entry_date').val(data.entry_date);
     $('#file_number').val(data.file_number);
     $('#subject').val(data.subject);
@@ -137,7 +146,7 @@ function populateModalFields(data) {
     $('#fileForm').data('entry_id', data.entry_id);
 }
 
-function getFormData() {
+function getFileFormData() {
     return {
         entry_id: $('#fileForm').data('entry_id'),
         entry_date: $('#entry_date').val(),
@@ -153,7 +162,7 @@ function getFormData() {
     };
 }
 
-function clearModalFields() {
+function clearFileModalFields() {
     $('#entry_date').val('');
     $('#file_number').val('');
     $('#subject').val('');
