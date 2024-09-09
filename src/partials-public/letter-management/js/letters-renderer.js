@@ -1,6 +1,6 @@
 $(document).ready(function () {
+    setupLetterModalActions();
     initializeDataTableforLetters();
-    setupModalActions();
 });
 
 function initializeDataTableforLetters() {
@@ -15,7 +15,7 @@ function initializeDataTableforLetters() {
             { data: "entry_id" },
             { data: "entry_date" },
             { data: "file_number" },
-            { data: "subject", render: function (data) { return truncate(data, 60); } },
+            { data: "subject", render: function (data) { return truncate(data, 100); } },
             { data: "officer_assigned" },
             { data: "status" },
             {
@@ -46,7 +46,7 @@ function initializeDataTableforLetters() {
         const row = $(this).closest('tr');
         const data = $('#letters-table').DataTable().row(row).data();
 
-        populateModalFields(data);
+        populateLetterModalFields(data);
         $('#letterModalLabel').text('Edit Letter');
         $('#save-letter').addClass('d-none');
         $('#update-letter').removeClass('d-none');
@@ -59,11 +59,13 @@ function initializeDataTableforLetters() {
 
         if (confirm('Are you sure you want to delete this entry?')) {
             $.ajax({
-                url: `http://localhost:49200/api/delete-entry/${data.entry_id}`,
+                url: `http://localhost:49200/api/delete-letter/${data.entry_id}`,
                 type: 'DELETE',
                 success: function (response) {
                     console.log("Entry deleted successfully:", response);
                     $('#letters-table').DataTable().ajax.reload();
+                    // resetInputs();
+
                 },
                 error: function (xhr, status, error) {
                     console.error("Error deleting entry:", error);
@@ -73,9 +75,9 @@ function initializeDataTableforLetters() {
     });
 }
 
-function setupModalActions() {
+function setupLetterModalActions() {
     $('#new-letter').on('click', function () {
-        clearModalFields();
+        clearLetterModalFields();
         $('#letterModalLabel').text('Add New Letter');
         $('#save-letter').removeClass('d-none');
         $('#update-letter').addClass('d-none');
@@ -85,7 +87,7 @@ function setupModalActions() {
 
     // Remove existing event listeners and attach a new one for "Save"
     $('#save-letter').off('click').on('click', function () {
-        const letterData = getFormData();
+        const letterData = getLetterFormData();
         $.ajax({
             url: 'http://localhost:49200/api/add-letter',
             type: 'POST',
@@ -104,7 +106,7 @@ function setupModalActions() {
 
     // Remove existing event listeners and attach a new one for "Update"
     $('#update-letter').off('click').on('click', function () {
-        const letterData = getFormData();
+        const letterData = getLetterFormData();
         $.ajax({
             url: 'http://localhost:49200/api/update-letter',
             type: 'POST',
@@ -122,7 +124,7 @@ function setupModalActions() {
     });
 }
 
-function populateModalFields(data) {
+function populateLetterModalFields(data) {
     $('#entry_date').val(data.entry_date);
     $('#file_number').val(data.file_number);
     $('#subject').val(data.subject);
@@ -137,7 +139,7 @@ function populateModalFields(data) {
     $('#letterForm').data('entry_id', data.entry_id);
 }
 
-function getFormData() {
+function getLetterFormData() {
     return {
         entry_id: $('#letterForm').data('entry_id'),
         entry_date: $('#entry_date').val(),
@@ -153,7 +155,7 @@ function getFormData() {
     };
 }
 
-function clearModalFields() {
+function clearLetterModalFields() {
     $('#entry_date').val('');
     $('#file_number').val('');
     $('#subject').val('');

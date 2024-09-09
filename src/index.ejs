@@ -25,6 +25,9 @@
 
   <!-- Index EJS CSS -->
   <link rel="stylesheet" href="../public/index/css/styles.css" />
+
+  <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="../node_modules/datatables.net/js/dataTables.min.js"></script>
 </head>
 
 <body>
@@ -160,7 +163,7 @@
       <div id="main-content" class="">
         <!-- Dynamic content will be displayed here -->
         <!-- <h1>Peter</h1> -->
-        <%- include('../views/pages/file-management.ejs') %>
+        <%- include('../views/pages/dashboard.ejs') %>
           <!-- Load dashboard content by default -->
       </div>
     </main>
@@ -177,9 +180,8 @@
 
   <!-- JavaScript -->
   <!-- CDNs -->
-  <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="../node_modules/html2canvas/dist/html2canvas.min.js"></script>
   <script type="text/javascript" src="../node_modules/jspdf/dist/jspdf.umd.min.js"></script>
-  <script type="text/javascript" src="../node_modules/datatables.net/js/dataTables.min.js"></script>
   <script type="text/javascript" src="../node_modules/moment/min/moment.min.js"></script>
   <script type="text/javascript" src="../node_modules/daterangepicker/daterangepicker.js"></script>
 

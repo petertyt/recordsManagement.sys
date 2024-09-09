@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function initializeFileManagement() {
-        console.log('Initializing Letter Management');
+        console.log('Initializing File Management');
 
         // Call the DataTable initialization for letters table
         initializeDataTableforFiles();
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function initializeEntriesManagement() {
-        console.log('Initializing Letter Management');
+        console.log('Initializing Entries');
 
         // Call the DataTable initialization for letters table
         initializeDataTableforEntries();
@@ -183,22 +183,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // Initial call to add event listeners
     addMenuEventListeners();
     addActivityViewEventListeners();
-
-    // Function to check window size and adjust spinner class
-    function checkWindowSize() {
-        const windowWidth = window.innerWidth;
-        const screenWidth = window.screen.width;
-        const spinner = document.getElementById("spinner-event");
-
-        if (windowWidth <= screenWidth / 2) {
-            spinner.className = "spinner-display-halfscreen";
-        } else {
-            spinner.className = "spinner-display";
-        }
-    }
-
-    // Listen for window resize events
-    window.addEventListener("resize", checkWindowSize);
-    // Run the function once on initial load
-    checkWindowSize();
 });

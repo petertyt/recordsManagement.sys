@@ -1,23 +1,16 @@
 $(document).ready(function () {
-    console.log('jQuery is ready');
-
     $('#generate-report').on('click', function () {
-        console.log('Generate Report button clicked');
         generateReport();
     });
 
     $('#export-pdf').on('click', function () {
-        console.log('Export as PDF button clicked');
         exportPDF();
     });
 
-    // Show modal with report content on Print Report button click
     $('#print-report').on('click', function () {
-        console.log('Print Report button clicked');
         showPrintPreview();
     });
 
-    // Handle the print button inside the modal
     $('#modal-print-button').on('click', function () {
         printOnlyReport();
     });
@@ -27,22 +20,11 @@ function showPrintPreview() {
     const reportContent = $('#report-content').html();
     $('#modal-report-content').html(reportContent); // Populate the modal with the report content
     $('#reportModal').modal('show'); // Show the modal
-
-    console.log('Print preview shown with content:', reportContent); // Debugging statement
 }
 
 function printOnlyReport() {
-    const printContent = $('#modal-report-content').html(); // Get the content from the modal
-    const originalContent = document.body.innerHTML;
-
-    document.body.innerHTML = printContent; // Replace the body with the report content
-    window.print(); // Print the report
-    document.body.innerHTML = originalContent; // Restore the original content
-
-    // Reinitialize necessary elements or functions if needed
-    $(document).ready(function () {
-        // Reattach event listeners if needed
-    });
+    $('#reportModal').modal('hide'); // Hide modal before printing
+    window.print(); // Trigger system print dialog
 }
 
 function generateReport() {
@@ -50,8 +32,6 @@ function generateReport() {
     const endDate = $('#end-date').val();
     const officerAssigned = $('#officer-assigned').val();
     const fileNumber = $('#file-number').val();
-
-    console.log('Generating report with:', { startDate, endDate, officerAssigned, fileNumber });
 
     $.ajax({
         url: 'http://localhost:49200/api/make-reports',
@@ -63,18 +43,16 @@ function generateReport() {
             file_number: fileNumber
         },
         success: function (data) {
-            console.log('Report data fetched successfully', data);
             $('#report-content').html(renderReport(data));
         },
-        error: function (error) {
-            console.error('Error fetching report data:', error);
-            alert('Failed to generate report. Please check the console for more details.');
+        error: function () {
+            alert('Failed to generate report.');
         }
     });
 }
 
 function renderReport(data) {
-    let reportHtml = '<table class="table table-striped">';
+    let reportHtml = '<table class="table table-striped table-bordered">';
     reportHtml += '<thead><tr><th>Entry ID</th><th>Date</th><th>Category</th><th>File Number</th><th>Subject</th><th>Officer Assigned</th><th>Status</th></tr></thead>';
     reportHtml += '<tbody>';
     data.data.forEach(function (entry) {
@@ -92,10 +70,39 @@ function renderReport(data) {
     return reportHtml;
 }
 
+// Function to export the report as a PDF using jsPDF
 function exportPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.text('Generated Report', 10, 10);
-    doc.fromHTML($('#report-content').html(), 10, 20);
-    doc.save('report.pdf');
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    // Add logo (replace with actual base64 data or URL)
+    const imgData = 'data:image/'; // Replace with your logo image data
+    doc.addImage(imgData, 'PNG', 10, 10, 30, 30); // Add logo at the top-left (x, y, width, height)
+
+    // Add header
+    doc.setFontSize(14);
+    doc.text('LANDS COMMISSION, GHANA', 105, 20, { align: 'center' });
+    doc.setFontSize(8);
+    doc.text('Land Valuation Department (LVD)', 105, 30, { align: 'center' });
+    doc.text('Files Office', 105, 40, { align: 'center' });
+    doc.line(10, 45, 200, 45); // Horizontal line
+
+    // Add report content
+    const reportContent = document.getElementById('report-content');
+    
+    // Rendering the HTML content into the PDF using html2canvas and jsPDF
+    doc.html(reportContent, {
+        x: 10,
+        y: 60,
+        width: 190,
+        callback: function (doc) {
+            // Add footer with page number
+            const totalPages = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++) {
+                doc.setPage(i);
+                doc.text(`Page ${i} of ${totalPages}`, 105, 290, { align: 'center' });
+            }
+            doc.save('report.pdf'); // Save the PDF file
+        }
+    });
 }
