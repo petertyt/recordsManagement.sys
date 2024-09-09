@@ -1,13 +1,15 @@
 <div class="recentEntries-header fileManagement-header">
     <div class="h3 fw-regular text-muted">Letter Management:</div>
+    <!-- Search and Add Letter Button -->
+    <div class="row mb-3">
+        <div class="col-md-6 text-end">
+            <button class="btn btn-primary" id="new-letter" onclick="setupModalActions()">Add New Letter</button>
+        </div>
+    </div>
 </div>
-<div class="activity2 recentEntries-tbl bg-light bg-gradient" id="fileEntries-tbl">
-    <!-- <div class="recentEntries-header">
-        <div class="h3 fw-regular text-muted">All Entries:</div>
-    </div> -->
-
+<div class="activity2 recentEntries-tbl bg-light bg-gradient" id="letterEntries-tbl">
     <div class="table2-container table-container">
-        <table class="table table-striped table-bordered table-hover display" id="fileEntries-tbl">
+        <table class="table table-striped table-bordered table-hover display" id="letters-table">
             <thead class="thead-dark">
                 <tr>
                     <th>ID</th>
@@ -15,10 +17,8 @@
                     <th>File Number</th>
                     <th>Subject</th>
                     <th>Officer</th>
-                    <th>Date Sent</th>
-                    <th>Receipient</th>
-                    <th>File type</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,3 +27,121 @@
         </table>
     </div>
 </div>
+
+<!-- Modal for Adding/Editing Letters -->
+<div class="modal fade" id="letterModal" tabindex="-1" aria-labelledby="letterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <!-- Use modal-lg for a larger modal size -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="letterModalLabel">Add/Edit Letter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="letterForm">
+                    <div class="container">
+                        <div class="row mb-3">
+                            <!-- Entry Date -->
+                            <div class="col-md-6">
+                                <label for="entry_date" class="form-label">Entry Date</label>
+                                <input type="text" class="form-control" id="entry_date" name="entry_date" disabled>
+                            </div>
+                            <!-- Entry Category -->
+                            <div class="col-md-6">
+                                <label for="entry_category" class="form-label">Entry Category</label>
+                                <input type="text" class="form-control" id="entry_category" name="entry_category" value="Letter" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <!-- File Number -->
+                            <div class="col-md-6">
+                                <label for="file_number" class="form-label">File Number</label>
+                                <input type="text" class="form-control" id="file_number" name="file_number" required>
+                            </div>
+                            <!-- Subject -->
+                            <div class="col-md-6">
+                                <label for="subject" class="form-label">Subject</label>
+                                <textarea class="form-control" id="subject" name="subject" rows="2" required></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <!-- Officer Assigned -->
+                            <div class="col-md-6">
+                                <label for="officer_assigned" class="form-label">Officer Assigned</label>
+                                <input list="officers" class="form-control" id="officer_assigned" name="officer_assigned" required>
+                                <datalist id="officers">
+                                    <option value="CLAO/C1"></option>
+                                    <option value="DISPATCH"></option>
+                                    <option value="DIRECTOR"></option>
+                                    <option value="DCLAO/C2"></option>
+                                    <option value="ALAO 1"></option>
+                                    <option value="CLAO/GV"></option>
+                                    <option value="ACCOUNTS"></option>
+                                    <option value="CLAO/C3"></option>
+                                    <option value="CARTO"></option>
+                                    <option value="CLAT"></option>
+                                    <option value="PLAT"></option>
+                                    <option value="ALAO 2"></option>
+                                    <option value="ALAO 3"></option>
+                                    <option value="HUMAN RESOURCE (HR)"></option>
+                                </datalist>
+                            </div>
+                            <!-- Received Date -->
+                            <div class="col-md-6">
+                                <label for="recieved_date" class="form-label">Received Date</label>
+                                <input type="date" class="form-control" id="recieved_date" name="recieved_date">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <!-- Letter Date -->
+                            <div class="col-md-6">
+                                <label for="letter_date" class="form-label">Letter Date</label>
+                                <input type="date" class="form-control" id="letter_date" name="letter_date">
+                            </div>
+                            <!-- Letter Type -->
+                            <div class="col-md-6">
+                                <label for="letter_type" class="form-label">Letter Type</label>
+                                <select class="form-select" id="letter_type" name="letter_type" required>
+                                    <option value="Letter only">Letter only</option>
+                                    <option value="Report only">Report only</option>
+                                    <option value="Letter + Report">Letter + Report</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <!-- Folio Number -->
+                            <div class="col-md-6">
+                                <label for="folio_number" class="form-label">Folio Number</label>
+                                <input type="text" class="form-control" id="folio_number" name="folio_number" placeholder="NULL">
+                            </div>
+                            <!-- Description -->
+                            <div class="col-md-6">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="2" placeholder="NULL"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="PENDING">PENDING</option>
+                                    <option value="FILED">FILED</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Hidden Field for Entry ID -->
+                        <input type="hidden" id="entry_id" name="entry_id">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary d-none" id="save-letter">Save</button>
+                <button type="button" class="btn btn-primary d-none" id="update-letter">Update</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-danger d-none" id="letterModalError" role="alert"></div>
