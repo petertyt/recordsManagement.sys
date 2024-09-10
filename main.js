@@ -100,8 +100,9 @@ function startServer() {
     });
   });
 
+// REPORTS ROUTE
   app.get('/api/make-reports', (req, res) => {
-    const { start_date, end_date, officer_assigned, file_number } = req.query;
+    const { start_date, end_date, officer_assigned, status, file_number, category } = req.query;
     let query = `
         SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
         FROM entries_tbl
@@ -122,9 +123,17 @@ function startServer() {
       query += ' AND officer_assigned LIKE ?';
       params.push(`%${officer_assigned}%`);
     }
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
     if (file_number) {
       query += ' AND file_number = ?';
       params.push(file_number);
+    }
+    if (category) {
+      query += ' AND entry_category = ?';
+      params.push(category);
     }
 
     query += ' ORDER BY entry_date DESC;';
@@ -136,7 +145,8 @@ function startServer() {
       }
       res.json({ data: rows });
     });
-  });
+});
+
 
   // ENTIRES EJS ROUTE
   app.get('/api/recent-entries-full', (req, res) => {
