@@ -3,7 +3,7 @@
     <!-- Search and Add Letter Button -->
     <div class="row mb-3">
         <div class="col-md-6 text-end">
-            <button class="btn btn-primary" id="new-letter" onclick="setupModalActions()">Add New Letter</button>
+            <button class="btn btn-primary" id="new-letter" onclick="setupLetterModalActions()">Add New Letter</button>
         </div>
     </div>
 </div>
@@ -60,7 +60,7 @@
                             <!-- Subject -->
                             <div class="col-md-6">
                                 <label for="subject" class="form-label">Subject</label>
-                                <textarea class="form-control" id="subject" name="subject" rows="2" required></textarea>
+                                <textarea class="form-control" id="subject" name="subject" rows="4" required></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -116,7 +116,7 @@
                             <!-- Description -->
                             <div class="col-md-6">
                                 <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="2" placeholder="NULL"></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="4" placeholder="NULL"></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -124,8 +124,8 @@
                             <div class="col-md-6">
                                 <label for="status" class="form-label">Status</label>
                                 <select class="form-select" id="status" name="status" required>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Filed">Filed</option>
+                                    <option value="PENDING">PENDING</option>
+                                    <option value="FILED">FILED</option>
                                 </select>
                             </div>
                         </div>

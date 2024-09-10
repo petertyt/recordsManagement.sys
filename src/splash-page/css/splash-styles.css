@@ -302,3 +302,13 @@ input.error {
 .modalContent-end a:hover {
   color: rgba(20, 35, 50, 1);
 }
+
+
+/* splash-styles.css */
+.error {
+  border: 2px solid red;
+}
+
+#error-msg {
+  font-size: 0.9em;
+}

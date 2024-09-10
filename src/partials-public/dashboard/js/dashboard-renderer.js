@@ -81,7 +81,7 @@ function initializeDataTable() {
             { 
                 "data": "subject",
                 "render": function(data, type, row) {
-                    return truncate(data, 60);
+                    return truncate(data, 100);
                 }
             },
             { "data": "officer_assigned" },

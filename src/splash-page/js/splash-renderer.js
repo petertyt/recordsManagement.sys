@@ -1,14 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Splash screen to modal transition
   setTimeout(() => {
-    //   console.log("Hiding splash content, showing login modal."); // Debug message
     document.querySelector(".splash-contentContainer").style.display = "none";
     document.getElementById("login-modal").style.display = "flex";
   }, 3000); // Show the modal after 3 seconds
 
   // Handle login button click
-  document.querySelector("button").addEventListener("click", (event) => {
-    event.preventDefault();
+  document.getElementById("login-btn").addEventListener("click", (event) => {
+    event.preventDefault(); // Prevent form submission
     authenticate();
   });
 
@@ -22,79 +21,51 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // function authenticate() {
-  //   const usernameInput = document.querySelector("input[name='username']");
-  //   const passwordInput = document.querySelector("input[name='password']");
-  //   const username = usernameInput.value;
-  //   const password = passwordInput.value;
-
-  //   // Simple authentication check
-  //   if (username === 'admin' && password === 'password') {
-  //     window.electronAPI.sendLoginSuccess();
-  //   } else {
-  //     showErrorState(usernameInput, passwordInput);
-  //   }
-  // }
-
-  const users = [
-    {
-      username: "LC-Esther",
-      password: "password",
-      role: "user",
-    },
-    {
-      username: "LC-Prudence",
-      password: "password",
-      role: "user",
-    },
-    {
-      username: "LC-Peter",
-      password: "password",
-      role: "user",
-    },
-    {
-      username: "LC-Courage",
-      password: "password",
-      role: "user",
-    },
-    {
-      username: "admin",
-      password: "password",
-      role: "Admin",
-    },
-  ];
-
+  // Authenticate user
   function authenticate() {
     const usernameInput = document.querySelector("input[name='username']");
     const passwordInput = document.querySelector("input[name='password']");
-    const username = usernameInput.value;
+    const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
-    // Find the user in the users array
-    const user = users.find(
-      (user) => user.username === username && user.password === password
-    );
-
-    if (user) {
-      if (user.role === "Admin") {
-        window.electronAPI.sendLoginSuccess({ role: "Admin" }, user);
-        // ipcRenderer.send("login-success", user);
-      } else {
-        window.electronAPI.sendLoginSuccess({ role: "user" }, user);
-      }
-    } else {
-      showErrorState(usernameInput, passwordInput);
+    if (!username || !password) {
+      showErrorState('Please enter both username and password.');
+      return;
     }
+
+    // Send login attempt to the main process
+    window.electronAPI.sendLoginAttempt({ username, password });
   }
 
-  function showErrorState(usernameInput, passwordInput) {
+  // Listen for login response from the main process
+  window.electronAPI.onLoginResponse((response) => {
+    if (response && response.success) {  
+      // Successful login
+      console.log('Login successful');
+      // Optionally, you can add logic here, like transitioning to another window
+      window.location.href = 'index.ejs'; // Example: navigate to the main window
+    } else if (response && response.message) {
+      // Display error message
+      showErrorState(response.message);
+    } else {
+      showErrorState('An unknown error occurred.');
+    }
+  });
+
+  // Show error message
+  function showErrorState(message) {
+    const usernameInput = document.querySelector("input[name='username']");
+    const passwordInput = document.querySelector("input[name='password']");
+    const errorMsg = document.getElementById('error-msg');
+
     usernameInput.classList.add("error");
     passwordInput.classList.add("error");
+    errorMsg.textContent = message;
 
-    // Optionally, you can remove the error state after some time
     setTimeout(() => {
       usernameInput.classList.remove("error");
       passwordInput.classList.remove("error");
+      errorMsg.textContent = '';
     }, 3000);
   }
 });
