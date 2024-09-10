@@ -1,8 +1,13 @@
 $(document).ready(function () {
     setupFileModalActions();
     initializeDataTableforFiles();
-    
 });
+
+function setEntryDateToCurrent() {
+    const currentDate = new Date().toISOString().split('T')[0];  // Get current date in YYYY-MM-DD format
+    $('#entry_date').val(currentDate);  // Set the entry_date field
+}
+
 
 function initializeDataTableforFiles() {
     const filesTable = $('#file-table').DataTable({
@@ -38,26 +43,32 @@ function initializeDataTableforFiles() {
         ]
     });
 
+    // Attach event listeners after table initialization
+    attachFileTableListeners();
+
+    // Search functionality
     $('#system-search').on('keyup', function () {
         filesTable.search(this.value).draw();
     });
+}
 
-    // Attach row click listeners after table is initialized
-    $('#file-table tbody').on('click', 'button.view-file', function () {
+// Event listeners using event delegation
+function attachFileTableListeners() {
+    // Edit button
+    $('#file-table').on('click', 'button.view-file', function () {
         const row = $(this).closest('tr');
         const data = $('#file-table').DataTable().row(row).data();
-
         populateFileModalFields(data);
-        $('#FileModalLabel').text('Edit Files');
+        $('#fileModalLabel').text('Edit Files');
         $('#save-file').addClass('d-none');
         $('#update-file').removeClass('d-none');
         $('#fileModal').modal('show');
     });
 
-    $('#file-table tbody').on('click', 'button.delete-file', function () {
+    // Delete button
+    $('#file-table').on('click', 'button.delete-file', function () {
         const row = $(this).closest('tr');
         const data = $('#file-table').DataTable().row(row).data();
-
         if (confirm('Are you sure you want to delete this entry?')) {
             $.ajax({
                 url: `http://localhost:49200/api/delete-file/${data.entry_id}`,
@@ -89,9 +100,11 @@ function setupFileModalActions() {
         $('#save-file').removeClass('d-none');
         $('#update-file').addClass('d-none');
         $('#fileModal').modal('show');
-        setEntryDateToCurrent();
+        setEntryDateToCurrent();  // Set the entry date to current system date
+        $('#entry_category').val('File');  // Ensure entry_category is set to "File"
     });
 
+ 
     // Remove existing event listeners and attach a new one for "Save"
     $('#save-file').off('click').on('click', function () {
         const fileData = getFileFormData();
@@ -115,7 +128,7 @@ function setupFileModalActions() {
     $('#update-file').off('click').on('click', function () {
         const fileData = getFileFormData();
         $.ajax({
-            url: 'http://localhost:49200/api/update-file',
+            url: `http://localhost:49200/api/update-file/${fileData.entry_id}`,
             type: 'POST',
             data: JSON.stringify(fileData),
             contentType: 'application/json',
@@ -125,58 +138,65 @@ function setupFileModalActions() {
                 $('#file-table').DataTable().ajax.reload();
             },
             error: function (xhr, status, error) {
-                console.error("Error updating file:", error);
+                console.error("Error updating file:", xhr.responseText);
             }
         });
     });
 }
 
 function populateFileModalFields(data) {
+    $('#fileForm').data('entry_id', data.entry_id);  // Ensure entry_id is set
+
+    // Set values to inputs
     $('#entry_date').val(data.entry_date);
-    $('#file_number').val(data.file_number);
+    $('#fileNumber').val(data.file_number);
     $('#subject').val(data.subject);
-    $('#officer_assigned').val(data.officer_assigned);
-    $('#recieved_date').val(data.recieved_date);
-    $('#date_sent').val(data.date_sent);
-    $('#file_type').val(data.file_type);
-    $('#reciepient').val(data.reciepient);
-    $('#description').val(data.description);
+    $('#officerAssigned').val(data.officer_assigned);
     $('#status').val(data.status);
-    // Set the entry_id in a hidden field
-    $('#fileForm').data('entry_id', data.entry_id);
+    
+    // File type, date sent, and recipient input fields
+    $('#fileType').val(data.file_type);
+    $('#dateSent').val(data.date_sent);
+    $('#reciepientName').val(data.reciepient);
+
+    // Additional fields
+    $('#description').val(data.description);
 }
 
 function getFileFormData() {
-    return {
+    const data = {
         entry_id: $('#fileForm').data('entry_id'),
-        entry_date: $('#entry_date').val(),
+        entry_date: $('#entry_date').val(),  // Make sure entry_date is passed correctly
         file_number: $('#file_number').val(),
         subject: $('#subject').val(),
         officer_assigned: $('#officer_assigned').val(),
         status: $('#status').val(),
-        recieved_date: $('#recieved_date').val(),
-        date_sent: $('#date_sent').val(),
-        file_type: $('#file_type').val(),
-        reciepient: $('#reciepient').val() || null,
-        description: $('#description').val() || null,
+        // Additional fields
+        file_type: $('#fileType').val(),
+        date_sent: $('#dateSent').val(),
+        reciepient: $('#reciepientName').val(),
+        description: $('#description').val(),
     };
+    return data;
 }
 
 function clearFileModalFields() {
-    $('#entry_date').val('');
-    $('#file_number').val('');
+    $('#fileForm').removeData('entry_id');
+    $('#entryDate').val('');
+    $('#fileNumber').val('');
     $('#subject').val('');
-    $('#officer_assigned').val('');
-    $('#recieved_date').val('');
-    $('#date_sent').val('');
-    $('#file_type').val('');
-    $('#reciepient').val('');
-    $('#description').val('');
+    $('#officerAssigned').val('');
     $('#status').val('');
-    $('#fileForm').data('entry_id', null);
+    $('#fileType').val('');
+    $('#dateSent').val('');
+    $('#reciepientName').val('');
+    $('#description').val('');
 }
 
-function setEntryDateToCurrent() {
-    const today = new Date().toISOString().split('T')[0];
-    $('#entry_date').val(today);
+// Truncate function for long text
+function truncate(str, num) {
+    if (str.length <= num) {
+        return str;
+    }
+    return str.slice(0, num) + '...';
 }

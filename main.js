@@ -84,6 +84,42 @@ function startServer() {
     });
   });
 
+  app.post('/reset-password', (req, res) => {
+    const { adminPassword, newPassword, username } = req.body;
+  
+    // Replace 'admin_username' with the correct admin username
+    const adminUsername = 'LVD-ADMIN'; 
+  
+    // Step 1: Verify the admin password
+    const query = `SELECT password FROM users_tbl WHERE username = ?`; 
+    db.get(query, [adminUsername], (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'Database error' });
+      }
+  
+      if (!row) {
+        return res.status(404).json({ success: false, message: 'Admin user not found' });
+      }
+  
+      // Check if the provided admin password matches the one in the database
+      if (adminPassword !== row.password) {
+        return res.status(401).json({ success: false, message: 'Invalid admin password' });
+      }
+  
+      // Step 2: Update the user's password
+      const updateQuery = `UPDATE users_tbl SET password = ? WHERE username = ?`;
+      db.run(updateQuery, [newPassword, username], function (err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ success: false, message: 'Error updating password' });
+        }
+  
+        return res.json({ success: true, message: 'Password reset successful' });
+      });
+    });
+  });
+  
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
     const query = `

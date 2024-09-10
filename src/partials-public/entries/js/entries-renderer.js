@@ -1,32 +1,6 @@
 $(document).ready(function () {
     // Initialize components on page load
     initializeDataTableforEntries();
-
-    // Handle form submission for updating entries
-    $('#entryForm').on('submit', function (e) {
-        e.preventDefault();
-
-        const entryData = {
-            entry_id: $('#entry_id').val(),
-            file_number: $('#file_number').val(),
-            status: $('#status').val()
-        };
-
-        $.ajax({
-            url: 'http://localhost:49200/api/update-entry',
-            type: 'POST',
-            data: JSON.stringify(entryData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log("Entry updated successfully:", response);
-                $('#entryModal').modal('hide');
-                $('#letters-table').DataTable().ajax.reload(); // Reload table to reflect changes
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating entry:", error);
-            }
-        });
-    });
 });
 
 function initializeDataTableforEntries() {
@@ -56,10 +30,10 @@ function initializeDataTableforEntries() {
             // Attach listeners on table initialization
             attachRowClickListener(entriesTable);
         },
-        "drawCallback": function () {
-            // Reattach listeners after every draw (reload or redraw)
-            attachRowClickListener(entriesTable);
-        }
+        // "drawCallback": function () {
+        //     // Reattach listeners after every draw (reload or redraw)
+        //     attachRowClickListener(entriesTable);
+        // }
     });
 }
 

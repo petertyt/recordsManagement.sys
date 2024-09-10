@@ -37,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
     <div class="login-modalPosition">
         <div class="login-modalContainer fade-in" id="login-modal">
             <div class="login-modalContent">
@@ -46,22 +45,36 @@
                     <img src="../splash-page/assets/splash-loginModal/splash-modal-icon.png" alt="title-icon">
                 </div>
                 <div class="modalForm">
-                    <form class="modalContent">
+                    <!-- Regular login form -->
+                    <form class="modalContent" id="login-form">
                         <div class="modalContent-main">
                             <input type="text" placeholder="Username" name="username" required>
                             <input type="password" placeholder="Password" name="password" required>
                         </div>
                         <div class="modalContent-end">
                             <button id="login-btn">Log In</button>
-                            <a href="#">Forgot password?</a>
+                            <a href="#" id="forgot-password-link">Forgot password?</a>
                         </div>
                     </form>
+    
+                    <!-- Forgot password form -->
+                    <form class="modalContent" id="forgot-password-form" style="display: none;">
+                        <div class="modalContent-main">
+                            <input type="password" placeholder="Admin Password" name="admin-password" required>
+                            <input type="password" placeholder="New Password" name="new-password" required>
+                        </div>
+                        <div class="modalContent-end">
+                            <button id="reset-password-btn">Reset Password</button>
+                            <a href="#" id="back-to-login">Back to login</a>
+                        </div>
+                    </form>
+    
                     <div id="error-msg" style="color:red; margin-top: 10px;"></div>
                 </div>
             </div>
         </div>
     </div>
-
+    
     <!-- Javascript -->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/splash-renderer.js"></script>

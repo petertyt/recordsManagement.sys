@@ -3,30 +3,38 @@ document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     document.querySelector(".splash-contentContainer").style.display = "none";
     document.getElementById("login-modal").style.display = "flex";
-  }, 3000); // Show the modal after 3 seconds
+  }, 3000);
 
   // Handle login button click
   document.getElementById("login-btn").addEventListener("click", (event) => {
-    event.preventDefault(); // Prevent form submission
+    event.preventDefault();
     authenticate();
   });
 
-  // Handle Enter key press for login
-  document.querySelectorAll("input").forEach((input) => {
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        authenticate();
-      }
-    });
+  // Forgot password link click
+  document.getElementById("forgot-password-link").addEventListener("click", (event) => {
+    event.preventDefault();
+    document.getElementById("login-form").style.display = "none";
+    document.getElementById("forgot-password-form").style.display = "block";
+  });
+
+  // Back to login link click
+  document.getElementById("back-to-login").addEventListener("click", (event) => {
+    event.preventDefault();
+    document.getElementById("forgot-password-form").style.display = "none";
+    document.getElementById("login-form").style.display = "block";
+  });
+
+  // Handle reset password button click
+  document.getElementById("reset-password-btn").addEventListener("click", (event) => {
+    event.preventDefault();
+    resetPassword();
   });
 
   // Authenticate user
   function authenticate() {
-    const usernameInput = document.querySelector("input[name='username']");
-    const passwordInput = document.querySelector("input[name='password']");
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
+    const username = document.querySelector("input[name='username']").value.trim();
+    const password = document.querySelector("input[name='password']").value;
 
     if (!username || !password) {
       showErrorState('Please enter both username and password.');
@@ -37,35 +45,46 @@ document.addEventListener("DOMContentLoaded", () => {
     window.electronAPI.sendLoginAttempt({ username, password });
   }
 
+  // Reset password function
+  function resetPassword() {
+    const adminPassword = document.querySelector("input[name='admin-password']").value;
+    const newPassword = document.querySelector("input[name='new-password']").value;
+
+    if (!adminPassword || !newPassword) {
+      showErrorState('Please fill out all fields.');
+      return;
+    }
+
+    // Send reset password attempt to the main process
+    window.electronAPI.sendPasswordReset({ adminPassword, newPassword });
+  }
+
   // Listen for login response from the main process
   window.electronAPI.onLoginResponse((response) => {
-    if (response && response.success) {  
-      // Successful login
-      console.log('Login successful');
-      // Optionally, you can add logic here, like transitioning to another window
-      window.location.href = 'index.ejs'; // Example: navigate to the main window
+    if (response && response.success) {
+      window.location.href = 'index.ejs'; // Navigate to main window
     } else if (response && response.message) {
-      // Display error message
       showErrorState(response.message);
     } else {
       showErrorState('An unknown error occurred.');
     }
   });
 
+  // Listen for password reset response
+  window.electronAPI.onPasswordResetResponse((response) => {
+    if (response && response.success) {
+      alert('Password successfully reset.');
+      document.getElementById("forgot-password-form").style.display = "none";
+      document.getElementById("login-form").style.display = "block";
+    } else {
+      showErrorState(response.message || 'Error resetting password.');
+    }
+  });
+
   // Show error message
   function showErrorState(message) {
-    const usernameInput = document.querySelector("input[name='username']");
-    const passwordInput = document.querySelector("input[name='password']");
     const errorMsg = document.getElementById('error-msg');
-
-    usernameInput.classList.add("error");
-    passwordInput.classList.add("error");
     errorMsg.textContent = message;
-
-    setTimeout(() => {
-      usernameInput.classList.remove("error");
-      passwordInput.classList.remove("error");
-      errorMsg.textContent = '';
-    }, 3000);
+    setTimeout(() => { errorMsg.textContent = ''; }, 3000);
   }
 });
