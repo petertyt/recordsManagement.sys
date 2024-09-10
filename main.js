@@ -24,16 +24,6 @@ function startServer() {
   const app = express();
   const PORT = process.env.PORT || 49200;
 
-  // Path to the SQLite database
-  const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
-  const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-      console.error('Error connecting to the database:', err.message);
-    } else {
-      console.log('Connected to the SQLite database.');
-    }
-  });
-
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -424,7 +414,43 @@ function createSplashWindow() {
 
 }
 
-function createMainWindow() {
+// IPC event for handling login attempts
+ipcMain.on('login-attempt', (event, credentials) => {
+  const { username, password } = credentials;
+
+  // Query the database for the provided credentials
+  db.get('SELECT * FROM users_tbl WHERE username = ? AND password = ?', [username, password], (err, row) => {
+    if (err) {
+      console.error('Error querying database:', err);
+      event.reply('login-response', { success: false, message: 'Database error.' });
+    } else if (row) {
+      // Successful login
+      const userData = {
+        username: row.username,
+        role: row.user_role // Assuming you have a role field in your table
+      };
+      event.reply('login-response', { success: true, userData });
+      splashWindow.close();
+      createMainWindow(userData); // Pass the userData to the main window
+    } else {
+      // Invalid credentials
+      event.reply('login-response', { success: false, message: 'Incorrect username or password.' });
+    }
+  });
+});
+
+// Handle login success and pass userData to the main window
+ipcMain.on("login-success", (event, userData) => {
+  // Close the splash window
+  if (splashWindow) {
+    splashWindow.close();
+  }
+
+  // Create and show the main window, and pass user data
+  createMainWindow(userData);  // Pass userData when creating the main window
+});
+
+function createMainWindow(userData) {
   mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
@@ -433,56 +459,22 @@ function createMainWindow() {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       enableRemoteModule: false,
-      nodeIntegration: true,
+      nodeIntegration: false,
     },
     autoHideMenuBar: true,
     icon: path.join(__dirname, "assets/icons/ico/icon-exe.ico"),
   });
 
   mainWindow.loadFile("src/index.ejs");
-}
-
-// ipcMain.on("login-success", (event, userData) => {
-//   if (splashWindow) splashWindow.close();
-//   createMainWindow();
-//   mainWindow.webContents.send("user-data", userData); // Pass user data to main window
-// });
-
-// IPC event for handling login attempts
-ipcMain.on('login-attempt', (event, credentials) => {
-  const { username, password } = credentials;
-
-  // Query the database for the provided credentials
-  db.get('SELECT * FROM users_tbl WHERE username = ? AND password = ?', [username, password], (err, row) => {
-      if (err) {
-          console.error('Error querying database:', err);
-          event.reply('login-response', { success: false, message: 'Database error.' });
-      } else if (row) {
-          // Successful login
-          event.reply('login-response', { success: true });
-          splashWindow.close();
-          createMainWindow();
-      } else {
-          // Invalid credentials
-          event.reply('login-response', { success: false, message: 'Incorrect username or password.' });
-      }
+  // Once the window is ready, send the userData to the renderer process
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('user-data', userData);  // Send user data to renderer process
   });
-});
 
-// Handle login success and launch main window
-ipcMain.on("login-success", (event, userData) => {
-  // Close the splash window
-  if (splashWindow) {
-    splashWindow.close();
-  }
-
-  // Create and show the main window
-  createMainWindow();
-
-  // Optionally, you can pass user data to the main window
-  // mainWindow.webContents.send("user-data", userData);
-});
-
+  mainWindow.on('closed', function () {
+    mainWindow = null;
+  });
+}
 
 ipcMain.on("sign-out", () => {
   if (mainWindow) {

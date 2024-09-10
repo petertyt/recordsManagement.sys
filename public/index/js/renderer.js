@@ -1,4 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+  // Listen for user data sent from the main process
+  window.electronAPI.onUserData((userData) => {
+    const usernameElement = document.getElementById('username');
+    const userRoleElement = document.getElementById('user_role');
+
+    // Update the UI with the received user data
+    usernameElement.textContent = userData.username;
+    userRoleElement.textContent = userData.role;
+  });
+ 
     // Handle Sign Out Button Click
     const signOutButton = document.getElementById("sign-out-button");
     if (signOutButton) {

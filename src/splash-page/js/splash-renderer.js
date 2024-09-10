@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Authenticate user
   function authenticate() {
     const usernameInput = document.querySelector("input[name='username']");
     const passwordInput = document.querySelector("input[name='password']");
@@ -32,16 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Send login attempt to main process
+    // Send login attempt to the main process
     window.electronAPI.sendLoginAttempt({ username, password });
   }
 
-  // Listen for login response from main process
-  window.electronAPI.onLoginResponse((event, response) => {
-    if (response && response.success) {  // Check if response exists and has success
+  // Listen for login response from the main process
+  window.electronAPI.onLoginResponse((response) => {
+    if (response && response.success) {  
       // Successful login
       console.log('Login successful');
       // Optionally, you can add logic here, like transitioning to another window
+      window.location.href = 'index.ejs'; // Example: navigate to the main window
     } else if (response && response.message) {
       // Display error message
       showErrorState(response.message);
@@ -50,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Show error message
   function showErrorState(message) {
     const usernameInput = document.querySelector("input[name='username']");
     const passwordInput = document.querySelector("input[name='password']");
