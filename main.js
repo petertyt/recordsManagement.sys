@@ -2,23 +2,54 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const ejs = require("ejs-electron");
 const { autoUpdater } = require("electron-updater");
+const fs = require("fs");
 
 // SERVER ROUTES
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
-// const path = require('path');
 
-  // Path to the SQLite database
-  const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
-  const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-      console.error('Error connecting to the database:', err.message);
-    } else {
-      console.log('Connected to the SQLite database.');
+// Print userData path for debugging
+console.log('userData path:', app.getPath('userData'));
+
+// Determine the correct path for the database
+let dbPath;
+if (app.isPackaged) {
+  // Production mode: Store the database in the userData folder
+  dbPath = path.join(app.getPath('userData'), 'recordsmgmtsys.db');
+
+  // Check if the database exists in userData; if not, copy it from resources
+  if (!fs.existsSync(dbPath)) {
+    const sourceDbPath = path.join(process.resourcesPath, 'database/recordsmgmtsys.db');
+    console.log('Source DB Path:', sourceDbPath); // Debugging the source path
+
+    try {
+      if (fs.existsSync(sourceDbPath)) {
+        fs.copyFileSync(sourceDbPath, dbPath);
+        console.log('Database copied to userData folder:', dbPath);
+      } else {
+        console.error('Source database file not found at:', sourceDbPath);
+      }
+    } catch (err) {
+      console.error('Error copying database file:', err.message);
     }
-  });
+  } else {
+    console.log('Database already exists in userData folder:', dbPath);
+  }
+} else {
+  // Development mode: Use the local database path
+  dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
+  console.log('Development mode DB Path:', dbPath); // Debugging the development path
+}
 
+// Initialize the database
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error('Error connecting to the database:', err.message);
+  } else {
+    console.log('Connected to the SQLite database at', dbPath);
+  }
+});
 // Start Express server
 function startServer() {
   const app = express();
@@ -29,8 +60,8 @@ function startServer() {
   app.use(bodyParser.urlencoded({ extended: true }));
 
 
-   // API route for user authentication (login)
-   app.post('/api/login', (req, res) => {
+  // API route for user authentication (login)
+  app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
       return res.status(400).json({ error: 'Missing required fields' });
