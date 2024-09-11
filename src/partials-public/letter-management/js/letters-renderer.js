@@ -53,26 +53,43 @@ function initializeDataTableforLetters() {
         $('#letterModal').modal('show');
     });
 
+    let letterEntryToDelete = null;
+
+    // Trigger the custom delete modal
     $('#letters-table tbody').on('click', 'button.delete-letter', function () {
         const row = $(this).closest('tr');
         const data = $('#letters-table').DataTable().row(row).data();
-
-        if (confirm('Are you sure you want to delete this entry?')) {
+    
+        // Store the entry_id to delete
+        letterEntryToDelete = data.entry_id;
+    
+        // Show the custom delete modal
+        $('#deleteModal').modal('show');
+    });
+    
+    // Handle delete confirmation
+    $('#confirmDelete').on('click', function () {
+        if (letterEntryToDelete) {
             $.ajax({
-                url: `http://localhost:49200/api/delete-letter/${data.entry_id}`,
+                url: `http://localhost:49200/api/delete-letter${letterEntryToDelete}`,
                 type: 'DELETE',
-                success: function (response) {
-                    console.log("Entry deleted successfully:", response);
+                success: function (result) {
+                    // Reload DataTable and hide the modal
                     $('#letters-table').DataTable().ajax.reload();
-                    // resetInputs();
-
+                    $('#deleteModal').modal('hide');
+                    letterEntryToDelete = null;
+    
+                    // Optional success message
+                    alert('Letter deleted successfully!');
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error deleting entry:", error);
+                    // Handle errors
+                    alert('Failed to delete letter: ' + error);
                 }
             });
         }
-    });
+    });    
+
 }
 
 function setupLetterModalActions() {
