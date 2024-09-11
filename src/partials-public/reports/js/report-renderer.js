@@ -6,32 +6,15 @@ $(document).ready(function () {
     $('#export-pdf').on('click', function () {
         exportPDF();
     });
-
-    $('#print-report').on('click', function () {
-        showPrintPreview();
-    });
-
-    $('#modal-print-button').on('click', function () {
-        printOnlyReport();
-    });
 });
-
-function showPrintPreview() {
-    const reportContent = $('#report-content').html();
-    $('#modal-report-content').html(reportContent); // Populate the modal with the report content
-    $('#reportModal').modal('show'); // Show the modal
-}
-
-function printOnlyReport() {
-    $('#reportModal').modal('hide'); // Hide modal before printing
-    window.print(); // Trigger system print dialog
-}
 
 function generateReport() {
     const startDate = $('#start-date').val();
     const endDate = $('#end-date').val();
     const officerAssigned = $('#officer-assigned').val();
+    const status = $('#status').val();
     const fileNumber = $('#file-number').val();
+    const category = $('#category').val();
 
     $.ajax({
         url: 'http://localhost:49200/api/make-reports',
@@ -40,7 +23,9 @@ function generateReport() {
             start_date: startDate,
             end_date: endDate,
             officer_assigned: officerAssigned,
-            file_number: fileNumber
+            status: status,
+            file_number: fileNumber,
+            category: category
         },
         success: function (data) {
             $('#report-content').html(renderReport(data));
@@ -75,9 +60,9 @@ function exportPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
 
-    // Add logo (replace with actual base64 data or URL)
-    const imgData = 'data:image/'; // Replace with your logo image data
-    doc.addImage(imgData, 'PNG', 10, 10, 30, 30); // Add logo at the top-left (x, y, width, height)
+    // // Add logo (replace with actual base64 data or URL)
+    // const imgData = 'data:image/png;base64,<your_base64_encoded_image>'; // Add your base64 logo here
+    // doc.addImage(imgData, 'PNG', 10, 10, 30, 30); // Add logo at the top-left (x, y, width, height)
 
     // Add header
     doc.setFontSize(14);

@@ -1,7 +1,7 @@
 $(document).ready(function () {
     setupFileModalActions();
     initializeDataTableforFiles();
-    
+
 });
 
 function initializeDataTableforFiles() {
@@ -54,32 +54,40 @@ function initializeDataTableforFiles() {
         $('#fileModal').modal('show');
     });
 
+    // Store entry_id to be deleted when the modal is triggered
+    let fileEntryToDelete = null;
+
     $('#file-table tbody').on('click', 'button.delete-file', function () {
         const row = $(this).closest('tr');
         const data = $('#file-table').DataTable().row(row).data();
 
-        if (confirm('Are you sure you want to delete this entry?')) {
+        // Store the entry_id to delete
+        fileEntryToDelete = data.entry_id;
+
+        // Show the custom modal
+        $('#deleteModal').modal('show');
+    });
+
+    // Handle the confirm button click inside the delete modal
+    $('#confirmDelete').on('click', function () {
+        if (fileEntryToDelete) {
             $.ajax({
-                url: `http://localhost:49200/api/delete-file/${data.entry_id}`,
+                url: `http://localhost:49200/api/delete-file/${fileEntryToDelete}`,
                 type: 'DELETE',
                 success: function (response) {
-                    console.log("Entry deleted successfully:", response);
+                    console.log("File deleted successfully:", response);
                     $('#file-table').DataTable().ajax.reload();
-                    resetInputs();
+                    $('#deleteModal').modal('hide');
+                    fileEntryToDelete = null;
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error deleting entry:", error);
+                    console.error("Error deleting file:", error);
                 }
             });
         }
     });
-}
 
-function resetInputs() {
-    document.querySelectorAll('input').forEach(input => {
-        input.value = '';
-        input.disabled = false;
-    });
+
 }
 
 function setupFileModalActions() {
@@ -132,22 +140,28 @@ function setupFileModalActions() {
 }
 
 function populateFileModalFields(data) {
+    $('#fileForm').data('entry_id', data.entry_id);  // Ensure entry_id is set
+
+    // Set values to inputs using IDs that match the HTML form
     $('#entry_date').val(data.entry_date);
     $('#file_number').val(data.file_number);
     $('#subject').val(data.subject);
     $('#officer_assigned').val(data.officer_assigned);
-    $('#recieved_date').val(data.recieved_date);
-    $('#date_sent').val(data.date_sent);
-    $('#file_type').val(data.file_type);
-    $('#reciepient').val(data.reciepient);
-    $('#description').val(data.description);
     $('#status').val(data.status);
-    // Set the entry_id in a hidden field
-    $('#fileForm').data('entry_id', data.entry_id);
+
+    // File type, date sent, and recipient input fields
+    $('#file_type').val(data.file_type);
+    $('#date_sent').val(data.date_sent);
+    $('#reciepient_name').val(data.reciepient);
+    $('#recieved_date').val(data.recieved_date);  // Ensure this field is correctly populated
+
+    // Additional fields
+    $('#description').val(data.description);
 }
 
+
 function getFileFormData() {
-    return {
+    const data = {
         entry_id: $('#fileForm').data('entry_id'),
         entry_date: $('#entry_date').val(),
         file_number: $('#file_number').val(),
@@ -157,10 +171,12 @@ function getFileFormData() {
         recieved_date: $('#recieved_date').val(),
         date_sent: $('#date_sent').val(),
         file_type: $('#file_type').val(),
-        reciepient: $('#reciepient').val() || null,
-        description: $('#description').val() || null,
+        reciepient: $('#reciepient_name').val(),
+        description: $('#description').val(),
     };
+    return data;
 }
+
 
 function clearFileModalFields() {
     $('#entry_date').val('');

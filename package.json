@@ -59,19 +59,20 @@
     "electron-rebuild": "^3.2.9",
     "webpack-bundle-analyzer": "^4.10.2"
   },
-  "build": {
-    "appId": "com.codecol.recordsmanagement",
-    "productName": "Records Management System",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*",
-      "main.js",
-      "index.html",
-      "package.json"
-    ],
+"build": {
+  "appId": "com.codecol.recordsmanagement",
+  "productName": "Records Management System",
+  "directories": {
+    "output": "dist"
+  },
+  "files": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "main.js",
+    "index.html",
+    "package.json",
+    "database/**/*"
+  ],
     "publish": [
       {
         "provider": "github",
