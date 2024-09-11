@@ -100,7 +100,7 @@ function startServer() {
     });
   });
 
-// REPORTS ROUTE
+  // REPORTS ROUTE
   app.get('/api/make-reports', (req, res) => {
     const { start_date, end_date, officer_assigned, status, file_number, category } = req.query;
     let query = `
@@ -145,7 +145,7 @@ function startServer() {
       }
       res.json({ data: rows });
     });
-});
+  });
 
 
   // ENTIRES EJS ROUTE
@@ -212,33 +212,59 @@ function startServer() {
     });
   });
 
-  // UPDATE FILE IN TABLE
-  app.post('/api/update-file', (req, res) => {
-    const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, reciepient, file_type, description } = req.body;
+// UPDATE FILE IN TABLE
+app.post('/api/update-file', (req, res) => {
+  const { 
+    entry_id,
+    entry_date,
+    file_number,
+    subject,
+    officer_assigned,
+    status,
+    recieved_date,    // Correct spelling here: received_date
+    date_sent,
+    reciepient,        // Correct spelling here
+    file_type,
+    description
+  } = req.body;
 
-    // Check only for required fields
-    if (!entry_id || !entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
+  // Check only for required fields
+  if (!entry_id || !entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
-    // Use null for optional fields if not provided
-    const reciepientValue = reciepient || null;
-    const recievedDateValue = recieved_date || null;
-    const descriptionValue = description || null;
+  // Use null for optional fields if not provided
+  const reciepientValue = reciepient || null;  // Correct spelling here
+  const recievedDateValue = recieved_date || null;  // Correct spelling here
+  const descriptionValue = description || null;
 
-    const query = `
+  const query = `
     UPDATE entries_tbl
     SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, date_sent = ?, reciepient = ?, file_type = ?, description = ?, status = ?
     WHERE entry_id = ? AND entry_category = 'File';
   `;
-    db.run(query, [entry_date, file_number, subject, officer_assigned, date_sent, file_type, recievedDateValue, reciepientValue, descriptionValue, status, entry_id], function (err) {
-      if (err) {
-        console.error("Error updating file:", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-      res.status(200).json({ message: 'File updated successfully' });
-    });
+
+  db.run(query, [
+    entry_date,
+    file_number,
+    subject,
+    officer_assigned,
+    recievedDateValue,  // Corrected: received date
+    date_sent,
+    reciepientValue,     // Corrected: recipient
+    file_type,
+    descriptionValue,
+    status,
+    entry_id
+  ], function (err) {
+    if (err) {
+      console.error("Error updating file:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(200).json({ message: 'File updated successfully' });
   });
+});
+
 
   // LETTER MANAGEMENT SECTION
   // GET LETTERS FROM TABLE
