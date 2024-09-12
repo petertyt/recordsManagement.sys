@@ -53,42 +53,42 @@ function initializeDataTableforLetters() {
         $('#letterModal').modal('show');
     });
 
-    let letterEntryToDelete = null;
+      let letterEntryToDelete = null;
 
     // Trigger the custom delete modal
     $('#letters-table tbody').on('click', 'button.delete-letter', function () {
         const row = $(this).closest('tr');
         const data = $('#letters-table').DataTable().row(row).data();
-    
+
         // Store the entry_id to delete
         letterEntryToDelete = data.entry_id;
-    
+
         // Show the custom delete modal
         $('#deleteModal').modal('show');
     });
-    
+
     // Handle delete confirmation
     $('#confirmDelete').on('click', function () {
         if (letterEntryToDelete) {
             $.ajax({
-                url: `http://localhost:49200/api/delete-letter${letterEntryToDelete}`,
+                url: `http://localhost:49200/api/delete-letter/${letterEntryToDelete}`,
                 type: 'DELETE',
                 success: function (result) {
                     // Reload DataTable and hide the modal
                     $('#letters-table').DataTable().ajax.reload();
                     $('#deleteModal').modal('hide');
                     letterEntryToDelete = null;
-    
+
                     // Optional success message
-                    alert('Letter deleted successfully!');
+                    console.log('Letter deleted successfully!', response);
                 },
                 error: function (xhr, status, error) {
                     // Handle errors
-                    alert('Failed to delete letter: ' + error);
+                    console.error("Error deleting letter:", error);
                 }
             });
         }
-    });    
+    });
 
 }
 
