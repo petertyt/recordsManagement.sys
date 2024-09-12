@@ -9,15 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     usernameElement.textContent = userData.username;
     userRoleElement.textContent = userData.role;
   });
- 
-    // Handle Sign Out Button Click
-    const signOutButton = document.getElementById("sign-out-button");
-    if (signOutButton) {
-        signOutButton.addEventListener("click", () => {
-            window.electronAPI.signOut();
-        });
-    }
-
+  
     // Get the element with the class 'dashboard-link'
     const dashboardLink = document.querySelector(".dashboard-link");
 

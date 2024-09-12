@@ -543,13 +543,21 @@ function createMainWindow(userData) {
   });
 }
 
-ipcMain.on("sign-out", () => {
-  if (mainWindow) {
-    mainWindow.close();
-    mainWindow = null;
-  }
-  createSplashWindow();
-});
+// // Handle the 'sign-out' event from the renderer
+// ipcMain.on('sign-out', () => {
+//   // Close the main window
+//   if (mainWindow) {
+//       mainWindow.close();
+//       mainWindow = null; // Clear the reference
+//   }
+
+//   // Reopen the splash window
+//   if (!splashWindow) {
+//       createSplashWindow();
+//   } else {
+//       splashWindow.show();
+//   }
+// });
 
 app.whenReady().then(createSplashWindow);
 
