@@ -4,67 +4,72 @@ body {
   font-family: "Poppins", sans-serif;
   overflow: hidden;
   background-color: transparent !important;
-  ;
 }
 
 .splash-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 600px;
-  width: 900px;
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100vw;
+  height: 100vh;
   border-radius: 10px;
   background: rgb(20, 35, 50);
-  background: linear-gradient(43deg,
-      rgba(20, 35, 50, 1) 0%,
-      rgba(20, 35, 50, 0.9164040616246498) 60%,
-      rgba(25, 70, 112, 1) 100%);
+  background: linear-gradient(
+    43deg,
+    rgba(20, 35, 50, 1) 0%,
+    rgba(20, 35, 50, 0.9164040616246498) 60%,
+    rgba(25, 70, 112, 1) 100%
+  );
 }
 
 .splash-contentContainer {
-  width: 828px;
-  height: 512px;
+  width: 90vw;
+  max-width: 600px;
+  min-width: 320px;
+  height: auto;
+  max-height: 90vh;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /*   border: 1px solid green; */
+  background: transparent;
 }
 
 /* Content Title with Demo inscription  */
 .splashContent-title {
   display: flex;
   justify-content: space-between;
-  /*   border: 1px solid black; */
-  width: 828px;
-  margin: 0 0 0 0;
+  width: 100%;
+  max-width: 600px;
+  margin: 0;
   position: relative;
-  top: 35px;
+  top: 2vw;
 }
 
 .splashContent-title h1 {
   color: rgba(255, 255, 255, 0.1);
   opacity: 40%;
-  font-size: 150pt;
+  font-size: 8vw;
   font-weight: 100;
   margin: 0;
   padding: 0;
   position: relative;
-  top: -45px;
-  /*   border: 1px solid white; */
+  top: -2vw;
 }
 
 .splashContent-title p {
   color: rgba(255, 255, 255, 1);
-  font-size: 14pt;
+  font-size: 1.2rem;
   font-weight: 500;
   margin: 0;
   padding: 0 0 3px 0;
   border-bottom: 2px solid white;
   position: relative;
-  top: -8px;
+  top: -0.5vw;
 }
 
 /* Splash Main Title Inscription  */
@@ -82,7 +87,7 @@ body {
 .splashContent-main p {
   text-align: center;
   color: white;
-  font-size: 32pt;
+  font-size: 2rem;
   font-weight: 400;
 }
 
@@ -91,8 +96,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 828px;
-  margin: 50px 0 0 0;
+  width: 100%;
+  max-width: 600px;
+  margin: 3vw 0 0 0;
   /*   border: 1px solid pink; */
 }
 
@@ -100,11 +106,11 @@ body {
   color: white;
   /*   border:1px solid white; */
   position: relative;
-  top: -10px;
+  top: -0.7vw;
 }
 
 .splashContent-end p:nth-child(1) {
-  font-size: 16pt;
+  font-size: 1.1rem;
   font-weight: 400;
 }
 
@@ -116,22 +122,23 @@ body {
 }
 
 .splashContent-end p:nth-last-child(1) {
-  font-size: 14pt;
+  font-size: 1rem;
   font-weight: 400;
   opacity: 40%;
 }
 
 .divider {
   position: absolute;
-  top: 505px;
+  top: 70%;
+  left: 50%;
+  transform: translateX(-50%);
   color: white;
-  height: 94px;
+  height: 8vh;
   width: 2px;
   background-color: rgba(255, 255, 255, 1);
   opacity: 40%;
   z-index: 100;
 }
-
 
 /* LOGIN MODAL */
 /* Modal Container */
@@ -144,7 +151,6 @@ body {
   justify-content: center;
   width: 900px;
   /* border:1px solid black; */
-
 }
 
 #login-modal {
@@ -164,7 +170,6 @@ body {
 .fade-in.show {
   opacity: 1;
 } */
-
 
 div.login-modalContainer {
   margin: 0;
@@ -302,7 +307,6 @@ input.error {
 .modalContent-end a:hover {
   color: rgba(20, 35, 50, 1);
 }
-
 
 /* splash-styles.css */
 .error {

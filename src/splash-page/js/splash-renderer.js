@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = passwordInput.value;
 
     if (!username || !password) {
-      showErrorState('Please enter both username and password.');
+      showErrorState("Please enter both username and password.");
       return;
     }
 
@@ -39,16 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Listen for login response from the main process
   window.electronAPI.onLoginResponse((response) => {
-    if (response && response.success) {  
+    if (response && response.success) {
       // Successful login
-      console.log('Login successful');
+      console.log("Login successful");
       // Optionally, you can add logic here, like transitioning to another window
-      window.location.href = 'index.ejs'; // Example: navigate to the main window
+      window.location.href = "index.ejs"; // Example: navigate to the main window
     } else if (response && response.message) {
       // Display error message
       showErrorState(response.message);
     } else {
-      showErrorState('An unknown error occurred.');
+      showErrorState("An unknown error occurred.");
     }
   });
 
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showErrorState(message) {
     const usernameInput = document.querySelector("input[name='username']");
     const passwordInput = document.querySelector("input[name='password']");
-    const errorMsg = document.getElementById('error-msg');
+    const errorMsg = document.getElementById("error-msg");
 
     usernameInput.classList.add("error");
     passwordInput.classList.add("error");
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
       usernameInput.classList.remove("error");
       passwordInput.classList.remove("error");
-      errorMsg.textContent = '';
+      errorMsg.textContent = "";
     }, 3000);
   }
 });
