@@ -1,3 +1,368 @@
-<div>
-    Users Management
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="page-title">Users Management</h2>
+            <p class="text-muted">Manage system users, their roles and access permissions</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" id="addUserBtn">
+                <i class="bi bi-plus-circle"></i> Add New User
+            </button>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Loading indicator -->
+            <div class="text-center py-5" id="loadingIndicator">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- No users message -->
+            <div class="text-center py-5 d-none" id="noUsersMessage">
+                <i class="bi bi-people fs-1 text-muted"></i>
+                <p class="text-muted mt-3">No users found</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userRole" class="form-label">Role</label>
+                        <select class="form-select" id="userRole" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveUserBtn">Save User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Status Modal -->
+<div class="modal fade" id="editStatusModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update User Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editUserId">
+                <select class="form-select" id="editUserStatus">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="suspended">Suspended</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary btn-sm" id="updateStatusBtn">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-title {
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .table th {
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35em 0.65em;
+    }
+    
+    .btn-action {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .status-active {
+        color: #198754;
+        background-color: #d1e7dd;
+    }
+    
+    .status-inactive {
+        color: #6c757d;
+        background-color: #e9ecef;
+    }
+    
+    .status-suspended {
+        color: #dc3545;
+        background-color: #f8d7da;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current user data
+    const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+    
+    // Check if user is admin
+    if (currentUser.user_role !== 'admin') {
+        document.querySelector('.container-fluid').innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i> Access Denied: This page is restricted to administrators only.
+            </div>
+        `;
+        return;
+    }
+    
+    // Elements
+    const usersTableBody = document.getElementById('usersTableBody');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const noUsersMessage = document.getElementById('noUsersMessage');
+    const addUserBtn = document.getElementById('addUserBtn');
+    const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
+    const editStatusModal = new bootstrap.Modal(document.getElementById('editStatusModal'));
+    
+    // Load users on page load
+    loadUsers();
+    
+    // Load users function
+    async function loadUsers() {
+        try {
+            loadingIndicator.classList.remove('d-none');
+            usersTableBody.innerHTML = '';
+            noUsersMessage.classList.add('d-none');
+            
+            const response = await fetch(`/api/users?userRole=${currentUser.user_role}`);
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to load users');
+            }
+            
+            loadingIndicator.classList.add('d-none');
+            
+            if (data.users.length === 0) {
+                noUsersMessage.classList.remove('d-none');
+                return;
+            }
+            
+            // Populate table
+            data.users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.user_id}</td>
+                    <td>${user.username}</td>
+                    <td>
+                        <span class="badge ${user.user_role === 'admin' ? 'bg-primary' : 'bg-secondary'}">
+                            ${user.user_role}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge status-${user.status}" data-user-id="${user.user_id}">
+                            ${user.status}
+                        </span>
+                    </td>
+                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary btn-action edit-status-btn" 
+                                data-user-id="${user.user_id}" 
+                                data-current-status="${user.status}"
+                                ${user.user_id === currentUser.user_id ? 'disabled' : ''}>
+                            <i class="bi bi-pencil-square"></i> Status
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger btn-action delete-user-btn" 
+                                data-user-id="${user.user_id}"
+                                data-username="${user.username}"
+                                ${user.user_id === currentUser.user_id ? 'disabled' : ''}>
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                usersTableBody.appendChild(row);
+            });
+            
+            // Attach event listeners
+            attachEventListeners();
+            
+        } catch (error) {
+            console.error('Error loading users:', error);
+            loadingIndicator.classList.add('d-none');
+            showAlert('danger', error.message);
+        }
+    }
+    
+    // Attach event listeners
+    function attachEventListeners() {
+        // Edit status buttons
+        document.querySelectorAll('.edit-status-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.dataset.userId;
+                const currentStatus = this.dataset.currentStatus;
+                
+                document.getElementById('editUserId').value = userId;
+                document.getElementById('editUserStatus').value = currentStatus;
+                
+                editStatusModal.show();
+            });
+        });
+        
+        // Delete user buttons
+        document.querySelectorAll('.delete-user-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.dataset.userId;
+                const username = this.dataset.username;
+                
+                if (confirm(`Are you sure you want to delete user "${username}"? This action cannot be undone.`)) {
+                    deleteUser(userId);
+                }
+            });
+        });
+    }
+    
+    // Update user status
+    document.getElementById('updateStatusBtn').addEventListener('click', async function() {
+        const userId = document.getElementById('editUserId').value;
+        const newStatus = document.getElementById('editUserStatus').value;
+        
+        try {
+            const response = await fetch(`/api/users/${userId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: newStatus,
+                    currentUserRole: currentUser.user_role
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to update status');
+            }
+            
+            editStatusModal.hide();
+            showAlert('success', 'User status updated successfully');
+            
+            // Update the status badge in the table
+            const statusBadge = document.querySelector(`span.badge[data-user-id="${userId}"]`);
+            if (statusBadge) {
+                statusBadge.textContent = newStatus;
+                statusBadge.className = `badge status-${newStatus}`;
+            }
+            
+            // Reload the table to ensure consistency
+            setTimeout(loadUsers, 500);
+            
+        } catch (error) {
+            console.error('Error updating status:', error);
+            showAlert('danger', error.message);
+        }
+    });
+    
+    // Delete user function
+    async function deleteUser(userId) {
+        try {
+            const response = await fetch(`/api/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    currentUserRole: currentUser.user_role,
+                    currentUserId: currentUser.user_id
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to delete user');
+            }
+            
+            showAlert('success', 'User deleted successfully');
+            loadUsers();
+            
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            showAlert('danger', error.message);
+        }
+    }
+    
+    // Show alert function
+    function showAlert(type, message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+        alertDiv.style.zIndex = '9999';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+    
+    // Add user button click
+    addUserBtn.addEventListener('click', function() {
+        document.getElementById('addUserForm').reset();
+        addUserModal.show();
+    });
+    
+    // Save user button click
+    document.getElementById('saveUserBtn').addEventListener('click', function() {
+        // TODO: Implement add user functionality
+        showAlert('info', 'Add user functionality coming soon');
+        addUserModal.hide();
+    });
+});
+</script>
