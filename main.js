@@ -447,6 +447,105 @@ app.post('/api/update-file', (req, res) => {
     });
   });
 
+  // USER MANAGEMENT ROUTES
+  
+  // Get current user session
+  app.get('/api/current-user', (req, res) => {
+    const userId = req.query.userId;
+    if (!userId) {
+      return res.status(401).json({ error: 'No user session' });
+    }
+    
+    const query = `SELECT user_id, username, user_role, status FROM users_tbl WHERE user_id = ?`;
+    db.get(query, [userId], (err, row) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (!row) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({ user: row });
+    });
+  });
+
+  // Get all users (admin only)
+  app.get('/api/users', (req, res) => {
+    const currentUserRole = req.query.userRole;
+    
+    // Check if user is admin
+    if (currentUserRole !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admin only.' });
+    }
+    
+    const query = `
+      SELECT user_id, username, user_role, status, created_at
+      FROM users_tbl
+      ORDER BY created_at DESC
+    `;
+    
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ users: rows });
+    });
+  });
+
+  // Update user status (admin only)
+  app.put('/api/users/:userId/status', (req, res) => {
+    const { userId } = req.params;
+    const { status, currentUserRole } = req.body;
+    
+    // Check if user is admin
+    if (currentUserRole !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admin only.' });
+    }
+    
+    if (!status || !['active', 'inactive', 'suspended'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid status value' });
+    }
+    
+    const query = `UPDATE users_tbl SET status = ? WHERE user_id = ?`;
+    
+    db.run(query, [status, userId], function(err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({ message: 'User status updated successfully', status });
+    });
+  });
+
+  // Delete user (admin only)
+  app.delete('/api/users/:userId', (req, res) => {
+    const { userId } = req.params;
+    const { currentUserRole, currentUserId } = req.body;
+    
+    // Check if user is admin
+    if (currentUserRole !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admin only.' });
+    }
+    
+    // Prevent admin from deleting themselves
+    if (parseInt(userId) === parseInt(currentUserId)) {
+      return res.status(400).json({ error: 'Cannot delete your own account' });
+    }
+    
+    const query = `DELETE FROM users_tbl WHERE user_id = ?`;
+    
+    db.run(query, [userId], function(err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({ message: 'User deleted successfully' });
+    });
+  });
+
   // Start the server and handle potential port conflict
   const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
@@ -493,8 +592,11 @@ ipcMain.on('login-attempt', (event, credentials) => {
     } else if (row) {
       // Successful login
       const userData = {
+        user_id: row.user_id,
         username: row.username,
-        role: row.user_role // Assuming you have a role field in your table
+        user_role: row.user_role,
+        status: row.status,
+        role: row.user_role // Keep for backward compatibility
       };
       event.reply('login-response', { success: true, userData });
       splashWindow.close();

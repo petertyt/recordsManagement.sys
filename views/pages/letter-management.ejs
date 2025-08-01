@@ -1,3 +1,20 @@
+<script>
+// Check user role before rendering page
+(function() {
+    const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (currentUser.user_role !== 'admin') {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.recentEntries-header').parentElement.innerHTML = `
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Access Denied: This page is restricted to administrators only.
+                </div>
+            `;
+        });
+        return;
+    }
+})();
+</script>
+
 <div class="recentEntries-header fileManagement-header">
     <div class="h3 fw-regular text-muted">Letter Management:</div>
     <!-- Search and Add Letter Button -->

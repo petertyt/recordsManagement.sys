@@ -8,6 +8,26 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update the UI with the received user data
     usernameElement.textContent = userData.username;
     userRoleElement.textContent = userData.role;
+    
+    // Store user data in localStorage for use across the application
+    localStorage.setItem('userData', JSON.stringify(userData));
+    
+    // Hide admin-only menu items for non-admin users
+    if (userData.user_role !== 'admin') {
+      // Hide admin-only menu items
+      const adminMenuItems = [
+        document.getElementById('menu-files'),
+        document.getElementById('menu-letters'),
+        document.getElementById('menu-reports'),
+        document.getElementById('menu-users')
+      ];
+      
+      adminMenuItems.forEach(item => {
+        if (item && item.parentElement) {
+          item.parentElement.style.display = 'none';
+        }
+      });
+    }
   });
   
     // Get the element with the class 'dashboard-link'
@@ -170,6 +190,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 break;
             case "reports":
                 menuItem = document.querySelector("#menu-reports");
+                break;
+            case "users":
+                menuItem = document.querySelector("#menu-users");
                 break;
             // Add more cases as needed for additional views
             default:
