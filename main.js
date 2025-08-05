@@ -8,6 +8,7 @@ const fs = require("fs");
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const { buildReportQuery } = require('./lib/reportQueryBuilder');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
@@ -102,45 +103,11 @@ function startServer() {
 
   // REPORTS ROUTE
   app.get('/api/make-reports', (req, res) => {
-    const { start_date, end_date, officer_assigned, status, file_number, category } = req.query;
-    let query = `
-        SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
-        FROM entries_tbl
-        WHERE 1=1
-      `;
+    const { sql, params } = buildReportQuery(req.query);
 
-    const params = [];
-
-    if (start_date) {
-      query += ' AND entry_date >= ?';
-      params.push(start_date);
-    }
-    if (end_date) {
-      query += ' AND entry_date <= ?';
-      params.push(end_date);
-    }
-    if (officer_assigned) {
-      query += ' AND officer_assigned LIKE ?';
-      params.push(`%${officer_assigned}%`);
-    }
-    if (status) {
-      query += ' AND status = ?';
-      params.push(status);
-    }
-    if (file_number) {
-      query += ' AND file_number = ?';
-      params.push(file_number);
-    }
-    if (category) {
-      query += ' AND entry_category = ?';
-      params.push(category);
-    }
-
-    query += ' ORDER BY entry_date DESC;';
-
-    db.all(query, params, (err, rows) => {
+    db.all(sql, params, (err, rows) => {
       if (err) {
-        console.error("Error executing SQL query:", err.message);
+        console.error('Error executing SQL query:', err.message);
         return res.status(500).json({ error: err.message });
       }
       res.json({ data: rows });
