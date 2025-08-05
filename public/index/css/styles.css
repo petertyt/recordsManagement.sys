@@ -55,7 +55,7 @@ div.searchbar button {
 
 div.searchbar button:hover {
   background-color: rgba(20, 35, 50, 0.9);
-  transition: 0.3s ease-out;
+  transition: var(--transition-normal) ease-out;
 }
 
 nav div.nav2-functions {
@@ -77,7 +77,7 @@ nav div.nav2-functions button {
 
 nav div.nav2-functions button:hover {
   background-color: rgba(20, 35, 50, 0.1);
-  transition: 0.3s ease-out;
+  transition: var(--transition-normal) ease-out;
 }
 
 /* Ful Main Container */
@@ -191,7 +191,7 @@ aside li {
   border: 1px solid #ccc;
   background-color: #f8f9fa;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--transition-normal) ease-out;
 }
 
 .active {
@@ -207,7 +207,7 @@ aside li {
 .submenu {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out;
+  transition: max-height var(--transition-normal) ease-out;
   margin-left: 20px;
 }
 
@@ -313,5 +313,5 @@ main {
 
 .blur-effect {
   filter: blur(10px);
-  transition: filter 0.1s ease;
+  transition: filter var(--transition-normal) ease-out;
 }

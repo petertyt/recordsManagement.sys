@@ -50,7 +50,7 @@
       width: 40px;
       border-radius: 50%;
       cursor: pointer;
-      transition: transform 0.5s ease-in-out; /* Smooth rotation */
+      transition: transform var(--transition-normal) ease-out; /* Smooth rotation */
     }
     
     button.dashboard-reload:hover {
@@ -124,7 +124,7 @@
     .activity-view-btn button:hover {
       opacity: 90%;
       border: 2px solid #fff;
-      transition: all 60ms ease-out;
+      transition: all var(--transition-normal) ease-out;
     }
 
     /* ENTRIES */
