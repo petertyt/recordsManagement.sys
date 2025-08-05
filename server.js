@@ -1,7 +1,7 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
+const { initializeDatabase } = require('./config/init-database');
 
 // Start Express server
 function startServer() {
@@ -10,13 +10,7 @@ function startServer() {
 
   // Path to the SQLite database
   const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
-  const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-      console.error('Error connecting to the database:', err.message);
-    } else {
-      console.log('Connected to the SQLite database.');
-    }
-  });
+  const db = initializeDatabase(dbPath);
 
   // Middleware setup
   app.use(bodyParser.json());

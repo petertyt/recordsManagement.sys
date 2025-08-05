@@ -20,6 +20,9 @@ coverage/
 /dist
 /build
 
+# Database backups
+/database/backups/
+
 # Environment variables
 .env
 

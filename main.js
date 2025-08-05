@@ -6,8 +6,8 @@ const fs = require("fs");
 
 // SERVER ROUTES
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const { initializeDatabase } = require('./config/init-database');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
@@ -42,14 +42,8 @@ if (app.isPackaged) {
   console.log('Development mode DB Path:', dbPath); // Debugging the development path
 }
 
-// Initialize the database
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.message);
-  } else {
-    console.log('Connected to the SQLite database at', dbPath);
-  }
-});
+// Initialize the database and ensure schema exists
+const db = initializeDatabase(dbPath);
 // Start Express server
 function startServer() {
   const app = express();

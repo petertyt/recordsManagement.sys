@@ -9,7 +9,9 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "build": "webpack",
-    "analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+    "analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json",
+    "db:backup": "node scripts/db-backup.js backup",
+    "db:restore": "node scripts/db-backup.js restore"
   },
   "keywords": [
     "records",
