@@ -1,5 +1,4 @@
     .dashboard-content {
-      /* border: 1px solid black; */
       width: 100%;
       height: fit-content;
       display: flex;
@@ -12,7 +11,6 @@
     /* Activities */
 
     .section1-container {
-      /* border: 1px blue solid; */
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -22,7 +20,6 @@
 
     /* Activity Container 1 */
     .activity1 {
-      /* border: 1px solid red; */
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -66,7 +63,6 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      /*   border: 1px solid black; */
       height: 250px;
       width: 100%;
       border-radius: 5px;
@@ -141,7 +137,6 @@
 
     /* Activity Container 2 */
     .activity2 {
-      border: 1px solid pink;
       height: fit-content;
       width: 100%;
       padding: 20px;
@@ -151,7 +146,6 @@
 
     .table-container {
       width: 100%;
-      /* border: 1px solid blue; */
       height: fit-content;
       border-radius: 5px;
     }
@@ -161,7 +155,6 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px;
-      /* border:1px solid red; */
       border-radius: 5px 5px 0 0;
     }
 
@@ -177,7 +170,6 @@
       width: 100vh;
       height: auto;
       color: rgb(20, 35, 50);
-      /* border: 1px solid blue; */
       overflow: auto;
     }
 
