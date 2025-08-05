@@ -1,0 +1,48 @@
+
+<div class="history-header">
+  <div class="h3 fw-regular text-muted">History Log:</div>
+</div>
+<div class="activity2 bg-light bg-gradient" id="history-entries">
+  <div class="table2-container table-container">
+    <table class="table table-striped table-bordered table-hover display" id="history-table">
+      <thead class="thead-dark">
+        <tr>
+          <th>ID</th>
+          <th>Entry ID</th>
+          <th>User ID</th>
+          <th>Action</th>
+          <th>Changes</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data dynamically populated -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function initializeDataTableforHistory() {
+    $('#history-table').DataTable({
+      ajax: {
+        url: 'http://localhost:49200/api/history',
+        dataSrc: 'data'
+      },
+      columns: [
+        { data: 'id' },
+        { data: 'entry_id' },
+        { data: 'user_id' },
+        { data: 'action' },
+        { data: 'changes' },
+        { data: 'timestamp' }
+      ],
+      dom: 'Bfrtip',
+      buttons: ['csv', 'pdf']
+    });
+  }
+
+  $(document).ready(function () {
+    initializeDataTableforHistory();
+  });
+</script>
