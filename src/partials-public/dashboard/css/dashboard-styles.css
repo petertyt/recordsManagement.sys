@@ -78,14 +78,14 @@
     }
 
     .activity-title h6 {
-      font-size: 12pt;
+      font-size: var(--text-sm);
       font-weight: 800;
       color: rgba(255, 255, 255, 0.5);
     }
 
     .activity-title h4 {
       font-weight: 700;
-      font-size: 24pt;
+      font-size: var(--text-2xl);
     }
 
     .activity-divider {
@@ -104,7 +104,7 @@
     }
 
     .activity-int {
-      font-size: 46pt;
+      font-size: var(--text-6xl);
       font-weight: 700;
     }
 
@@ -113,7 +113,7 @@
       border-radius: 10px;
       border: none;
       padding: 5px;
-      font-size: 10pt;
+      font-size: var(--text-xs);
       opacity: 70%;
     }
 
@@ -178,7 +178,7 @@
     .dropbtn {
       color: white;
       padding: 5px;
-      font-size: 16px;
+      font-size: var(--text-base);
       border: none;
       cursor: pointer;
       border-radius: 5px;
@@ -231,7 +231,7 @@
     .dropbtn {
       color: white;
       padding: 5px;
-      font-size: 16px;
+      font-size: var(--text-base);
       border: none;
       cursor: pointer;
       border-radius: 5px;
