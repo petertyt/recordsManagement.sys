@@ -1,15 +1,15 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
-const path = require('path');
+const { PORT, DB_PATH } = require('./config/settings');
 
 // Start Express server
 function startServer() {
   const app = express();
-  const PORT = process.env.PORT || 49200;
+  const port = PORT;
 
   // Path to the SQLite database
-  const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
+  const dbPath = DB_PATH;
   const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
       console.error('Error connecting to the database:', err.message);
@@ -336,8 +336,8 @@ app.post('/api/update-letter', (req, res) => {
   });
 
   // Start the server and handle potential port conflict
-  const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  const server = app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
   });
 }
 

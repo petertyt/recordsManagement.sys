@@ -4,7 +4,7 @@
   "description": "Records Management System",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "PORT=${PORT:-49200} DB_PATH=${DB_PATH:-./database/recordsmgmtsys.db} electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make",

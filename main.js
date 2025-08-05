@@ -8,13 +8,14 @@ const fs = require("fs");
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const { PORT, DB_PATH } = require('./config/settings');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
 
 // Determine the correct path for the database
-let dbPath;
-if (app.isPackaged) {
+let dbPath = DB_PATH;
+if (app.isPackaged && !process.env.DB_PATH) {
   // Production mode: Store the database in the userData folder
   dbPath = path.join(app.getPath('userData'), 'recordsmgmtsys.db');
 
@@ -37,9 +38,7 @@ if (app.isPackaged) {
     console.log('Database already exists in userData folder:', dbPath);
   }
 } else {
-  // Development mode: Use the local database path
-  dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
-  console.log('Development mode DB Path:', dbPath); // Debugging the development path
+  console.log('Using database path:', dbPath);
 }
 
 // Initialize the database
@@ -53,7 +52,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 // Start Express server
 function startServer() {
   const app = express();
-  const PORT = process.env.PORT || 49200;
+  const port = PORT;
 
   // Middleware setup
   app.use(bodyParser.json());
@@ -448,8 +447,8 @@ app.post('/api/update-file', (req, res) => {
   });
 
   // Start the server and handle potential port conflict
-  const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  const server = app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
   });
 }
 
