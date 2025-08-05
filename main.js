@@ -8,6 +8,7 @@ const fs = require("fs");
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const { body, validationResult } = require('express-validator');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
@@ -186,84 +187,143 @@ function startServer() {
   });
 
   // ADD FILE TO TABLE
-  app.post('/api/add-file', (req, res) => {
-    const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
+  app.post(
+    '/api/add-file',
+    [
+      body('entry_date').notEmpty().withMessage('entry_date is required').isISO8601().toDate(),
+      body('file_number').notEmpty().withMessage('file_number is required').isLength({ max: 50 }).trim().escape(),
+      body('subject').notEmpty().withMessage('subject is required').isLength({ max: 255 }).trim().escape(),
+      body('officer_assigned').notEmpty().withMessage('officer_assigned is required').isLength({ max: 255 }).trim().escape(),
+      body('status').notEmpty().withMessage('status is required').isLength({ max: 50 }).trim().escape(),
+      body('date_sent').notEmpty().withMessage('date_sent is required').isISO8601().toDate(),
+      body('file_type').notEmpty().withMessage('file_type is required').isLength({ max: 50 }).trim().escape(),
+      body('reciepient').optional({ checkFalsy: true }).trim().escape(),
+      body('recieved_date').optional({ checkFalsy: true }).isISO8601().toDate(),
+      body('description').optional({ checkFalsy: true }).trim().escape()
+    ],
+    (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return next({ status: 400, errors: errors.array() });
+      }
 
-    // Check only for required fields
-    if (!entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      const {
+        entry_date,
+        file_number,
+        subject,
+        officer_assigned,
+        status,
+        recieved_date,
+        date_sent,
+        file_type,
+        reciepient,
+        description
+      } = req.body;
+
+      const reciepientValue = reciepient || null;
+      const recievedDateValue = recieved_date || null;
+      const descriptionValue = description || null;
+
+      const query = `
+    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status)
+    VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?);
+  `;
+      db.run(
+        query,
+        [
+          entry_date,
+          file_number,
+          subject,
+          officer_assigned,
+          recievedDateValue,
+          date_sent,
+          file_type,
+          reciepientValue,
+          descriptionValue,
+          status
+        ],
+        function (err) {
+          if (err) {
+            console.error('Error inserting new file:', err.message);
+            return res.status(500).json({ error: err.message });
+          }
+          res.status(201).json({ message: 'File added successfully', entry_id: this.lastID });
+        }
+      );
+    }
+  );
+
+// UPDATE FILE IN TABLE
+app.post(
+  '/api/update-file',
+  [
+    body('entry_id').isInt().withMessage('entry_id is required').toInt(),
+    body('entry_date').notEmpty().withMessage('entry_date is required').isISO8601().toDate(),
+    body('file_number').notEmpty().withMessage('file_number is required').isLength({ max: 50 }).trim().escape(),
+    body('subject').notEmpty().withMessage('subject is required').isLength({ max: 255 }).trim().escape(),
+    body('officer_assigned').notEmpty().withMessage('officer_assigned is required').isLength({ max: 255 }).trim().escape(),
+    body('status').notEmpty().withMessage('status is required').isLength({ max: 50 }).trim().escape(),
+    body('recieved_date').optional({ checkFalsy: true }).isISO8601().toDate(),
+    body('date_sent').notEmpty().withMessage('date_sent is required').isISO8601().toDate(),
+    body('reciepient').optional({ checkFalsy: true }).trim().escape(),
+    body('file_type').notEmpty().withMessage('file_type is required').isLength({ max: 50 }).trim().escape(),
+    body('description').optional({ checkFalsy: true }).trim().escape()
+  ],
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return next({ status: 400, errors: errors.array() });
     }
 
-    // Use null for optional fields if not provided
+    const {
+      entry_id,
+      entry_date,
+      file_number,
+      subject,
+      officer_assigned,
+      status,
+      recieved_date,
+      date_sent,
+      reciepient,
+      file_type,
+      description
+    } = req.body;
+
     const reciepientValue = reciepient || null;
     const recievedDateValue = recieved_date || null;
     const descriptionValue = description || null;
 
     const query = `
-    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status)
-    VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?);
-  `;
-    db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status], function (err) {
-      if (err) {
-        console.error("Error inserting new file:", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-      res.status(201).json({ message: 'File added successfully', entry_id: this.lastID });
-    });
-  });
-
-// UPDATE FILE IN TABLE
-app.post('/api/update-file', (req, res) => {
-  const { 
-    entry_id,
-    entry_date,
-    file_number,
-    subject,
-    officer_assigned,
-    status,
-    recieved_date,    // Correct spelling here: received_date
-    date_sent,
-    reciepient,        // Correct spelling here
-    file_type,
-    description
-  } = req.body;
-
-  // Check only for required fields
-  if (!entry_id || !entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
-  // Use null for optional fields if not provided
-  const reciepientValue = reciepient || null;  // Correct spelling here
-  const recievedDateValue = recieved_date || null;  // Correct spelling here
-  const descriptionValue = description || null;
-
-  const query = `
     UPDATE entries_tbl
     SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, date_sent = ?, reciepient = ?, file_type = ?, description = ?, status = ?
     WHERE entry_id = ? AND entry_category = 'File';
   `;
 
-  db.run(query, [
-    entry_date,
-    file_number,
-    subject,
-    officer_assigned,
-    recievedDateValue,  // Corrected: received date
-    date_sent,
-    reciepientValue,     // Corrected: recipient
-    file_type,
-    descriptionValue,
-    status,
-    entry_id
-  ], function (err) {
-    if (err) {
-      console.error("Error updating file:", err.message);
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(200).json({ message: 'File updated successfully' });
-  });
-});
+    db.run(
+      query,
+      [
+        entry_date,
+        file_number,
+        subject,
+        officer_assigned,
+        recievedDateValue,
+        date_sent,
+        reciepientValue,
+        file_type,
+        descriptionValue,
+        status,
+        entry_id
+      ],
+      function (err) {
+        if (err) {
+          console.error('Error updating file:', err.message);
+          return res.status(500).json({ error: err.message });
+        }
+        res.status(200).json({ message: 'File updated successfully' });
+      }
+    );
+  }
+);
 
 
   // LETTER MANAGEMENT SECTION
@@ -445,6 +505,14 @@ app.post('/api/update-file', (req, res) => {
       }
       res.json({ message: 'Entry updated successfully' });
     });
+  });
+
+  // Validation error handler
+  app.use((err, req, res, next) => {
+    if (err && err.errors) {
+      return res.status(err.status || 400).json({ errors: err.errors });
+    }
+    next(err);
   });
 
   // Start the server and handle potential port conflict
