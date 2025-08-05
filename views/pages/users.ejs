@@ -1,3 +1,110 @@
-<div>
-    Users Management
+<div class="container mt-4">
+  <h3>User Management</h3>
+  <form id="createUserForm" class="mb-4">
+    <div class="mb-2">
+      <label for="username">Username</label>
+      <input type="text" id="username" class="form-control" required>
+    </div>
+    <div class="mb-2">
+      <label for="password">Password</label>
+      <input type="password" id="password" class="form-control" required>
+    </div>
+    <div class="mb-2">
+      <label for="role">Role</label>
+      <select id="role" class="form-select">
+        <option value="user">user</option>
+        <option value="admin">admin</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Create User</button>
+  </form>
+
+  <table class="table table-bordered" id="usersTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
+
+<script>
+async function fetchUsers() {
+  const res = await fetch('/api/users', { credentials: 'include' });
+  const data = await res.json();
+  renderUsers(data.data || []);
+}
+
+function renderUsers(users) {
+  const tbody = document.querySelector('#usersTable tbody');
+  tbody.innerHTML = '';
+  users.forEach(user => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${user.id}</td>
+      <td>${user.username}</td>
+      <td>${user.role}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="resetPassword(${user.id})">Reset Password</button>
+        <button class="btn btn-sm btn-info" onclick="changeRole(${user.id}, '${user.role}')">Change Role</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const role = document.getElementById('role').value;
+  await fetch('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password, role })
+  });
+  e.target.reset();
+  fetchUsers();
+});
+
+async function resetPassword(id) {
+  const password = prompt('Enter new password');
+  if (password) {
+    await fetch('/api/users/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ password })
+    });
+    fetchUsers();
+  }
+}
+
+async function changeRole(id, currentRole) {
+  const role = prompt('Enter role', currentRole);
+  if (role) {
+    await fetch('/api/users/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ role })
+    });
+    fetchUsers();
+  }
+}
+
+async function deleteUser(id) {
+  if (confirm('Delete user?')) {
+    await fetch('/api/users/' + id, { method: 'DELETE', credentials: 'include' });
+    fetchUsers();
+  }
+}
+
+fetchUsers();
+</script>

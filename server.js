@@ -1,7 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const authMiddleware = require('./middleware/authMiddleware');
+const roleMiddleware = require('./middleware/roleMiddleware');
 
 // Start Express server
 function startServer() {
@@ -21,8 +27,130 @@ function startServer() {
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(cookieParser());
+
+  const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS) || 10;
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'user',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Authentication routes
+  app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Missing username or password' });
+    }
+    const query = 'SELECT id, username, password_hash, role FROM users WHERE username = ?';
+    db.get(query, [username], async (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      const match = await bcrypt.compare(password, user.password_hash);
+      if (!match) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, process.env.JWT_SECRET, {
+        expiresIn: '1h'
+      });
+      res.cookie('token', token, { httpOnly: true });
+      res.json({ message: 'Logged in successfully' });
+    });
+  });
+
+  app.post('/api/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ message: 'Logged out' });
+  });
+
+  // Protect subsequent API routes
+  app.use('/api', authMiddleware);
 
   // Define routes here
+  // User management
+  app.get('/api/users', roleMiddleware('admin'), (req, res) => {
+    const query = 'SELECT id, username, role, created_at, updated_at FROM users';
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ data: rows });
+    });
+  });
+
+  app.post('/api/users', roleMiddleware('admin'), async (req, res) => {
+    const { username, password, role } = req.body;
+    if (!username || !password || !role) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    try {
+      const hash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+      const query = 'INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)';
+      db.run(query, [username, hash, role], function (err) {
+        if (err) {
+          return res.status(500).json({ error: err.message });
+        }
+        res.status(201).json({ id: this.lastID });
+      });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.put('/api/users/:id', roleMiddleware('admin'), async (req, res) => {
+    const { password, role } = req.body;
+    const updates = [];
+    const params = [];
+    if (password) {
+      const hash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+      updates.push('password_hash = ?');
+      params.push(hash);
+    }
+    if (role) {
+      updates.push('role = ?');
+      params.push(role);
+    }
+    if (updates.length === 0) {
+      return res.status(400).json({ error: 'No updates provided' });
+    }
+    updates.push('updated_at = CURRENT_TIMESTAMP');
+    const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+    params.push(req.params.id);
+    db.run(query, params, function (err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({ message: 'User updated' });
+    });
+  });
+
+  app.delete('/api/users/:id', roleMiddleware('admin'), (req, res) => {
+    const query = 'DELETE FROM users WHERE id = ?';
+    db.run(query, [req.params.id], function (err) {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({ message: 'User deleted' });
+    });
+  });
+
+  // Existing routes
   app.get('/api/recent-entries', (req, res) => {
     const query = `
               SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
