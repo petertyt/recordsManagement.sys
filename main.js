@@ -50,6 +50,30 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.log('Connected to the SQLite database at', dbPath);
   }
 });
+
+let dbClosed = false;
+const closeDatabase = () => {
+  if (dbClosed) return;
+  db.close((err) => {
+    if (err) {
+      console.error('Error closing database:', err.message);
+    } else {
+      console.log('Database connection closed.');
+    }
+  });
+  dbClosed = true;
+};
+
+app.on('quit', closeDatabase);
+process.on('SIGINT', () => {
+  closeDatabase();
+  process.exit(0);
+});
+process.on('SIGTERM', () => {
+  closeDatabase();
+  process.exit(0);
+});
+process.on('exit', closeDatabase);
 // Start Express server
 function startServer() {
   const app = express();

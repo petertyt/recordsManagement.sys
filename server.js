@@ -18,6 +18,29 @@ function startServer() {
     }
   });
 
+  let dbClosed = false;
+  const closeDatabase = () => {
+    if (dbClosed) return;
+    db.close((err) => {
+      if (err) {
+        console.error('Error closing database:', err.message);
+      } else {
+        console.log('Database connection closed.');
+      }
+    });
+    dbClosed = true;
+  };
+
+  process.on('SIGINT', () => {
+    closeDatabase();
+    process.exit(0);
+  });
+  process.on('SIGTERM', () => {
+    closeDatabase();
+    process.exit(0);
+  });
+  process.on('exit', closeDatabase);
+
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
