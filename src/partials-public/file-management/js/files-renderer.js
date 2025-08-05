@@ -152,7 +152,7 @@ function populateFileModalFields(data) {
     // File type, date sent, and recipient input fields
     $('#file_type').val(data.file_type);
     $('#date_sent').val(data.date_sent);
-    $('#reciepient_name').val(data.reciepient);
+    $('#recipient_name').val(data.recipient);
     $('#recieved_date').val(data.recieved_date);  // Ensure this field is correctly populated
 
     // Additional fields
@@ -171,7 +171,7 @@ function getFileFormData() {
         recieved_date: $('#recieved_date').val(),
         date_sent: $('#date_sent').val(),
         file_type: $('#file_type').val(),
-        reciepient: $('#reciepient_name').val(),
+        recipient: $('#recipient_name').val(),
         description: $('#description').val(),
     };
     return data;
@@ -186,7 +186,7 @@ function clearFileModalFields() {
     $('#recieved_date').val('');
     $('#date_sent').val('');
     $('#file_type').val('');
-    $('#reciepient').val('');
+    $('#recipient_name').val('');
     $('#description').val('');
     $('#status').val('');
     $('#fileForm').data('entry_id', null);

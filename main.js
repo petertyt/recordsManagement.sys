@@ -187,7 +187,7 @@ function startServer() {
 
   // ADD FILE TO TABLE
   app.post('/api/add-file', (req, res) => {
-    const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
+    const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, recipient, description } = req.body;
 
     // Check only for required fields
     if (!entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
@@ -195,7 +195,7 @@ function startServer() {
     }
 
     // Use null for optional fields if not provided
-    const reciepientValue = reciepient || null;
+    const recipientValue = recipient || null;
     const recievedDateValue = recieved_date || null;
     const descriptionValue = description || null;
 
@@ -203,7 +203,7 @@ function startServer() {
     INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status)
     VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `;
-    db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status], function (err) {
+    db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, recipientValue, descriptionValue, status], function (err) {
       if (err) {
         console.error("Error inserting new file:", err.message);
         return res.status(500).json({ error: err.message });
@@ -223,7 +223,7 @@ app.post('/api/update-file', (req, res) => {
     status,
     recieved_date,    // Correct spelling here: received_date
     date_sent,
-    reciepient,        // Correct spelling here
+    recipient,        // Correct spelling here
     file_type,
     description
   } = req.body;
@@ -234,7 +234,7 @@ app.post('/api/update-file', (req, res) => {
   }
 
   // Use null for optional fields if not provided
-  const reciepientValue = reciepient || null;  // Correct spelling here
+  const recipientValue = recipient || null;  // Correct spelling here
   const recievedDateValue = recieved_date || null;  // Correct spelling here
   const descriptionValue = description || null;
 
@@ -251,7 +251,7 @@ app.post('/api/update-file', (req, res) => {
     officer_assigned,
     recievedDateValue,  // Corrected: received date
     date_sent,
-    reciepientValue,     // Corrected: recipient
+    recipientValue,     // Corrected: recipient
     file_type,
     descriptionValue,
     status,
