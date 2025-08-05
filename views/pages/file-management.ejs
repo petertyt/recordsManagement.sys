@@ -19,6 +19,7 @@
                     <th>Subject</th>
                     <th>Officer</th>
                     <th>Status</th>
+                    <th>File</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -38,7 +39,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="fileForm">
+                <form id="fileForm" enctype="multipart/form-data">
                     <div class="container">
                         <div class="row mb-3">
                             <!-- Entry Date -->
@@ -122,6 +123,12 @@
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description" rows="4"
                                     placeholder="NULL"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="file" class="form-label">Upload File</label>
+                                <input type="file" class="form-control" id="file" name="file">
                             </div>
                         </div>
                         <div class="row mb-3">

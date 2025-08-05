@@ -2,6 +2,8 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 
 // Start Express server
 function startServer() {
@@ -21,6 +23,32 @@ function startServer() {
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  // File upload setup
+  const uploadDir = path.join(__dirname, 'uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+  }
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+  });
+  const upload = multer({ storage });
+
+  app.use('/uploads', express.static(uploadDir));
+
+  // Ensure file_path column exists
+  db.get("SELECT name FROM pragma_table_info('entries_tbl') WHERE name='file_path'", (err, row) => {
+    if (err) {
+      console.error('Error checking file_path column:', err.message);
+    } else if (!row) {
+      db.run("ALTER TABLE entries_tbl ADD COLUMN file_path TEXT", (err) => {
+        if (err) {
+          console.error('Error adding file_path column:', err.message);
+        }
+      });
+    }
+  });
 
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
@@ -99,8 +127,8 @@ function startServer() {
 // GET FILE FROM TABLE
 app.get('/api/get-files', (req, res) => {
   const query = `
-      SELECT *
-      FROM entries_tbl 
+      SELECT entry_id, entry_date, file_number, subject, officer_assigned, status, file_path
+      FROM entries_tbl
       WHERE entry_category = 'File'
       ORDER BY entry_date DESC;
   `;
@@ -114,7 +142,7 @@ app.get('/api/get-files', (req, res) => {
 });
 
 // ADD FILE TO TABLE
-app.post('/api/add-file', (req, res) => {
+app.post('/api/add-file', upload.single('file'), (req, res) => {
   const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
 
   // Check only for required fields
@@ -126,17 +154,44 @@ app.post('/api/add-file', (req, res) => {
   const reciepientValue = reciepient || null;
   const recievedDateValue = recieved_date || null;
   const descriptionValue = description || null;
+  const filePath = req.file ? path.join('uploads', req.file.filename) : null;
 
   const query = `
-    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status)
-    VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status, file_path)
+    VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status], function (err) {
+  db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status, filePath], function (err) {
     if (err) {
       console.error("Error inserting new file:", err.message);
       return res.status(500).json({ error: err.message });
     }
     res.status(201).json({ message: 'File added successfully', entry_id: this.lastID });
+  });
+});
+
+// DOWNLOAD FILE
+app.get('/api/download-file/:entry_id', (req, res) => {
+  const entryId = req.params.entry_id;
+  const query = `SELECT file_path FROM entries_tbl WHERE entry_id = ? AND entry_category = 'File';`;
+  db.get(query, [entryId], (err, row) => {
+    if (err || !row || !row.file_path) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    const fileLocation = path.resolve(__dirname, row.file_path);
+    res.download(fileLocation);
+  });
+});
+
+// PREVIEW FILE
+app.get('/api/preview-file/:entry_id', (req, res) => {
+  const entryId = req.params.entry_id;
+  const query = `SELECT file_path FROM entries_tbl WHERE entry_id = ? AND entry_category = 'File';`;
+  db.get(query, [entryId], (err, row) => {
+    if (err || !row || !row.file_path) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    const fileLocation = path.resolve(__dirname, row.file_path);
+    res.sendFile(fileLocation);
   });
 });
 
