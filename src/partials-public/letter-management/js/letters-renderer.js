@@ -80,7 +80,7 @@ function initializeDataTableforLetters() {
                     letterEntryToDelete = null;
 
                     // Optional success message
-                    console.log('Letter deleted successfully!', response);
+                    console.log('Letter deleted successfully!', result);
                 },
                 error: function (xhr, status, error) {
                     // Handle errors
