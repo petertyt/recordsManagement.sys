@@ -3,14 +3,18 @@ const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
 
-// Start Express server
-function startServer() {
+// Start Express server. Accepts optional configuration for database path and
+// port so tests can supply an in-memory database or custom port. When
+// `listen` is false the server will not start listening, allowing Supertest to
+// interact with the Express instance directly.
+function startServer({ dbPath, port, listen = true } = {}) {
   const app = express();
-  const PORT = process.env.PORT || 49200;
+  const PORT = port || process.env.PORT || 49200;
 
-  // Path to the SQLite database
-  const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
-  const db = new sqlite3.Database(dbPath, (err) => {
+  // Path to the SQLite database. In tests we can pass `:memory:` or a temp
+  // path to keep the real data untouched.
+  const resolvedDbPath = dbPath || path.resolve(__dirname, './database/recordsmgmtsys.db');
+  const db = new sqlite3.Database(resolvedDbPath, (err) => {
     if (err) {
       console.error('Error connecting to the database:', err.message);
     } else {
@@ -336,10 +340,18 @@ app.post('/api/update-letter', (req, res) => {
   });
 
   // Start the server and handle potential port conflict
-  const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+  if (listen) {
+    const server = app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+    return { app, db, server };
+  }
+  return { app, db };
 }
 
-// Start the server when the app starts
-startServer();
+// Start the server when run directly
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = startServer;
