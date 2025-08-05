@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 // Start Express server
-function startServer() {
+function startServer(port = process.env.PORT || 49200) {
   const app = express();
-  const PORT = process.env.PORT || 49200;
+  const PORT = port;
 
   // Path to the SQLite database
   const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
@@ -338,6 +338,15 @@ app.post('/api/update-letter', (req, res) => {
   // Start the server and handle potential port conflict
   const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+  });
+
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`Port ${PORT} is in use, trying port ${PORT + 1}...`);
+      startServer(PORT + 1);
+    } else {
+      console.error("Server error:", err);
+    }
   });
 }
 

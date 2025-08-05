@@ -51,9 +51,9 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 // Start Express server
-function startServer() {
+function startServer(port = process.env.PORT || 49200) {
   const app = express();
-  const PORT = process.env.PORT || 49200;
+  const PORT = port;
 
   // Middleware setup
   app.use(bodyParser.json());
@@ -450,6 +450,15 @@ app.post('/api/update-file', (req, res) => {
   // Start the server and handle potential port conflict
   const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+  });
+
+  server.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`Port ${PORT} is in use, trying port ${PORT + 1}...`);
+      startServer(PORT + 1);
+    } else {
+      console.error("Server error:", err);
+    }
   });
 }
 
