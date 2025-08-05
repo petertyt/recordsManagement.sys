@@ -7,7 +7,6 @@ const fs = require("fs");
 // SERVER ROUTES
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const bodyParser = require('body-parser');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
@@ -56,8 +55,8 @@ function startServer() {
   const PORT = process.env.PORT || 49200;
 
   // Middleware setup
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
 
   // API route for user authentication (login)
