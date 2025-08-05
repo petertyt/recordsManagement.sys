@@ -1,39 +1,37 @@
-$(document).ready(function () {
-    $('#generate-report').on('click', function () {
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('generate-report').addEventListener('click', () => {
         generateReport();
     });
 
-    $('#export-pdf').on('click', function () {
+    document.getElementById('export-pdf').addEventListener('click', () => {
         exportPDF();
     });
 });
 
-function generateReport() {
-    const startDate = $('#start-date').val();
-    const endDate = $('#end-date').val();
-    const officerAssigned = $('#officer-assigned').val();
-    const status = $('#status').val();
-    const fileNumber = $('#file-number').val();
-    const category = $('#category').val();
+async function generateReport() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+    const officerAssigned = document.getElementById('officer-assigned').value;
+    const status = document.getElementById('status').value;
+    const fileNumber = document.getElementById('file-number').value;
+    const category = document.getElementById('category').value;
 
-    $.ajax({
-        url: 'http://localhost:49200/api/make-reports',
-        method: 'GET',
-        data: {
-            start_date: startDate,
-            end_date: endDate,
-            officer_assigned: officerAssigned,
-            status: status,
-            file_number: fileNumber,
-            category: category
-        },
-        success: function (data) {
-            $('#report-content').html(renderReport(data));
-        },
-        error: function () {
-            alert('Failed to generate report.');
-        }
+    const params = new URLSearchParams({
+        start_date: startDate,
+        end_date: endDate,
+        officer_assigned: officerAssigned,
+        status: status,
+        file_number: fileNumber,
+        category: category
     });
+
+    try {
+        const response = await fetch(`http://localhost:49200/api/make-reports?${params.toString()}`);
+        const data = await response.json();
+        document.getElementById('report-content').innerHTML = renderReport(data);
+    } catch (error) {
+        alert('Failed to generate report.');
+    }
 }
 
 function renderReport(data) {

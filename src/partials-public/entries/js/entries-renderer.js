@@ -3,7 +3,7 @@ $(document).ready(function () {
     initializeDataTableforEntries();
 
     // Handle form submission for updating entries
-    $('#entryForm').on('submit', function (e) {
+    $('#entryForm').on('submit', async function (e) {
         e.preventDefault();
 
         const entryData = {
@@ -12,20 +12,19 @@ $(document).ready(function () {
             status: $('#status').val()
         };
 
-        $.ajax({
-            url: 'http://localhost:49200/api/update-entry',
-            type: 'POST',
-            data: JSON.stringify(entryData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log("Entry updated successfully:", response);
-                $('#entryModal').modal('hide');
-                $('#letters-table').DataTable().ajax.reload(); // Reload table to reflect changes
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating entry:", error);
-            }
-        });
+        try {
+            const response = await fetch('http://localhost:49200/api/update-entry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(entryData)
+            });
+            const result = await response.json();
+            console.log("Entry updated successfully:", result);
+            $('#entryModal').modal('hide');
+            $('#letters-table').DataTable().ajax.reload(); // Reload table to reflect changes
+        } catch (error) {
+            console.error("Error updating entry:", error);
+        }
     });
 });
 

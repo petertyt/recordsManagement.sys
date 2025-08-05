@@ -69,21 +69,20 @@ function initializeDataTableforFiles() {
     });
 
     // Handle the confirm button click inside the delete modal
-    $('#confirmDelete').on('click', function () {
+    $('#confirmDelete').on('click', async function () {
         if (fileEntryToDelete) {
-            $.ajax({
-                url: `http://localhost:49200/api/delete-file/${fileEntryToDelete}`,
-                type: 'DELETE',
-                success: function (response) {
-                    console.log("File deleted successfully:", response);
-                    $('#file-table').DataTable().ajax.reload();
-                    $('#deleteModal').modal('hide');
-                    fileEntryToDelete = null;
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error deleting file:", error);
-                }
-            });
+            try {
+                const response = await fetch(`http://localhost:49200/api/delete-file/${fileEntryToDelete}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                console.log("File deleted successfully:", result);
+                $('#file-table').DataTable().ajax.reload();
+                $('#deleteModal').modal('hide');
+                fileEntryToDelete = null;
+            } catch (error) {
+                console.error("Error deleting file:", error);
+            }
         }
     });
 
@@ -101,41 +100,39 @@ function setupFileModalActions() {
     });
 
     // Remove existing event listeners and attach a new one for "Save"
-    $('#save-file').off('click').on('click', function () {
+    $('#save-file').off('click').on('click', async function () {
         const fileData = getFileFormData();
-        $.ajax({
-            url: 'http://localhost:49200/api/add-file',
-            type: 'POST',
-            data: JSON.stringify(fileData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log("File added successfully:", response);
-                $('#fileModal').modal('hide');
-                $('#file-table').DataTable().ajax.reload();
-            },
-            error: function (xhr, status, error) {
-                console.error("Error adding file:", error);
-            }
-        });
+        try {
+            const response = await fetch('http://localhost:49200/api/add-file', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(fileData)
+            });
+            const result = await response.json();
+            console.log("File added successfully:", result);
+            $('#fileModal').modal('hide');
+            $('#file-table').DataTable().ajax.reload();
+        } catch (error) {
+            console.error("Error adding file:", error);
+        }
     });
 
     // Remove existing event listeners and attach a new one for "Update"
-    $('#update-file').off('click').on('click', function () {
+    $('#update-file').off('click').on('click', async function () {
         const fileData = getFileFormData();
-        $.ajax({
-            url: 'http://localhost:49200/api/update-file',
-            type: 'POST',
-            data: JSON.stringify(fileData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log("File updated successfully:", response);
-                $('#fileModal').modal('hide');
-                $('#file-table').DataTable().ajax.reload();
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating file:", error);
-            }
-        });
+        try {
+            const response = await fetch('http://localhost:49200/api/update-file', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(fileData)
+            });
+            const result = await response.json();
+            console.log("File updated successfully:", result);
+            $('#fileModal').modal('hide');
+            $('#file-table').DataTable().ajax.reload();
+        } catch (error) {
+            console.error("Error updating file:", error);
+        }
     });
 }
 
