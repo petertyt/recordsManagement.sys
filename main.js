@@ -77,7 +77,8 @@ function startServer() {
       }
 
       if (row) {
-        res.json({ message: 'Login successful', user: row });
+        const { password: _password, ...user } = row;
+        res.json({ message: 'Login successful', user });
       } else {
         res.status(401).json({ error: 'Invalid username or password' });
       }
@@ -492,13 +493,11 @@ ipcMain.on('login-attempt', (event, credentials) => {
       event.reply('login-response', { success: false, message: 'Database error.' });
     } else if (row) {
       // Successful login
-      const userData = {
-        username: row.username,
-        role: row.user_role // Assuming you have a role field in your table
-      };
-      event.reply('login-response', { success: true, userData });
+      const { password: _password, user_role, ...rest } = row;
+      const user = { ...rest, role: user_role };
+      event.reply('login-response', { success: true, user });
       splashWindow.close();
-      createMainWindow(userData); // Pass the userData to the main window
+      createMainWindow(user); // Pass sanitized user data to the main window
     } else {
       // Invalid credentials
       event.reply('login-response', { success: false, message: 'Incorrect username or password.' });
