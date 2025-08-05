@@ -461,6 +461,62 @@ startServer();
 let splashWindow;
 let mainWindow;
 
+// Helper function to send update status to whichever window is available
+function sendStatusToWindow(message) {
+  if (mainWindow) {
+    mainWindow.webContents.send('update-message', message);
+  } else if (splashWindow) {
+    splashWindow.webContents.send('update-message', message);
+  }
+}
+
+// AutoUpdater event listeners
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...');
+});
+
+autoUpdater.on('update-available', () => {
+  sendStatusToWindow('Update available.');
+});
+
+autoUpdater.on('update-not-available', () => {
+  sendStatusToWindow('Update not available.');
+});
+
+autoUpdater.on('error', (err) => {
+  sendStatusToWindow(`Error in auto-updater: ${err === null ? 'unknown' : err.toString()}`);
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  const logMessage = `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent.toFixed(2)}% (${progressObj.transferred}/${progressObj.total})`;
+  sendStatusToWindow(logMessage);
+});
+
+autoUpdater.on('update-downloaded', () => {
+  sendStatusToWindow('Update downloaded; restart to install.');
+  if (mainWindow) {
+    mainWindow.webContents.send('update-downloaded');
+  } else if (splashWindow) {
+    splashWindow.webContents.send('update-downloaded');
+  }
+  dialog
+    .showMessageBox({
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Update Ready',
+      message: 'A new version has been downloaded. Restart now to apply the update?'
+    })
+    .then((returnValue) => {
+      if (returnValue.response === 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
+});
+
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
+});
+
 function createSplashWindow() {
   splashWindow = new BrowserWindow({
     width: 900,
@@ -559,7 +615,10 @@ function createMainWindow(userData) {
 //   }
 // });
 
-app.whenReady().then(createSplashWindow);
+app.whenReady().then(() => {
+  createSplashWindow();
+  autoUpdater.checkForUpdates();
+});
 
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createSplashWindow();
