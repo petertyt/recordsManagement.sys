@@ -3,10 +3,9 @@ const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
 
-// Start Express server
-function startServer() {
+// Factory function to create an Express server instance
+function createServer() {
   const app = express();
-  const PORT = process.env.PORT || 49200;
 
   // Path to the SQLite database
   const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
@@ -335,11 +334,19 @@ app.post('/api/update-letter', (req, res) => {
     });
   });
 
-  // Start the server and handle potential port conflict
-  const server = app.listen(PORT, () => {
+  // expose database for tests
+  app.locals.db = db;
+
+  return app;
+}
+
+// Start the server when run directly
+if (require.main === module) {
+  const app = createServer();
+  const PORT = process.env.PORT || 49200;
+  app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 }
 
-// Start the server when the app starts
-startServer();
+module.exports = createServer;
