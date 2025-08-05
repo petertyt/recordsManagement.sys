@@ -4,6 +4,9 @@ $(document).ready(function () {
 });
 
 function initializeDataTableforLetters() {
+    if ($.fn.DataTable.isDataTable('#letters-table')) {
+        $('#letters-table').DataTable().destroy();
+    }
     const lettersTable = $('#letters-table').DataTable({
         ajax: {
             url: "http://localhost:49200/api/get-letters",

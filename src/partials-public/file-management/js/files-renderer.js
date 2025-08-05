@@ -5,6 +5,9 @@ $(document).ready(function () {
 });
 
 function initializeDataTableforFiles() {
+    if ($.fn.DataTable.isDataTable('#file-table')) {
+        $('#file-table').DataTable().destroy();
+    }
     const filesTable = $('#file-table').DataTable({
         ajax: {
             url: "http://localhost:49200/api/get-files",
