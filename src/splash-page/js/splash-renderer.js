@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Listen for login response from the main process
-  window.electronAPI.onLoginResponse((response) => {
+  const removeLoginListener = window.electronAPI.onLoginResponse((response) => {
     if (response && response.success) {
       // Successful login
       console.log("Login successful");
@@ -50,6 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       showErrorState("An unknown error occurred.");
     }
+
+    // Cleanup listener after receiving a response
+    removeLoginListener();
   });
 
   // Show error message
