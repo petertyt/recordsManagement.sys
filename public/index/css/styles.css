@@ -1,8 +1,8 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Poppins", sans-serif;
-  font-size: 10pt;
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
   box-sizing: border-box;
   overflow: hidden;
   height: 100vh;
@@ -10,13 +10,13 @@ body {
 
 /* Second Navbar */
 nav {
-  border-bottom: 1px solid rgba(20, 35, 50, 0.1);
+  border-bottom: 1px solid var(--primary-blue-100);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: var(--space-3);
   margin: 0;
-  height: 80px;
+  height: var(--space-20);
 }
 
 div.nav2-title {
@@ -33,15 +33,15 @@ div.searchbar {
 div.searchbar input {
   background-color: inherit;
   border-radius: 5px;
-  padding: 10px;
-  margin: 0 10px 0 0;
+  padding: var(--space-3);
+  margin: 0 var(--space-3) 0 0;
   height: 40px;
   width: 500px;
-  border: 1px solid rgba(20, 35, 50, 0.5);
+  border: 1px solid var(--primary-blue-300);
 }
 
 div.searchbar input:focus {
-  border: 2px solid rgba(20, 35, 50, 0.8);
+  border: 2px solid var(--primary-blue-500);
 }
 
 div.searchbar button {
@@ -49,12 +49,12 @@ div.searchbar button {
   height: 40px;
   width: 50px;
   border-radius: 5px;
-  background-color: rgb(20, 35, 50);
-  color: rgb(255, 255, 255);
+  background-color: var(--primary-blue-500);
+  color: var(--white);
 }
 
 div.searchbar button:hover {
-  background-color: rgba(20, 35, 50, 0.9);
+  background-color: var(--primary-blue-600);
   transition: 0.3s ease-out;
 }
 
@@ -72,11 +72,11 @@ nav div.nav2-functions button {
   border-radius: 50%;
   height: 40px;
   width: 40px;
-  color: rgb(20, 35, 50);
+  color: var(--primary-blue-500);
 }
 
 nav div.nav2-functions button:hover {
-  background-color: rgba(20, 35, 50, 0.1);
+  background-color: var(--primary-blue-50);
   transition: 0.3s ease-out;
 }
 
@@ -90,10 +90,10 @@ nav div.nav2-functions button:hover {
 
 /* Sidebar Navigation  */
 aside {
-  border-right: 2px solid rgba(20, 35, 50, 0.1);
+  border-right: 2px solid var(--primary-blue-100);
   width: 300px;
-  background-color: rgba(20, 35, 50, 0.1);
-  height: calc(100vh - 80px);
+  background-color: var(--primary-blue-50);
+  height: calc(100vh - var(--space-20));
   overflow: hidden;
   padding: 20px 15px;
   display: flex;
@@ -122,12 +122,12 @@ aside div.sidebar-menu-title {
 }
 
 .username div:nth-child(1) {
-  color: rgb(20, 35, 50);
+  color: var(--primary-blue-500);
   font-weight: 700;
 }
 
 .username div:nth-child(2) {
-  color: rgba(20, 35, 50, 0.8);
+  color: var(--primary-blue-600);
   font-weight: 500;
   font-size: 10.5pt;
 }
@@ -144,7 +144,7 @@ aside div.sidebar-menu-title {
 }
 
 .dropdown-icon:hover {
-  background-color: rgba(20, 35, 50, 0.1);
+  background-color: var(--primary-blue-50);
   cursor: pointer;
 }
 
@@ -160,7 +160,7 @@ div.sidebar-menu-list {
 .divider {
   height: 1px;
   width: 100%;
-  background-color: rgba(20, 35, 50, 0.1);
+  background-color: var(--primary-blue-100);
 }
 
 .top-div {
@@ -195,13 +195,13 @@ aside li {
 }
 
 .active {
-  color: white;
-  background-color: rgb(20, 30, 52);
+  color: var(--white);
+  background-color: var(--primary-blue-600);
 }
 
 .focus {
-  color: white;
-  background-color: rgb(20, 30, 52);
+  color: var(--white);
+  background-color: var(--primary-blue-600);
 }
 
 .submenu {
@@ -219,8 +219,8 @@ aside li {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(20, 35, 50);
-  color: white;
+  background-color: var(--primary-blue-500);
+  color: var(--white);
   padding: 8px;
   width: 125px;
   border-radius: 5px;
@@ -228,16 +228,16 @@ aside li {
 }
 
 .sidebar-sign-out:hover {
-  background-color: rgba(20, 35, 50, 0.9);
+  background-color: var(--primary-blue-600);
 }
 
 .sidebar-sign-out:focus {
-  background-color: rgba(20, 35, 50, 0.9);
+  background-color: var(--primary-blue-600);
   /*   border: 3px solid gray; */
 }
 
 .sidebar-sign-out:active {
-  background-color: rgba(20, 35, 50, 0.9);
+  background-color: var(--primary-blue-600);
 }
 
 .sidebar-sign-out svg {
@@ -277,8 +277,8 @@ main {
   justify-content: center;
   padding: 10px;
   border-radius: 5px;
-  background-color: rgb(20, 35, 50);
-  color: white;
+  background-color: var(--primary-blue-500);
+  color: var(--white);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   position: absolute;
   right: 40%;
@@ -295,8 +295,8 @@ main {
   justify-content: center;
   padding: 10px;
   border-radius: 5px;
-  background-color: rgb(20, 35, 50);
-  color: white;
+  background-color: var(--primary-blue-500);
+  color: var(--white);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   position: absolute;
   right: 26%;
