@@ -1655,7 +1655,7 @@ function createMainWindow(userData) {
 
 app.whenReady().then(createSplashWindow);
 
-app.on("activate", () => {
+app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createSplashWindow();
 });
 
