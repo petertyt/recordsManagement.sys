@@ -30,6 +30,9 @@ $(document).ready(function () {
 });
 
 function initializeDataTableforEntries() {
+    if ($.fn.DataTable.isDataTable('#entries-table')) {
+        $('#entries-table').DataTable().destroy();
+    }
     const entriesTable = $('#entries-table').DataTable({
         "ajax": {
             "url": "http://localhost:49200/api/recent-entries-full",
