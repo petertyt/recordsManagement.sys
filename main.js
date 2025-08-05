@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, session } = require("electron");
 const path = require("path");
 const ejs = require("ejs-electron");
 const { autoUpdater } = require("electron-updater");
@@ -700,21 +700,28 @@ function createMainWindow(userData) {
   });
 }
 
-// // Handle the 'sign-out' event from the renderer
-// ipcMain.on('sign-out', () => {
-//   // Close the main window
-//   if (mainWindow) {
-//       mainWindow.close();
-//       mainWindow = null; // Clear the reference
-//   }
+// Handle the 'sign-out' event from the renderer
+ipcMain.on('sign-out', async () => {
+  // Clear session data and close the main window
+  if (mainWindow) {
+    try {
+      await session.defaultSession.clearStorageData();
+      await session.defaultSession.clearCache();
+    } catch (error) {
+      console.error('Error clearing session data:', error);
+    }
 
-//   // Reopen the splash window
-//   if (!splashWindow) {
-//       createSplashWindow();
-//   } else {
-//       splashWindow.show();
-//   }
-// });
+    mainWindow.close();
+    mainWindow = null; // Clear the reference
+  }
+
+  // Reopen the splash window
+  if (!splashWindow) {
+    createSplashWindow();
+  } else {
+    splashWindow.show();
+  }
+});
 
 app.whenReady().then(() => {
   createSplashWindow();
