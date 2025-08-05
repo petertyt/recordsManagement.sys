@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "build": "webpack",
@@ -35,11 +35,13 @@
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.3.4",
     "express": "^4.19.2",
+    "fast-csv": "^5.0.5",
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "latest": "^0.2.0",
+    "pdfkit": "^0.17.1",
     "print-this": "^2.0.0",
     "puppeteer": "^23.3.0",
     "sql.js": "^1.11.0",
@@ -55,24 +57,27 @@
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron-forge/publisher-github": "^7.4.0",
     "@electron/fuses": "^1.8.0",
+    "chai": "^5.2.1",
     "electron": "^32.0.1",
     "electron-rebuild": "^3.2.9",
+    "mocha": "^11.7.1",
+    "supertest": "^7.1.4",
     "webpack-bundle-analyzer": "^4.10.2"
   },
-"build": {
-  "appId": "com.codecol.recordsmanagement",
-  "productName": "Records Management System",
-  "directories": {
-    "output": "dist"
-  },
-  "files": [
-    "dist/**/*",
-    "node_modules/**/*",
-    "main.js",
-    "index.html",
-    "package.json",
-    "database/**/*"
-  ],
+  "build": {
+    "appId": "com.codecol.recordsmanagement",
+    "productName": "Records Management System",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "main.js",
+      "index.html",
+      "package.json",
+      "database/**/*"
+    ],
     "publish": [
       {
         "provider": "github",

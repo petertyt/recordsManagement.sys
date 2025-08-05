@@ -8,6 +8,8 @@ const fs = require("fs");
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const fastCsv = require('fast-csv');
+const PDFDocument = require('pdfkit');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
@@ -145,6 +147,83 @@ function startServer() {
       }
       res.json({ data: rows });
     });
+  });
+
+  app.get('/api/reports/export', (req, res) => {
+    const { format, start_date, end_date, officer_assigned, status, file_number, category } = req.query;
+    let query = `
+        SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
+        FROM entries_tbl
+        WHERE 1=1
+      `;
+    const params = [];
+
+    if (start_date) {
+      query += ' AND entry_date >= ?';
+      params.push(start_date);
+    }
+    if (end_date) {
+      query += ' AND entry_date <= ?';
+      params.push(end_date);
+    }
+    if (officer_assigned) {
+      query += ' AND officer_assigned LIKE ?';
+      params.push(`%${officer_assigned}%`);
+    }
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
+    if (file_number) {
+      query += ' AND file_number = ?';
+      params.push(file_number);
+    }
+    if (category) {
+      query += ' AND entry_category = ?';
+      params.push(category);
+    }
+
+    query += ' ORDER BY entry_date DESC;';
+
+    if (format === 'csv') {
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="report.csv"');
+      const csvStream = fastCsv.format({ headers: true });
+      csvStream.pipe(res);
+      db.each(
+        query,
+        params,
+        (err, row) => {
+          if (!err) {
+            csvStream.write(row);
+          }
+        },
+        () => csvStream.end()
+      );
+      return;
+    }
+
+    if (format === 'pdf') {
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename="report.pdf"');
+      const doc = new PDFDocument();
+      doc.pipe(res);
+      doc.fontSize(16).text('Report', { align: 'center' });
+      doc.moveDown();
+      db.each(
+        query,
+        params,
+        (err, row) => {
+          if (!err) {
+            doc.text(`${row.entry_id} | ${row.entry_date} | ${row.entry_category} | ${row.file_number} | ${row.subject} | ${row.officer_assigned} | ${row.status}`);
+          }
+        },
+        () => doc.end()
+      );
+      return;
+    }
+
+    res.status(400).json({ error: 'Invalid format' });
   });
 
 
