@@ -1511,7 +1511,7 @@ function createSplashWindow() {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       enableRemoteModule: false,
-      nodeIntegration: true,
+      nodeIntegration: false,
     },
     icon: path.join(__dirname, "assets/icons/ico/icon-exe.ico"),
   });
