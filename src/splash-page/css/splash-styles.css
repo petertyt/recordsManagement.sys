@@ -280,25 +280,6 @@ input.error {
   width: 510px;
 }
 
-.modalContent-end button {
-  height: 60px;
-  width: 133px;
-  font-size: 16pt;
-  font-weight: 600;
-  color: white;
-  background-color: #142332;
-  border-radius: 5px;
-  border: none;
-}
-
-.modalContent-end button:hover {
-  background-color: rgba(20, 35, 50, 0.95);
-}
-
-.modalContent-end button:active {
-  border: 3px solid rgba(20, 35, 50, 0.5);
-}
-
 .modalContent-end a {
   text-decoration: none;
   color: rgba(20, 35, 50, 0.5);
