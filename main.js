@@ -48,6 +48,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.error('Error connecting to the database:', err.message);
   } else {
     console.log('Connected to the SQLite database at', dbPath);
+    db.exec('PRAGMA foreign_keys = ON');
   }
 });
 // Start Express server
