@@ -1,6 +1,5 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const bodyParser = require('body-parser');
 const path = require('path');
 
 // Start Express server
@@ -19,8 +18,8 @@ function startServer() {
   });
 
   // Middleware setup
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
