@@ -1,3 +1,5 @@
+import { truncate } from '../../../../public/index/js/utils.js';
+
 $(document).ready(function () {
     setupLetterModalActions();
     initializeDataTableforLetters();

@@ -1,8 +1,4 @@
-// Define the truncate function
-function truncate(str, maxlength) {
-    return (str.length > maxlength) ?
-        str.slice(0, maxlength - 1) + '…' : str;
-}
+import { truncate } from '../../../../public/index/js/utils.js';
 
 function fetchSummations() {
     $.ajax({
