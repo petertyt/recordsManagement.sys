@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Event listeners for report management page
         document.getElementById('generate-report')?.addEventListener('click', generateReport);
         document.getElementById('export-pdf')?.addEventListener('click', exportPDF);
+        document.getElementById('export-csv')?.addEventListener('click', exportCSV);
         document.getElementById('print-report')?.addEventListener('click', () => window.print());
     }
 

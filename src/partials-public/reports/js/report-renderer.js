@@ -6,6 +6,10 @@ $(document).ready(function () {
     $('#export-pdf').on('click', function () {
         exportPDF();
     });
+
+    $('#export-csv').on('click', function () {
+        exportCSV();
+    });
 });
 
 function generateReport() {
@@ -37,7 +41,7 @@ function generateReport() {
 }
 
 function renderReport(data) {
-    let reportHtml = '<table class="table table-striped table-bordered">';
+    let reportHtml = '<table id="report-table" class="table table-striped table-bordered">';
     reportHtml += '<thead><tr><th>Entry ID</th><th>Date</th><th>Category</th><th>File Number</th><th>Subject</th><th>Officer Assigned</th><th>Status</th></tr></thead>';
     reportHtml += '<tbody>';
     data.data.forEach(function (entry) {
@@ -55,39 +59,50 @@ function renderReport(data) {
     return reportHtml;
 }
 
-// Function to export the report as a PDF using jsPDF
+// Function to export the report as a PDF using jsPDF and html2canvas
 function exportPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
+    const reportTable = document.getElementById('report-table');
+    if (!reportTable) {
+        alert('No report generated to export.');
+        return;
+    }
 
-    // // Add logo (replace with actual base64 data or URL)
-    // const imgData = 'data:image/png;base64,<your_base64_encoded_image>'; // Add your base64 logo here
-    // doc.addImage(imgData, 'PNG', 10, 10, 30, 30); // Add logo at the top-left (x, y, width, height)
-
-    // Add header
-    doc.setFontSize(14);
-    doc.text('LANDS COMMISSION, GHANA', 105, 20, { align: 'center' });
-    doc.setFontSize(8);
-    doc.text('Land Valuation Department (LVD)', 105, 30, { align: 'center' });
-    doc.text('Files Office', 105, 40, { align: 'center' });
-    doc.line(10, 45, 200, 45); // Horizontal line
-
-    // Add report content
-    const reportContent = document.getElementById('report-content');
-    
-    // Rendering the HTML content into the PDF using html2canvas and jsPDF
-    doc.html(reportContent, {
-        x: 10,
-        y: 60,
-        width: 190,
-        callback: function (doc) {
-            // Add footer with page number
-            const totalPages = doc.internal.getNumberOfPages();
-            for (let i = 1; i <= totalPages; i++) {
-                doc.setPage(i);
-                doc.text(`Page ${i} of ${totalPages}`, 105, 290, { align: 'center' });
-            }
-            doc.save('report.pdf'); // Save the PDF file
-        }
+    html2canvas(reportTable).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('report.pdf');
     });
+}
+
+// Function to export the report table as CSV
+function exportCSV() {
+    const table = document.getElementById('report-table');
+    if (!table) {
+        alert('No report generated to export.');
+        return;
+    }
+
+    let csv = '';
+    const rows = table.querySelectorAll('tr');
+    rows.forEach((row) => {
+        const cols = row.querySelectorAll('th, td');
+        const rowData = Array.from(cols)
+            .map(col => '"' + col.innerText.replace(/"/g, '""') + '"')
+            .join(',');
+        csv += rowData + '\n';
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'report.csv';
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
 }
