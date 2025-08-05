@@ -61,7 +61,7 @@ div.searchbar button:hover {
 nav div.nav2-functions {
   display: flex;
   align-items: center;
-  justify: center;
+  justify-content: center;
 }
 
 nav div.nav2-functions button {
