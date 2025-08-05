@@ -32,7 +32,7 @@ div.searchbar {
 
 div.searchbar input {
   background-color: inherit;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   padding: 10px;
   margin: 0 10px 0 0;
   height: 40px;
@@ -48,7 +48,7 @@ div.searchbar button {
   border: none;
   height: 40px;
   width: 50px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background-color: rgb(20, 35, 50);
   color: rgb(255, 255, 255);
 }
@@ -69,7 +69,7 @@ nav div.nav2-functions button {
   margin: 0 0 0 5px;
   border: none;
   padding: 5px 0;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   height: 40px;
   width: 40px;
   color: rgb(20, 35, 50);
@@ -135,7 +135,7 @@ aside div.sidebar-menu-title {
 .dropdown-icon {
   font-weight: bold;
   /*   border:1px solid black; */
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   height: 26px;
   width: 26px;
   display: flex;
@@ -190,7 +190,7 @@ aside li {
   padding: 10px;
   border: 1px solid #ccc;
   background-color: #f8f9fa;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   transition: background-color 0.3s ease;
 }
 
@@ -223,7 +223,7 @@ aside li {
   color: white;
   padding: 8px;
   width: 125px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: none;
 }
 
@@ -276,7 +276,7 @@ main {
   align-items: center;
   justify-content: center;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background-color: rgb(20, 35, 50);
   color: white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -294,7 +294,7 @@ main {
   align-items: center;
   justify-content: center;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background-color: rgb(20, 35, 50);
   color: white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);

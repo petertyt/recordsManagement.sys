@@ -14,7 +14,7 @@ body {
   min-width: 100vw;
   width: 100vw;
   height: 100vh;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: rgb(20, 35, 50);
   background: linear-gradient(
     43deg,
@@ -176,7 +176,7 @@ div.login-modalContainer {
   padding: 0;
   height: 400px;
   width: 600px;
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background-color: white;
   /* border: 1px solid black; */
 }
@@ -245,7 +245,7 @@ div.login-modalContainer {
   padding: 0 0 0 20px;
   color: rgba(20, 35, 50, 0.5);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background-color: #d9d9d9;
   font-size: 14pt;
 }
@@ -287,7 +287,7 @@ input.error {
   font-weight: 600;
   color: white;
   background-color: #142332;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   border: none;
 }
 
