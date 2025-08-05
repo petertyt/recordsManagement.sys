@@ -37,10 +37,6 @@ function initializeDataTableforLetters() {
         ]
     });
 
-    $('#system-search').on('keyup', function () {
-        lettersTable.search(this.value).draw();
-    });
-
     // Attach row click listeners after table is initialized
     $('#letters-table tbody').on('click', 'button.view-letter', function () {
         const row = $(this).closest('tr');

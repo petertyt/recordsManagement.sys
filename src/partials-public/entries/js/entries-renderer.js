@@ -32,7 +32,7 @@ $(document).ready(function () {
 function initializeDataTableforEntries() {
     const entriesTable = $('#entries-table').DataTable({
         "ajax": {
-            "url": "http://localhost:49200/api/recent-entries-full",
+            "url": "http://localhost:49200/api/all-entries",
             "dataSrc": function (json) {
                 console.log("AJAX Response:", json);
                 return json.data; // Adjust based on your API response
@@ -74,15 +74,6 @@ function attachRowClickListener(entriesTable) {
         $('#entry_id').val(data.entry_id);
         $('#status').val(data.status);
         $('#entryModal').modal('show');
-    });
-
-    // Search functionality for the Letter Management
-    let debounceTimeout;
-    $('#system-search').on('keyup', function () {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
-            entriesTable.search(this.value).draw();
-        }, 300); // Adjust delay as necessary
     });
 
     // Handle the View and Delete actions

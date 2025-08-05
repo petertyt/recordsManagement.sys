@@ -38,10 +38,6 @@ function initializeDataTableforFiles() {
         ]
     });
 
-    $('#system-search').on('keyup', function () {
-        filesTable.search(this.value).draw();
-    });
-
     // Attach row click listeners after table is initialized
     $('#file-table tbody').on('click', 'button.view-file', function () {
         const row = $(this).closest('tr');

@@ -259,21 +259,52 @@ app.post('/api/update-letter', (req, res) => {
 
 
 
-  // ALL ENTRIES ROUTE
+  // ALL ENTRIES ROUTE WITH FILTERS
   app.get('/api/all-entries', (req, res) => {
-    const query = `
+    const { keywords, start_date, end_date, status, category } = req.query;
+
+    let query = `
         SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
         FROM entries_tbl
-        ORDER BY entry_date DESC;
+        WHERE 1=1
       `;
 
-    db.all(query, [], (err, rows) => {
+    const params = [];
+
+    if (keywords) {
+      query += ` AND (subject LIKE ? OR file_number LIKE ? OR officer_assigned LIKE ?)`;
+      const likeKeyword = `%${keywords}%`;
+      params.push(likeKeyword, likeKeyword, likeKeyword);
+    }
+
+    if (start_date) {
+      query += ' AND entry_date >= ?';
+      params.push(start_date);
+    }
+
+    if (end_date) {
+      query += ' AND entry_date <= ?';
+      params.push(end_date);
+    }
+
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
+
+    if (category) {
+      query += ' AND entry_category = ?';
+      params.push(category);
+    }
+
+    query += ' ORDER BY entry_date DESC;';
+
+    db.all(query, params, (err, rows) => {
       if (err) {
         console.error("Error executing SQL query:", err.message);
         return res.status(500).json({ error: err.message });
       }
 
-      // console.log("Retrieved rows:", rows); // Debugging output
       res.json({ data: rows });
     });
   });

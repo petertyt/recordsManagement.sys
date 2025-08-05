@@ -183,7 +183,60 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function setupSearchFilters() {
+        const searchInput = document.getElementById('system-search');
+        const categoryFilter = document.getElementById('category-filter');
+        const statusFilter = document.getElementById('status-filter');
+        const startDate = document.getElementById('start-date');
+        const endDate = document.getElementById('end-date');
+
+        let debounceTimeout;
+
+        const fetchAndUpdate = () => {
+            const params = new URLSearchParams();
+            if (searchInput?.value) params.append('keywords', searchInput.value);
+            if (categoryFilter?.value) params.append('category', categoryFilter.value);
+            if (statusFilter?.value) params.append('status', statusFilter.value);
+            if (startDate?.value) params.append('start_date', startDate.value);
+            if (endDate?.value) params.append('end_date', endDate.value);
+
+            fetch(`http://localhost:49200/api/all-entries?${params.toString()}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (window.jQuery && $.fn.DataTable) {
+                        if ($.fn.DataTable.isDataTable('#entries-table')) {
+                            const table = $('#entries-table').DataTable();
+                            table.clear().rows.add(data.data).draw();
+                        }
+                        if ($.fn.DataTable.isDataTable('#letters-table')) {
+                            const table = $('#letters-table').DataTable();
+                            const letters = data.data.filter(r => r.entry_category === 'Letter');
+                            table.clear().rows.add(letters).draw();
+                        }
+                        if ($.fn.DataTable.isDataTable('#file-table')) {
+                            const table = $('#file-table').DataTable();
+                            const files = data.data.filter(r => r.entry_category === 'File');
+                            table.clear().rows.add(files).draw();
+                        }
+                    }
+                })
+                .catch(err => console.error('Search error:', err));
+        };
+
+        const debounceFetch = () => {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(fetchAndUpdate, 300);
+        };
+
+        searchInput?.addEventListener('keyup', debounceFetch);
+        categoryFilter?.addEventListener('change', fetchAndUpdate);
+        statusFilter?.addEventListener('change', fetchAndUpdate);
+        startDate?.addEventListener('change', fetchAndUpdate);
+        endDate?.addEventListener('change', fetchAndUpdate);
+    }
+
     // Initial call to add event listeners
     addMenuEventListeners();
     addActivityViewEventListeners();
+    setupSearchFilters();
 });
