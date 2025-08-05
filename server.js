@@ -115,7 +115,7 @@ app.get('/api/get-files', (req, res) => {
 
 // ADD FILE TO TABLE
 app.post('/api/add-file', (req, res) => {
-  const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
+  const { entry_date, file_number, subject, officer_assigned, status, received_date, date_sent, file_type, recipient, description } = req.body;
 
   // Check only for required fields
   if (!entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
@@ -123,15 +123,15 @@ app.post('/api/add-file', (req, res) => {
   }
 
   // Use null for optional fields if not provided
-  const reciepientValue = reciepient || null;
-  const recievedDateValue = recieved_date || null;
+  const recipientValue = recipient || null;
+  const receivedDateValue = received_date || null;
   const descriptionValue = description || null;
 
   const query = `
-    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status)
+    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, received_date, date_sent, file_type, recipient, description, status)
     VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status], function (err) {
+  db.run(query, [entry_date, file_number, subject, officer_assigned, receivedDateValue, date_sent, file_type, recipientValue, descriptionValue, status], function (err) {
     if (err) {
       console.error("Error inserting new file:", err.message);
       return res.status(500).json({ error: err.message });
@@ -142,7 +142,7 @@ app.post('/api/add-file', (req, res) => {
 
 // UPDATE FILE IN TABLE
 app.post('/api/update-file', (req, res) => {
-  const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, reciepient, file_type, folio_number, description } = req.body;
+  const { entry_id, entry_date, file_number, subject, officer_assigned, status, received_date, date_sent, recipient, file_type, folio_number, description } = req.body;
 
   // Check only for required fields
   if (!entry_id || !entry_date || !file_number || !subject || !officer_assigned || !status || !date_sent || !file_type) {
@@ -150,16 +150,16 @@ app.post('/api/update-file', (req, res) => {
   }
 
   // Use null for optional fields if not provided
-  const reciepientValue = reciepient || null;
-  const recievedDateValue = folio_number || null;
+  const recipientValue = recipient || null;
+  const receivedDateValue = received_date || null;
   const descriptionValue = description || null;
 
   const query = `
     UPDATE entries_tbl
-    SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, date_sent = ?, reciepient = ?, file_type = ?, folio_number = ?, description = ?, status = ?
+    SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, received_date = ?, date_sent = ?, recipient = ?, file_type = ?, folio_number = ?, description = ?, status = ?
     WHERE entry_id = ? AND entry_category = 'File';
   `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, recievedDateValue,reciepientValue, descriptionValue, status, entry_id], function (err) {
+  db.run(query, [entry_date, file_number, subject, officer_assigned, received_date, date_sent, recipientValue, file_type, folio_number, descriptionValue, status, entry_id], function (err) {
     if (err) {
       console.error("Error updating file:", err.message);
       return res.status(500).json({ error: err.message });
@@ -187,10 +187,10 @@ app.post('/api/update-file', (req, res) => {
 
 // ADD LETTER TO TABLE
 app.post('/api/add-letter', (req, res) => {
-  const { entry_date, file_number, subject, officer_assigned, status, recieved_date, letter_date, letter_type, folio_number, description } = req.body;
+  const { entry_date, file_number, subject, officer_assigned, status, received_date, letter_date, letter_type, folio_number, description } = req.body;
 
   // Check only for required fields
-  if (!entry_date || !file_number || !subject || !officer_assigned || !status || !recieved_date || !letter_date || !letter_type) {
+  if (!entry_date || !file_number || !subject || !officer_assigned || !status || !received_date || !letter_date || !letter_type) {
       return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -199,10 +199,10 @@ app.post('/api/add-letter', (req, res) => {
   const descriptionValue = description || null;
 
   const query = `
-      INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, letter_date, letter_type, folio_number, description, status)
+      INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, received_date, letter_date, letter_type, folio_number, description, status)
       VALUES (?, 'Letter', ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recieved_date, letter_date, letter_type, folioNumberValue, descriptionValue, status], function (err) {
+  db.run(query, [entry_date, file_number, subject, officer_assigned, received_date, letter_date, letter_type, folioNumberValue, descriptionValue, status], function (err) {
       if (err) {
           console.error("Error inserting new letter:", err.message);
           return res.status(500).json({ error: err.message });
@@ -214,10 +214,10 @@ app.post('/api/add-letter', (req, res) => {
 
   // UPDATE LETTER IN TABLE
 app.post('/api/update-letter', (req, res) => {
-  const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, letter_date, letter_type, folio_number, description } = req.body;
+  const { entry_id, entry_date, file_number, subject, officer_assigned, status, received_date, letter_date, letter_type, folio_number, description } = req.body;
 
   // Check only for required fields
-  if (!entry_id || !entry_date || !file_number || !subject || !officer_assigned || !status || !recieved_date || !letter_date || !letter_type) {
+  if (!entry_id || !entry_date || !file_number || !subject || !officer_assigned || !status || !received_date || !letter_date || !letter_type) {
       return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -227,10 +227,10 @@ app.post('/api/update-letter', (req, res) => {
 
   const query = `
       UPDATE entries_tbl
-      SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, letter_date = ?, letter_type = ?, folio_number = ?, description = ?, status = ?
+      SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, received_date = ?, letter_date = ?, letter_type = ?, folio_number = ?, description = ?, status = ?
       WHERE entry_id = ? AND entry_category = 'Letter';
   `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recieved_date, letter_date, letter_type, folioNumberValue, descriptionValue, status, entry_id], function (err) {
+  db.run(query, [entry_date, file_number, subject, officer_assigned, received_date, letter_date, letter_type, folioNumberValue, descriptionValue, status, entry_id], function (err) {
       if (err) {
           console.error("Error updating letter:", err.message);
           return res.status(500).json({ error: err.message });

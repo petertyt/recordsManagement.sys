@@ -152,8 +152,8 @@ function populateFileModalFields(data) {
     // File type, date sent, and recipient input fields
     $('#file_type').val(data.file_type);
     $('#date_sent').val(data.date_sent);
-    $('#reciepient_name').val(data.reciepient);
-    $('#recieved_date').val(data.recieved_date);  // Ensure this field is correctly populated
+    $('#recipient').val(data.recipient);
+    $('#received_date').val(data.received_date);  // Ensure this field is correctly populated
 
     // Additional fields
     $('#description').val(data.description);
@@ -168,10 +168,10 @@ function getFileFormData() {
         subject: $('#subject').val(),
         officer_assigned: $('#officer_assigned').val(),
         status: $('#status').val(),
-        recieved_date: $('#recieved_date').val(),
+        received_date: $('#received_date').val(),
         date_sent: $('#date_sent').val(),
         file_type: $('#file_type').val(),
-        reciepient: $('#reciepient_name').val(),
+        recipient: $('#recipient').val(),
         description: $('#description').val(),
     };
     return data;
@@ -183,10 +183,10 @@ function clearFileModalFields() {
     $('#file_number').val('');
     $('#subject').val('');
     $('#officer_assigned').val('');
-    $('#recieved_date').val('');
+    $('#received_date').val('');
     $('#date_sent').val('');
     $('#file_type').val('');
-    $('#reciepient').val('');
+    $('#recipient').val('');
     $('#description').val('');
     $('#status').val('');
     $('#fileForm').data('entry_id', null);
