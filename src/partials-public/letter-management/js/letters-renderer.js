@@ -146,7 +146,7 @@ function populateLetterModalFields(data) {
     $('#file_number').val(data.file_number);
     $('#subject').val(data.subject);
     $('#officer_assigned').val(data.officer_assigned);
-    $('#recieved_date').val(data.recieved_date);
+    $('#received_date').val(data.received_date);
     $('#letter_date').val(data.letter_date);
     $('#letter_type').val(data.letter_type);
     $('#folio_number').val(data.folio_number);
@@ -164,7 +164,7 @@ function getLetterFormData() {
         subject: $('#subject').val(),
         officer_assigned: $('#officer_assigned').val(),
         status: $('#status').val(),
-        recieved_date: $('#recieved_date').val(),
+        received_date: $('#received_date').val(),
         letter_date: $('#letter_date').val(),
         letter_type: $('#letter_type').val(),
         folio_number: $('#folio_number').val() || null,
@@ -177,7 +177,7 @@ function clearLetterModalFields() {
     $('#file_number').val('');
     $('#subject').val('');
     $('#officer_assigned').val('');
-    $('#recieved_date').val('');
+    $('#received_date').val('');
     $('#letter_date').val('');
     $('#letter_type').val('');
     $('#folio_number').val('');
