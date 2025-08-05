@@ -506,16 +506,6 @@ ipcMain.on('login-attempt', (event, credentials) => {
   });
 });
 
-// Handle login success and pass userData to the main window
-ipcMain.on("login-success", (event, userData) => {
-  // Close the splash window
-  if (splashWindow) {
-    splashWindow.close();
-  }
-
-  // Create and show the main window, and pass user data
-  createMainWindow(userData);  // Pass userData when creating the main window
-});
 
 function createMainWindow(userData) {
   mainWindow = new BrowserWindow({
