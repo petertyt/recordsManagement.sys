@@ -57,6 +57,8 @@
     "@electron/fuses": "^1.8.0",
     "electron": "^32.0.1",
     "electron-rebuild": "^3.2.9",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
     "webpack-bundle-analyzer": "^4.10.2"
   },
 "build": {
