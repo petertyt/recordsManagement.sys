@@ -3,10 +3,9 @@ const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
 
-// Start Express server
-function startServer() {
+// Create Express app
+function createServer() {
   const app = express();
-  const PORT = process.env.PORT || 49200;
 
   // Path to the SQLite database
   const dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
@@ -21,6 +20,30 @@ function startServer() {
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  // API route for user authentication (login)
+  app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const query = `
+        SELECT * FROM users_tbl WHERE username = ? AND password = ?;
+      `;
+    db.get(query, [username, password], (err, row) => {
+      if (err) {
+        console.error('Error checking user credentials:', err.message);
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (row) {
+        res.json({ message: 'Login successful', user: row });
+      } else {
+        res.status(401).json({ error: 'Invalid username or password' });
+      }
+    });
+  });
 
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
@@ -335,11 +358,16 @@ app.post('/api/update-letter', (req, res) => {
     });
   });
 
-  // Start the server and handle potential port conflict
-  const server = app.listen(PORT, () => {
+  return app;
+}
+
+// Start the server when this file is run directly
+if (require.main === module) {
+  const PORT = process.env.PORT || 49200;
+  const app = createServer();
+  app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 }
 
-// Start the server when the app starts
-startServer();
+module.exports = createServer;
