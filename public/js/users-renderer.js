@@ -273,10 +273,8 @@ class UserManager {
           : '<span class="badge bg-danger">Inactive</span>';
 
       row.innerHTML = `
-        <td>${user.user_id}</td>
         <td>${this.escapeHtml(user.username)}</td>
         <td>${this.escapeHtml(user.full_name || "-")}</td>
-        <td>${this.escapeHtml(user.email || "-")}</td>
         <td>${this.escapeHtml(user.department || "-")}</td>
         <td>
           <span class="badge ${
@@ -289,10 +287,9 @@ class UserManager {
         <td>${
           user.last_login_date ? this.formatDate(user.last_login_date) : "Never"
         }</td>
-        <td>${this.formatDate(user.user_creation_date)}</td>
         <td>
           <div class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-outline-primary" onclick="window.userManager.editUser(${
+            <button class="btn btn-outline-primary" onclick="window.userManager.enhancedEditUser(${
               user.user_id
             })" title="Edit">
               <i class="bi bi-pencil"></i>
@@ -302,16 +299,9 @@ class UserManager {
             })" title="Change Password">
               <i class="bi bi-key"></i>
             </button>
-            <button class="btn btn-outline-info" onclick="window.userManager.toggleUserStatus(${
-              user.user_id
-            }, ${user.is_active})" title="${
-        user.is_active === 1 ? "Deactivate" : "Activate"
-      }">
-              <i class="bi bi-${user.is_active === 1 ? "pause" : "play"}"></i>
-            </button>
             <button class="btn btn-outline-danger" onclick="window.userManager.deleteUser(${
               user.user_id
-            }, '${user.username}')" title="Delete">
+            }, '${this.escapeHtml(user.username)}')" title="Delete">
               <i class="bi bi-trash"></i>
             </button>
           </div>
@@ -334,10 +324,17 @@ class UserManager {
     const term = searchTerm.toLowerCase();
 
     rows.forEach((row) => {
-      const username = row.cells[1].textContent.toLowerCase();
-      const role = row.cells[2].textContent.toLowerCase();
+      const username = row.cells[0].textContent.toLowerCase();
+      const fullName = row.cells[1].textContent.toLowerCase();
+      const department = row.cells[2].textContent.toLowerCase();
+      const role = row.cells[3].textContent.toLowerCase();
 
-      if (username.includes(term) || role.includes(term)) {
+      if (
+        username.includes(term) ||
+        fullName.includes(term) ||
+        department.includes(term) ||
+        role.includes(term)
+      ) {
         row.style.display = "";
       } else {
         row.style.display = "none";
@@ -682,38 +679,195 @@ class UserManager {
 
   changePassword(userId) {
     this.editingUserId = userId;
-    this.resetPasswordForm();
-
-    const modalElement = document.getElementById("changePasswordModal");
-    let modal = bootstrap.Modal.getInstance(modalElement);
-    if (!modal) {
-      modal = new bootstrap.Modal(modalElement, {
-        backdrop: true,
-        keyboard: true,
-        focus: true,
-      });
-    }
-    modal.show();
+    this.showCustomPasswordChangeModal();
   }
 
-  async savePassword() {
-    if (!this.validatePasswordForm()) return;
+  showCustomPasswordChangeModal() {
+    // Remove any existing custom modal
+    const existingModal = document.getElementById("customPasswordModal");
+    if (existingModal) {
+      existingModal.remove();
+    }
 
-    const currentPasswordElement = document.getElementById("currentPassword");
-    const newPasswordElement = document.getElementById("newPassword");
+    // Create password change modal HTML
+    const modalHtml = `
+      <div class="modal fade" id="customPasswordModal" tabindex="-1" aria-labelledby="customPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+              <h5 class="modal-title" id="customPasswordModalLabel">
+                <i class="bi bi-key"></i> Change Password
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="passwordChangeForm">
+                <div class="mb-3">
+                  <label for="currentPassword" class="form-label">Current Password *</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="currentPassword" required>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div class="invalid-feedback" id="currentPasswordError"></div>
+                </div>
+                <div class="mb-3">
+                  <label for="newPassword" class="form-label">New Password *</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="newPassword" required>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div class="form-text">
+                    <small class="text-muted">
+                      Password must be at least 8 characters long and contain:
+                      <ul class="mb-0 mt-1">
+                        <li>At least one uppercase letter</li>
+                        <li>At least one lowercase letter</li>
+                        <li>At least one number</li>
+                        <li>At least one special character (!@#$%^&*(),.?":{}|<>)</li>
+                      </ul>
+                    </small>
+                  </div>
+                  <div class="invalid-feedback" id="newPasswordError"></div>
+                </div>
+                <div class="mb-3">
+                  <label for="confirmNewPassword" class="form-label">Confirm New Password *</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="confirmNewPassword" required>
+                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div class="invalid-feedback" id="confirmNewPasswordError"></div>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-warning" id="savePasswordBtn" onclick="event.preventDefault();">
+                <i class="bi bi-check-circle"></i> Change Password
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
 
-    if (!currentPasswordElement || !newPasswordElement) {
-      this.showError("Password form fields not found");
+    // Add modal to body
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+    // Get modal element
+    const modal = document.getElementById("customPasswordModal");
+    const modalInstance = new bootstrap.Modal(modal);
+
+    // Setup password toggles
+    this.setupPasswordTogglesForModal(modal);
+
+    // Handle form submission and button click
+    const form = modal.querySelector("#passwordChangeForm");
+    const saveBtn = modal.querySelector("#savePasswordBtn");
+    console.log("Save button found:", saveBtn);
+    console.log("Form found:", form);
+
+    if (form) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        console.log("Form submitted!");
+        this.performPasswordChange(modalInstance);
+      });
+    }
+
+    if (saveBtn) {
+      // Add both event listener and onclick as backup
+      saveBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        console.log("Change password button clicked (addEventListener)!");
+        console.log("this context:", this);
+        this.performPasswordChange(modalInstance);
+      });
+
+      // Also add onclick as backup
+      saveBtn.onclick = (event) => {
+        event.preventDefault();
+        console.log("Change password button clicked (onclick)!");
+        this.performPasswordChange(modalInstance);
+      };
+    } else {
+      console.error("Save password button not found!");
+    }
+
+    // Handle modal hidden event
+    modal.addEventListener("hidden.bs.modal", () => {
+      modal.remove();
+    });
+
+    // Show modal
+    modalInstance.show();
+  }
+
+  setupPasswordTogglesForModal(modal) {
+    const toggles = [
+      { inputId: "currentPassword", toggleId: "toggleCurrentPassword" },
+      { inputId: "newPassword", toggleId: "toggleNewPassword" },
+      { inputId: "confirmNewPassword", toggleId: "toggleConfirmPassword" },
+    ];
+
+    toggles.forEach(({ inputId, toggleId }) => {
+      const input = modal.querySelector(`#${inputId}`);
+      const toggle = modal.querySelector(`#${toggleId}`);
+
+      if (input && toggle) {
+        toggle.addEventListener("click", () => {
+          const type = input.type === "password" ? "text" : "password";
+          input.type = type;
+          const icon = toggle.querySelector("i");
+          icon.className =
+            type === "password" ? "bi bi-eye" : "bi bi-eye-slash";
+        });
+      }
+    });
+  }
+
+  async performPasswordChange(modalInstance) {
+    console.log("performPasswordChange called!");
+    console.log("this.editingUserId:", this.editingUserId);
+
+    if (!this.validateCustomPasswordForm()) {
+      console.log("Password validation failed!");
       return;
     }
 
+    // Get password values from the modal
+    const modal = document.getElementById("customPasswordModal");
+    const currentPasswordInput = modal.querySelector("#currentPassword");
+    const newPasswordInput = modal.querySelector("#newPassword");
+
+    const currentPassword = currentPasswordInput?.value || "";
+    const newPassword = newPasswordInput?.value || "";
+
     const formData = {
-      currentPassword: currentPasswordElement.value,
-      newPassword: newPasswordElement.value,
+      currentPassword,
+      newPassword,
     };
+
+    console.log("Sending password change request:", {
+      userId: this.editingUserId,
+      currentPasswordLength: currentPassword.length,
+      newPasswordLength: newPassword.length,
+      formData,
+    });
 
     try {
       this.showLoading(true);
+
+      console.log(
+        "Making API request to:",
+        `http://localhost:49200/api/users/${this.editingUserId}/change-password`
+      );
+      console.log("Request body:", JSON.stringify(formData, null, 2));
 
       const response = await fetch(
         `http://localhost:49200/api/users/${this.editingUserId}/change-password`,
@@ -726,16 +880,16 @@ class UserManager {
         }
       );
 
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
       const data = await response.json();
 
       if (response.ok) {
         this.showSuccess(data.message);
-        const modalInstance = bootstrap.Modal.getInstance(
-          document.getElementById("changePasswordModal")
-        );
-        if (modalInstance) {
-          modalInstance.hide();
-        }
+        modalInstance.hide();
+        // Clear the form
+        this.resetCustomPasswordForm();
       } else {
         this.showError(data.error);
       }
@@ -746,28 +900,163 @@ class UserManager {
     }
   }
 
-  deleteUser(userId, username) {
-    document.getElementById("deleteUserName").textContent = username;
-    this.editingUserId = userId;
+  validateCustomPasswordForm() {
+    console.log("validateCustomPasswordForm called!");
+    let isValid = true;
+    const errors = {};
 
-    const modalElement = document.getElementById("deleteUserModal");
-    let modal = bootstrap.Modal.getInstance(modalElement);
+    // Find the modal first
+    const modal = document.getElementById("customPasswordModal");
+    console.log("Modal found:", modal);
+
     if (!modal) {
-      modal = new bootstrap.Modal(modalElement, {
-        backdrop: true,
-        keyboard: true,
-        focus: true,
-      });
+      console.log("Modal not found!");
+      return false;
     }
-    modal.show();
+
+    // Get input elements from within the modal
+    const currentPasswordInput = modal.querySelector("#currentPassword");
+    const newPasswordInput = modal.querySelector("#newPassword");
+    const confirmNewPasswordInput = modal.querySelector("#confirmNewPassword");
+
+    console.log("Input elements found:", {
+      currentPasswordInput: !!currentPasswordInput,
+      newPasswordInput: !!newPasswordInput,
+      confirmNewPasswordInput: !!confirmNewPasswordInput,
+    });
+
+    const currentPassword = currentPasswordInput?.value || "";
+    const newPassword = newPasswordInput?.value || "";
+    const confirmNewPassword = confirmNewPasswordInput?.value || "";
+
+    // Clear previous errors
+    this.clearCustomPasswordFormErrors();
+
+    // Validate current password
+    console.log("Current password length:", currentPassword.length);
+    if (!currentPassword) {
+      console.log("Current password validation failed: empty");
+      errors.currentPassword = "Current password is required";
+      isValid = false;
+    }
+
+    // Validate new password
+    console.log("New password length:", newPassword.length);
+    console.log("New password value:", newPassword);
+    if (!newPassword) {
+      console.log("New password validation failed: empty");
+      errors.newPassword = "New password is required";
+      isValid = false;
+    } else {
+      // Enhanced password validation
+      const minLength = 8;
+      const hasUpperCase = /[A-Z]/.test(newPassword);
+      const hasLowerCase = /[a-z]/.test(newPassword);
+      const hasNumbers = /\d/.test(newPassword);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+
+      console.log("Password validation checks:", {
+        length: newPassword.length,
+        minLength,
+        hasUpperCase,
+        hasLowerCase,
+        hasNumbers,
+        hasSpecialChar,
+      });
+
+      if (newPassword.length < minLength) {
+        console.log("New password validation failed: too short");
+        errors.newPassword = `Password must be at least ${minLength} characters long`;
+        isValid = false;
+      } else if (!hasUpperCase) {
+        console.log("New password validation failed: no uppercase");
+        errors.newPassword =
+          "Password must contain at least one uppercase letter";
+        isValid = false;
+      } else if (!hasLowerCase) {
+        console.log("New password validation failed: no lowercase");
+        errors.newPassword =
+          "Password must contain at least one lowercase letter";
+        isValid = false;
+      } else if (!hasNumbers) {
+        console.log("New password validation failed: no numbers");
+        errors.newPassword = "Password must contain at least one number";
+        isValid = false;
+      } else if (!hasSpecialChar) {
+        console.log("New password validation failed: no special char");
+        errors.newPassword =
+          "Password must contain at least one special character";
+        isValid = false;
+      }
+    }
+
+    // Validate confirm password
+    console.log("Confirm password length:", confirmNewPassword.length);
+    console.log("Confirm password value:", confirmNewPassword);
+    console.log("Passwords match:", newPassword === confirmNewPassword);
+    if (!confirmNewPassword) {
+      console.log("Confirm password validation failed: empty");
+      errors.confirmNewPassword = "Please confirm your new password";
+      isValid = false;
+    } else if (newPassword !== confirmNewPassword) {
+      console.log("Confirm password validation failed: passwords don't match");
+      errors.confirmNewPassword = "Passwords do not match";
+      isValid = false;
+    }
+
+    // Display errors
+    Object.keys(errors).forEach((field) => {
+      const errorElement = document.getElementById(field + "Error");
+      if (errorElement) {
+        errorElement.textContent = errors[field];
+        errorElement.style.display = "block";
+      }
+    });
+
+    console.log("Final validation result:", isValid);
+    console.log("Validation errors:", errors);
+    return isValid;
   }
 
-  async confirmDelete() {
+  clearCustomPasswordFormErrors() {
+    const errorElements = document.querySelectorAll(
+      "#customPasswordModal .invalid-feedback"
+    );
+    errorElements.forEach((element) => {
+      element.style.display = "none";
+    });
+  }
+
+  resetCustomPasswordForm() {
+    const form = document.getElementById("passwordChangeForm");
+    if (form) {
+      form.reset();
+    }
+    this.clearCustomPasswordFormErrors();
+  }
+
+  deleteUser(userId, username) {
+    // Use custom confirmation modal instead of separate delete modal
+    this.showConfirmModal(
+      "Delete User",
+      `Are you sure you want to delete user "${username}"? This action cannot be undone.`,
+      async () => {
+        // User confirmed deletion
+        await this.performDeleteUser(userId);
+      },
+      () => {
+        // User cancelled
+        console.log("User cancelled deletion");
+      }
+    );
+  }
+
+  async performDeleteUser(userId) {
     try {
       this.showLoading(true);
 
       const response = await fetch(
-        `http://localhost:49200/api/users/${this.editingUserId}`,
+        `http://localhost:49200/api/users/${userId}`,
         {
           method: "DELETE",
         }
@@ -777,12 +1066,6 @@ class UserManager {
 
       if (response.ok) {
         this.showSuccess(data.message);
-        const modalInstance = bootstrap.Modal.getInstance(
-          document.getElementById("deleteUserModal")
-        );
-        if (modalInstance) {
-          modalInstance.hide();
-        }
         // Force immediate refresh
         await this.loadUsers();
         await this.loadUserStats();
@@ -806,36 +1089,49 @@ class UserManager {
       const newStatus = currentStatus === 1 ? false : true;
       const action = newStatus ? "activate" : "deactivate";
 
-      if (!confirm(`Are you sure you want to ${action} this user?`)) {
-        return;
-      }
+      // Use custom confirmation modal instead of default confirm
+      this.showConfirmModal(
+        "Confirm Action",
+        `Are you sure you want to ${action} this user?`,
+        async () => {
+          // Continue with the action
+          console.log(
+            `Making API call to update status: isActive=${newStatus}`
+          );
+          const response = await fetch(
+            `http://localhost:49200/api/users/${userId}/status`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ isActive: newStatus }),
+            }
+          );
 
-      console.log(`Making API call to update status: isActive=${newStatus}`);
-      const response = await fetch(
-        `http://localhost:49200/api/users/${userId}/status`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ isActive: newStatus }),
+          console.log(`API response status: ${response.status}`);
+          const data = await response.json();
+          console.log(`API response data:`, data);
+
+          if (response.ok) {
+            this.showSuccess(data.message);
+            console.log(
+              "Status updated successfully, reloading users and stats"
+            );
+            // Force immediate refresh
+            await this.loadUsers();
+            await this.loadUserStats();
+            console.log("Users and stats refreshed after status update");
+          } else {
+            this.showError(data.error);
+          }
+        },
+        () => {
+          // User cancelled
+          console.log("User cancelled the action");
         }
       );
-
-      console.log(`API response status: ${response.status}`);
-      const data = await response.json();
-      console.log(`API response data:`, data);
-
-      if (response.ok) {
-        this.showSuccess(data.message);
-        console.log("Status updated successfully, reloading users and stats");
-        // Force immediate refresh
-        await this.loadUsers();
-        await this.loadUserStats();
-        console.log("Users and stats refreshed after status update");
-      } else {
-        this.showError(data.error);
-      }
+      return; // Exit early since we're using async callback
     } catch (error) {
       console.error("Error updating user status:", error);
       this.showError("Error updating user status: " + error.message);
@@ -897,14 +1193,12 @@ class UserManager {
       }
     }
 
-    // Password validation (only for new users) - TEMPORARILY DISABLED
+    // Password validation (only for new users)
     if (!this.isEditMode) {
-      console.log("Password validation temporarily disabled");
-      /*
       console.log("Validating password for new user");
       const passwordElement = document.getElementById("password");
       const confirmPasswordElement = document.getElementById("confirmPassword");
-      
+
       console.log("Password element found:", !!passwordElement);
       console.log("Confirm password element found:", !!confirmPasswordElement);
 
@@ -919,7 +1213,7 @@ class UserManager {
       } else {
         const password = passwordElement.value;
         const confirmPassword = confirmPasswordElement.value;
-        
+
         console.log("Password value length:", password ? password.length : 0);
         console.log(
           "Confirm password value length:",
@@ -930,51 +1224,29 @@ class UserManager {
           errors.password = "Password is required";
           isValid = false;
         } else {
-          // Enhanced password validation to match backend requirements
-          const minLength = 8;
-          const hasUpperCase = /[A-Z]/.test(password);
-          const hasLowerCase = /[a-z]/.test(password);
-          const hasNumbers = /\d/.test(password);
-          const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+          // Basic password validation - minimum length only
+          const minLength = 6;
 
           console.log("Password validation results:", {
             length: password.length,
-            hasUpperCase,
-            hasLowerCase,
-            hasNumbers,
-            hasSpecialChar,
+            minLength,
           });
 
           if (password.length < minLength) {
             errors.password = `Password must be at least ${minLength} characters long`;
             isValid = false;
-          } else if (!hasUpperCase) {
-            errors.password =
-              "Password must contain at least one uppercase letter";
-            isValid = false;
-          } else if (!hasLowerCase) {
-            errors.password =
-              "Password must contain at least one lowercase letter";
-            isValid = false;
-          } else if (!hasNumbers) {
-            errors.password = "Password must contain at least one number";
-            isValid = false;
-          } else if (!hasSpecialChar) {
-            errors.password =
-              "Password must contain at least one special character";
-            isValid = false;
           }
         }
-      }
 
-      if (!confirmPassword) {
-        errors.confirmPassword = "Please confirm your password";
-        isValid = false;
-      } else if (password !== confirmPassword) {
-        errors.confirmPassword = "Passwords do not match";
-        isValid = false;
+        // Confirm password validation
+        if (!confirmPassword) {
+          errors.confirmPassword = "Please confirm your password";
+          isValid = false;
+        } else if (password && password !== confirmPassword) {
+          errors.confirmPassword = "Passwords do not match";
+          isValid = false;
+        }
       }
-      */
     } else {
       console.log("Skipping password validation for edit mode");
     }
@@ -1139,13 +1411,98 @@ class UserManager {
   }
 
   showSuccess(message) {
-    // You can implement a toast notification system here
-    alert("Success: " + message);
+    this.showCustomModal("Success", message, "success");
   }
 
   showError(message) {
-    // You can implement a toast notification system here
-    alert("Error: " + message);
+    this.showCustomModal("Error", message, "error");
+  }
+
+  showConfirmModal(title, message, onConfirm, onCancel = null) {
+    this.showCustomModal(title, message, "confirm", onConfirm, onCancel);
+  }
+
+  showCustomModal(
+    title,
+    message,
+    type = "info",
+    onConfirm = null,
+    onCancel = null
+  ) {
+    // Remove any existing custom modal
+    const existingModal = document.getElementById("customModal");
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // Create modal HTML
+    const modalHtml = `
+      <div class="modal fade" id="customModal" tabindex="-1" aria-labelledby="customModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header ${
+              type === "error"
+                ? "bg-danger text-white"
+                : type === "success"
+                ? "bg-success text-white"
+                : "bg-primary text-white"
+            }">
+              <h5 class="modal-title" id="customModalLabel">
+                <i class="bi ${
+                  type === "error"
+                    ? "bi-exclamation-triangle"
+                    : type === "success"
+                    ? "bi-check-circle"
+                    : "bi-info-circle"
+                }"></i>
+                ${this.escapeHtml(title)}
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p class="mb-0">${this.escapeHtml(message)}</p>
+            </div>
+            <div class="modal-footer">
+              ${
+                type === "confirm"
+                  ? `
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
+              `
+                  : `
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+              `
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add modal to body
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+    // Get modal element
+    const modal = document.getElementById("customModal");
+    const modalInstance = new bootstrap.Modal(modal);
+
+    // Handle confirm button click
+    if (type === "confirm" && onConfirm) {
+      const confirmBtn = modal.querySelector("#confirmBtn");
+      confirmBtn.addEventListener("click", () => {
+        modalInstance.hide();
+        if (onConfirm) onConfirm();
+      });
+    }
+
+    // Handle modal hidden event
+    modal.addEventListener("hidden.bs.modal", () => {
+      if (type === "confirm" && onCancel) onCancel();
+      modal.remove();
+    });
+
+    // Show modal
+    modalInstance.show();
   }
 
   // Focus management for modals
@@ -2245,6 +2602,266 @@ class UserManager {
     });
 
     console.log("=== CHECK FORM VALUES END ===");
+  }
+
+  async enhancedEditUser(userId) {
+    console.log("=== ENHANCED EDIT USER DEBUG ===");
+    console.log("Enhanced edit user called for ID:", userId);
+
+    try {
+      // Fetch user details
+      const response = await fetch(
+        `http://localhost:49200/api/users/${userId}`
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user: ${response.statusText}`);
+      }
+
+      const responseData = await response.json();
+      console.log("Fetched user data:", responseData);
+
+      // Extract user data from the response
+      const user = responseData.data;
+      if (!user) {
+        throw new Error("No user data received from server");
+      }
+
+      // Show enhanced edit modal with all user details
+      this.showEnhancedEditModal(user);
+    } catch (error) {
+      console.error("Error in enhancedEditUser:", error);
+      this.showError("Failed to load user details");
+    }
+  }
+
+  showEnhancedEditModal(user) {
+    console.log("=== SHOW ENHANCED EDIT MODAL DEBUG ===");
+    console.log("Showing enhanced edit modal for user:", user);
+
+    // Create modal HTML with all user details and action buttons
+    const modalHtml = `
+      <div class="modal fade" id="enhancedEditModal" tabindex="-1" aria-labelledby="enhancedEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="enhancedEditModalLabel">
+                <i class="bi bi-pencil-square"></i> Edit User: ${this.escapeHtml(
+                  user.username
+                )}
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6 class="text-primary mb-3">User Information</h6>
+                  <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" id="enhanced-username" value="${this.escapeHtml(
+                      user.username
+                    )}">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="enhanced-full-name" value="${this.escapeHtml(
+                      user.full_name || ""
+                    )}">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="enhanced-email" value="${this.escapeHtml(
+                      user.email || ""
+                    )}">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Department</label>
+                    <input type="text" class="form-control" id="enhanced-department" value="${this.escapeHtml(
+                      user.department || ""
+                    )}">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="enhanced-phone" value="${this.escapeHtml(
+                      user.phone || ""
+                    )}">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select class="form-select" id="enhanced-user-role">
+                      <option value="User" ${
+                        user.user_role === "User" ? "selected" : ""
+                      }>User</option>
+                      <option value="Administrator" ${
+                        user.user_role === "Administrator" ? "selected" : ""
+                      }>Administrator</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <h6 class="text-info mb-3">Account Details</h6>
+                  <div class="mb-3">
+                    <label class="form-label">User ID</label>
+                    <input type="text" class="form-control" value="${
+                      user.user_id
+                    }" readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Status</label>
+                    <div class="d-flex align-items-center">
+                      <span class="badge ${
+                        user.is_active === 1 ? "bg-success" : "bg-danger"
+                      } me-2">
+                        ${user.is_active === 1 ? "Active" : "Inactive"}
+                      </span>
+                      <button class="btn btn-sm ${
+                        user.is_active === 1 ? "btn-warning" : "btn-success"
+                      }" 
+                              onclick="window.userManager.toggleUserStatusFromEnhanced(${
+                                user.user_id
+                              }, ${user.is_active})">
+                        ${user.is_active === 1 ? "Deactivate" : "Activate"}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Created Date</label>
+                    <input type="text" class="form-control" value="${this.formatDate(
+                      user.user_creation_date
+                    )}" readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Last Login</label>
+                    <input type="text" class="form-control" value="${
+                      user.last_login_date
+                        ? this.formatDate(user.last_login_date)
+                        : "Never"
+                    }" readonly>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Actions</label>
+                    <div class="d-grid gap-2">
+                      <button class="btn btn-warning btn-sm" onclick="window.userManager.changePasswordFromEnhanced(${
+                        user.user_id
+                      })">
+                        <i class="bi bi-key"></i> Change Password
+                      </button>
+                      <button class="btn btn-danger btn-sm" onclick="window.userManager.deleteUserFromEnhanced(${
+                        user.user_id
+                      }, '${this.escapeHtml(user.username)}')">
+                        <i class="bi bi-trash"></i> Delete User
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" onclick="window.userManager.saveEnhancedUser(${
+                user.user_id
+              })">
+                <i class="bi bi-check"></i> Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Remove existing modal if any
+    const existingModal = document.getElementById("enhancedEditModal");
+    if (existingModal) {
+      existingModal.remove();
+    }
+
+    // Add modal to body
+    document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+    // Show modal
+    const modal = new bootstrap.Modal(
+      document.getElementById("enhancedEditModal")
+    );
+    modal.show();
+
+    console.log("Enhanced edit modal displayed");
+    console.log("=== SHOW ENHANCED EDIT MODAL DEBUG END ===");
+  }
+
+  async saveEnhancedUser(userId) {
+    console.log("=== SAVE ENHANCED USER DEBUG ===");
+    console.log("Saving enhanced user with ID:", userId);
+
+    try {
+      const userData = {
+        username: document.getElementById("enhanced-username").value,
+        full_name: document.getElementById("enhanced-full-name").value,
+        email: document.getElementById("enhanced-email").value,
+        department: document.getElementById("enhanced-department").value,
+        phone: document.getElementById("enhanced-phone").value,
+        user_role: document.getElementById("enhanced-user-role").value,
+      };
+
+      console.log("User data to save:", userData);
+
+      const response = await fetch(
+        `http://localhost:49200/api/users/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update user");
+      }
+
+      const result = await response.json();
+      console.log("Update result:", result);
+
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(
+        document.getElementById("enhancedEditModal")
+      );
+      modal.hide();
+
+      // Refresh user list
+      await this.loadUsers();
+      this.showSuccess("User updated successfully");
+    } catch (error) {
+      console.error("Error saving enhanced user:", error);
+      this.showError(error.message);
+    }
+  }
+
+  toggleUserStatusFromEnhanced(userId, currentStatus) {
+    console.log("Toggle status from enhanced modal:", userId, currentStatus);
+    this.toggleUserStatus(userId, currentStatus);
+  }
+
+  changePasswordFromEnhanced(userId) {
+    console.log("Change password from enhanced modal:", userId);
+    // Close enhanced modal first
+    const modal = bootstrap.Modal.getInstance(
+      document.getElementById("enhancedEditModal")
+    );
+    modal.hide();
+    // Then open password change modal
+    this.changePassword(userId);
+  }
+
+  deleteUserFromEnhanced(userId, username) {
+    console.log("Delete user from enhanced modal:", userId, username);
+    // Close enhanced modal first
+    const modal = bootstrap.Modal.getInstance(
+      document.getElementById("enhancedEditModal")
+    );
+    modal.hide();
+    // Then open delete confirmation
+    this.deleteUser(userId, username);
   }
 }
 

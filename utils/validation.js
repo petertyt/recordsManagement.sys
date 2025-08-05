@@ -221,6 +221,33 @@ function validateUserData(userData, isUpdate = false) {
     }
   }
 
+  if (userData.full_name) {
+    const sanitizedFullName = sanitizeInput(userData.full_name);
+    if (sanitizedFullName.length > 100) {
+      errors.push("Full name must be less than 100 characters");
+    } else {
+      sanitizedData.full_name = sanitizedFullName;
+    }
+  }
+
+  if (userData.department) {
+    const sanitizedDepartment = sanitizeInput(userData.department);
+    if (sanitizedDepartment.length > 50) {
+      errors.push("Department must be less than 50 characters");
+    } else {
+      sanitizedData.department = sanitizedDepartment;
+    }
+  }
+
+  if (userData.phone) {
+    const sanitizedPhone = sanitizeInput(userData.phone);
+    if (sanitizedPhone.length > 20) {
+      errors.push("Phone number must be less than 20 characters");
+    } else {
+      sanitizedData.phone = sanitizedPhone;
+    }
+  }
+
   if (userData.user_role) {
     const validRoles = ["admin", "user", "manager", "Administrator", "User"];
     const sanitizedRole = sanitizeInput(userData.user_role);

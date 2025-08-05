@@ -848,17 +848,37 @@ function startServer() {
   // CREATE NEW USER
   app.post("/api/users", async (req, res) => {
     try {
-      const { username, password, user_role } = req.body;
+      const {
+        username,
+        password,
+        user_role,
+        full_name,
+        email,
+        department,
+        phone,
+      } = req.body;
 
       // Validate input data
-      const validation = validateUserData({ username, password, user_role });
+      const validation = validateUserData({
+        username,
+        password,
+        user_role,
+        full_name,
+        email,
+        department,
+        phone,
+      });
       if (!validation.isValid) {
         return res.status(400).json({ error: validation.errors.join(", ") });
       }
 
-      // Sanitize inputs
-      const sanitizedUsername = sanitizeInput(username);
-      const sanitizedRole = sanitizeInput(user_role);
+      // Use sanitized data from validation
+      const sanitizedUsername = validation.sanitizedData.username;
+      const sanitizedRole = validation.sanitizedData.user_role;
+      const sanitizedFullName = validation.sanitizedData.full_name || null;
+      const sanitizedEmail = validation.sanitizedData.email || null;
+      const sanitizedDepartment = validation.sanitizedData.department || null;
+      const sanitizedPhone = validation.sanitizedData.phone || null;
 
       // Check if username already exists
       db.get(
@@ -876,37 +896,49 @@ function startServer() {
           // Hash password
           const hashedPassword = await bcrypt.hash(password, 10);
 
-          // Insert new user
+          // Insert new user with all fields
           const query = `
-          INSERT INTO users_tbl (username, password, user_role, user_creation_date)
-          VALUES (?, ?, ?, datetime('now'));
+          INSERT INTO users_tbl (username, password, user_role, full_name, email, department, phone, user_creation_date)
+          VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'));
         `;
-          db.run(
-            query,
-            [sanitizedUsername, hashedPassword, sanitizedRole],
-            function (err) {
-              if (err) {
-                console.error("Error creating user:", err.message);
-                return res.status(500).json({ error: err.message });
-              }
+          const params = [
+            sanitizedUsername,
+            hashedPassword,
+            sanitizedRole,
+            sanitizedFullName,
+            sanitizedEmail,
+            sanitizedDepartment,
+            sanitizedPhone,
+          ];
 
-              // Log the user creation event
-              auditLogger.logUserManagementEvent(
-                "system",
-                "create_user",
-                sanitizedUsername,
-                {
-                  user_id: this.lastID,
-                  role: sanitizedRole,
-                }
-              );
-
-              res.status(201).json({
-                message: "User created successfully",
-                user_id: this.lastID,
-              });
+          db.run(query, params, function (err) {
+            if (err) {
+              console.error("Error creating user:", err.message);
+              return res.status(500).json({ error: err.message });
             }
-          );
+
+            console.log("User created successfully with ID:", this.lastID);
+
+            // Log the user creation event
+            auditLogger.logUserManagementEvent(
+              "system",
+              "create_user",
+              sanitizedUsername,
+              {
+                user_id: this.lastID,
+                role: sanitizedRole,
+                full_name: sanitizedFullName,
+                email: sanitizedEmail,
+                department: sanitizedDepartment,
+                phone: sanitizedPhone,
+              }
+            );
+
+            res.status(201).json({
+              message: "User created successfully",
+              user_id: this.lastID,
+            });
+          });
         }
       );
     } catch (error) {
@@ -1134,7 +1166,17 @@ function startServer() {
       const { userId } = req.params;
       const { currentPassword, newPassword } = req.body;
 
+      console.log("Password change request received:", {
+        userId,
+        hasCurrentPassword: !!currentPassword,
+        hasNewPassword: !!newPassword,
+        currentPasswordLength: currentPassword?.length || 0,
+        newPasswordLength: newPassword?.length || 0,
+        body: req.body,
+      });
+
       if (!currentPassword || !newPassword) {
+        console.log("Password change validation failed: missing passwords");
         return res
           .status(400)
           .json({ error: "Current password and new password are required" });
@@ -1503,47 +1545,54 @@ let mainWindow;
 // Helper function to send update status to whichever window is available
 function sendStatusToWindow(message) {
   if (mainWindow) {
-    mainWindow.webContents.send('update-message', message);
+    mainWindow.webContents.send("update-message", message);
   } else if (splashWindow) {
-    splashWindow.webContents.send('update-message', message);
+    splashWindow.webContents.send("update-message", message);
   }
 }
 
 // AutoUpdater event listeners
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
+autoUpdater.on("checking-for-update", () => {
+  sendStatusToWindow("Checking for update...");
 });
 
-autoUpdater.on('update-available', () => {
-  sendStatusToWindow('Update available.');
+autoUpdater.on("update-available", () => {
+  sendStatusToWindow("Update available.");
 });
 
-autoUpdater.on('update-not-available', () => {
-  sendStatusToWindow('Update not available.');
+autoUpdater.on("update-not-available", () => {
+  sendStatusToWindow("Update not available.");
 });
 
-autoUpdater.on('error', (err) => {
-  sendStatusToWindow(`Error in auto-updater: ${err === null ? 'unknown' : err.toString()}`);
+autoUpdater.on("error", (err) => {
+  sendStatusToWindow(
+    `Error in auto-updater: ${err === null ? "unknown" : err.toString()}`
+  );
 });
 
-autoUpdater.on('download-progress', (progressObj) => {
-  const logMessage = `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent.toFixed(2)}% (${progressObj.transferred}/${progressObj.total})`;
+autoUpdater.on("download-progress", (progressObj) => {
+  const logMessage = `Download speed: ${
+    progressObj.bytesPerSecond
+  } - Downloaded ${progressObj.percent.toFixed(2)}% (${
+    progressObj.transferred
+  }/${progressObj.total})`;
   sendStatusToWindow(logMessage);
 });
 
-autoUpdater.on('update-downloaded', () => {
-  sendStatusToWindow('Update downloaded; restart to install.');
+autoUpdater.on("update-downloaded", () => {
+  sendStatusToWindow("Update downloaded; restart to install.");
   if (mainWindow) {
-    mainWindow.webContents.send('update-downloaded');
+    mainWindow.webContents.send("update-downloaded");
   } else if (splashWindow) {
-    splashWindow.webContents.send('update-downloaded');
+    splashWindow.webContents.send("update-downloaded");
   }
   dialog
     .showMessageBox({
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Update Ready',
-      message: 'A new version has been downloaded. Restart now to apply the update?'
+      type: "info",
+      buttons: ["Restart", "Later"],
+      title: "Update Ready",
+      message:
+        "A new version has been downloaded. Restart now to apply the update?",
     })
     .then((returnValue) => {
       if (returnValue.response === 0) {
@@ -1552,27 +1601,39 @@ autoUpdater.on('update-downloaded', () => {
     });
 });
 
-ipcMain.on('restart_app', () => {
+ipcMain.on("restart_app", () => {
   autoUpdater.quitAndInstall();
 });
 
 function createSplashWindow() {
-  splashWindow = new BrowserWindow({
-    width: 900,
-    height: 600,
-    frame: false,
-    transparent: true,
-    // alwaysOnTop: true,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-      enableRemoteModule: false,
-      nodeIntegration: true,
-    },
-    icon: path.join(__dirname, "assets/icons/ico/icon-exe.ico"),
-  });
+  try {
+    splashWindow = new BrowserWindow({
+      width: 900,
+      height: 600,
+      frame: false,
+      transparent: true,
+      // alwaysOnTop: true,
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+        enableRemoteModule: false,
+        nodeIntegration: true,
+      },
+      icon: path.join(__dirname, "assets/icons/ico/icon-exe.ico"),
+    });
 
-  splashWindow.loadFile("src/splash-page/splash.html");
+    splashWindow.loadFile("src/splash-page/splash.html");
+
+    // Add event listener to ensure window is shown
+    splashWindow.once("ready-to-show", () => {
+      console.log("Splash window ready to show");
+      splashWindow.show();
+    });
+
+    console.log("Splash window created successfully");
+  } catch (error) {
+    console.error("Error creating splash window:", error);
+  }
 }
 
 // IPC event for handling login attempts
@@ -1694,25 +1755,42 @@ function createMainWindow(userData) {
 }
 
 // Handle the 'sign-out' event from the renderer
-ipcMain.on('sign-out', async () => {
-  // Clear session data and close the main window
-  if (mainWindow) {
-    try {
-      await session.defaultSession.clearStorageData();
-      await session.defaultSession.clearCache();
-    } catch (error) {
-      console.error('Error clearing session data:', error);
+ipcMain.on("sign-out", async () => {
+  console.log("Sign out event received");
+
+  try {
+    // Clear session data and close the main window
+    if (mainWindow) {
+      try {
+        await session.defaultSession.clearStorageData();
+        await session.defaultSession.clearCache();
+      } catch (error) {
+        console.error("Error clearing session data:", error);
+      }
+
+      mainWindow.close();
+      mainWindow = null; // Clear the reference
     }
 
-    mainWindow.close();
-    mainWindow = null; // Clear the reference
-  }
+    // Reopen the splash window
+    if (!splashWindow) {
+      console.log("Creating new splash window");
+      createSplashWindow();
+    } else {
+      console.log("Showing existing splash window");
+      splashWindow.show();
+    }
 
-  // Reopen the splash window
-  if (!splashWindow) {
-    createSplashWindow();
-  } else {
-    splashWindow.show();
+    // Force show splash window after a short delay to ensure it's visible
+    setTimeout(() => {
+      if (splashWindow && !splashWindow.isDestroyed()) {
+        console.log("Force showing splash window");
+        splashWindow.show();
+        splashWindow.focus();
+      }
+    }, 500);
+  } catch (error) {
+    console.error("Error in sign out process:", error);
   }
 });
 
@@ -1726,5 +1804,6 @@ app.on("activate", () => {
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  // Don't quit the app when windows are closed - let the app stay running
+  // This allows the splash window to remain open after sign out
 });

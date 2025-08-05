@@ -1,69 +1,95 @@
 <!-- splash.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';"
+    />
     <title>Splash Screen | Records Management System</title>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
     <!-- Custom Fonts (Poppins) -->
-    <link rel="stylesheet" href="../../public/index/css/font.css">
+    <link rel="stylesheet" href="../../public/index/css/font.css" />
     <!-- Custom Stylesheet -->
-    <link rel="stylesheet" href="./css/splash-styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./css/splash-styles.css" />
+  </head>
+  <body>
     <!-- Main Splash Content -->
     <div class="splash-container">
-        <div class="splash-contentContainer">
-            <div class="splashContent-title">
-                <h1>records</h1>
-                <div class="demo-title">
-                    <p>Demo</p>
-                </div>
-            </div>
-            <div class="splashContent-main">
-                <img src="../splash-page/assets/splash-main/splash-title-icon.png" alt="Title-icon">
-                <p>File Management System <br>(Files Office)</p>
-            </div>
-            <div class="splashContent-end">
-                <p>LOADING<span class="spinner-border spinner-border-sm" id="loader"></span></p>
-                <p>Author: Peter Quayetey</p>
-            </div>
-            <div class="divider"></div>
+      <div class="splash-contentContainer">
+        <div class="splashContent-title">
+          <h1>records</h1>
+          <div class="demo-title">
+            <p>Demo</p>
+          </div>
         </div>
+        <div class="splashContent-main">
+          <img
+            src="../splash-page/assets/splash-main/splash-title-icon.png"
+            alt="Title-icon"
+          />
+          <p>File Management System <br />(Files Office)</p>
+        </div>
+        <div class="splashContent-end">
+          <p>
+            LOADING<span
+              class="spinner-border spinner-border-sm"
+              id="loader"
+            ></span>
+          </p>
+          <p>Author: Peter Quayetey</p>
+        </div>
+        <div class="divider"></div>
+      </div>
     </div>
 
     <!-- Login Modal -->
     <div class="login-modalPosition">
-        <div class="login-modalContainer fade-in" id="login-modal">
-            <div class="login-modalContent">
-                <div class="modalContent-title">
-                    <h1>SIGN IN</h1>
-                    <img src="../splash-page/assets/splash-loginModal/splash-modal-icon.png" alt="title-icon">
-                </div>
-                <div class="modalForm">
-                    <form class="modalContent">
-                        <div class="modalContent-main">
-                            <input type="text" placeholder="Username" name="username" required>
-                            <input type="password" placeholder="Password" name="password" required>
-                        </div>
-                        <div class="modalContent-end">
-                            <button id="login-btn">Log In</button>
-                            <a href="#">Forgot password?</a>
-                        </div>
-                    </form>
-                    <div id="error-msg" style="color:red; margin-top: 10px;"></div>
-                </div>
-            </div>
+      <div class="login-modalContainer fade-in" id="login-modal">
+        <div class="login-modalContent">
+          <div class="modalContent-title">
+            <h1>SIGN IN</h1>
+            <img
+              src="../splash-page/assets/splash-loginModal/splash-modal-icon.png"
+              alt="title-icon"
+            />
+          </div>
+          <div class="modalForm">
+            <form class="modalContent">
+              <div class="modalContent-main">
+                <input
+                  type="text"
+                  placeholder="Username"
+                  name="username"
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  required
+                />
+              </div>
+              <div class="modalContent-end">
+                <button id="login-btn">Log In</button>
+                <a href="#">Forgot password?</a>
+              </div>
+            </form>
+            <div id="error-msg" style="color: red; margin-top: 10px"></div>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Javascript -->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/splash-renderer.js"></script>
-</body>
+  </body>
 </html>
