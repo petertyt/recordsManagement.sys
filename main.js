@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const ejs = require("ejs-electron");
 const { autoUpdater } = require("electron-updater");
-const fs = require("fs");
+const fs = require("fs").promises;
 
 // SERVER ROUTES
 const express = require('express');
@@ -12,44 +12,44 @@ const bodyParser = require('body-parser');
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
 
-// Determine the correct path for the database
+// Determine the correct path for the database and ensure it exists
 let dbPath;
-if (app.isPackaged) {
-  // Production mode: Store the database in the userData folder
-  dbPath = path.join(app.getPath('userData'), 'recordsmgmtsys.db');
+let db;
 
-  // Check if the database exists in userData; if not, copy it from resources
-  if (!fs.existsSync(dbPath)) {
-    const sourceDbPath = path.join(process.resourcesPath, 'database/recordsmgmtsys.db');
-    console.log('Source DB Path:', sourceDbPath); // Debugging the source path
+async function initializeDatabase() {
+  if (app.isPackaged) {
+    // Production mode: Store the database in the userData folder
+    dbPath = path.join(app.getPath('userData'), 'recordsmgmtsys.db');
 
     try {
-      if (fs.existsSync(sourceDbPath)) {
-        fs.copyFileSync(sourceDbPath, dbPath);
+      await fs.access(dbPath);
+      console.log('Database already exists in userData folder:', dbPath);
+    } catch {
+      const sourceDbPath = path.join(process.resourcesPath, 'database/recordsmgmtsys.db');
+      console.log('Source DB Path:', sourceDbPath); // Debugging the source path
+
+      try {
+        await fs.copyFile(sourceDbPath, dbPath);
         console.log('Database copied to userData folder:', dbPath);
-      } else {
-        console.error('Source database file not found at:', sourceDbPath);
+      } catch (err) {
+        console.error('Error copying database file:', err.message);
+        throw err;
       }
-    } catch (err) {
-      console.error('Error copying database file:', err.message);
     }
   } else {
-    console.log('Database already exists in userData folder:', dbPath);
+    // Development mode: Use the local database path
+    dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
+    console.log('Development mode DB Path:', dbPath); // Debugging the development path
   }
-} else {
-  // Development mode: Use the local database path
-  dbPath = path.resolve(__dirname, './database/recordsmgmtsys.db');
-  console.log('Development mode DB Path:', dbPath); // Debugging the development path
-}
 
-// Initialize the database
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.message);
-  } else {
-    console.log('Connected to the SQLite database at', dbPath);
-  }
-});
+  db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+      console.error('Error connecting to the database:', err.message);
+    } else {
+      console.log('Connected to the SQLite database at', dbPath);
+    }
+  });
+}
 // Start Express server
 function startServer() {
   const app = express();
@@ -453,8 +453,14 @@ app.post('/api/update-file', (req, res) => {
   });
 }
 
-// Start the server when the app starts
-startServer();
+// Initialize the database and then start the server
+initializeDatabase()
+  .then(() => {
+    startServer();
+  })
+  .catch((err) => {
+    console.error('Failed to initialize database:', err.message);
+  });
 
 // END SERVER ROUTES
 
