@@ -1,4 +1,4 @@
-/* src/css/styles.css */
+/* Design system font declarations */
 @font-face {
   font-family: 'Poppins';
   src: url('../fonts/Poppins-Thin.ttf') format('truetype');
@@ -121,6 +121,3 @@
 }
 
 
-body {
-  font-family: 'Poppins', sans-serif;
-}
