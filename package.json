@@ -9,7 +9,10 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "build": "webpack",
-    "analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+    "analyze": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json",
+    "db:init": "node config/init-database.js",
+    "db:backup": "node scripts/backup-db.js",
+    "db:restore": "node scripts/restore-db.js"
   },
   "keywords": [
     "records",
@@ -40,6 +43,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "latest": "^0.2.0",
+    "node-cron": "^3.0.3",
     "print-this": "^2.0.0",
     "puppeteer": "^23.3.0",
     "sql.js": "^1.11.0",
@@ -59,20 +63,20 @@
     "electron-rebuild": "^3.2.9",
     "webpack-bundle-analyzer": "^4.10.2"
   },
-"build": {
-  "appId": "com.codecol.recordsmanagement",
-  "productName": "Records Management System",
-  "directories": {
-    "output": "dist"
-  },
-  "files": [
-    "dist/**/*",
-    "node_modules/**/*",
-    "main.js",
-    "index.html",
-    "package.json",
-    "database/**/*"
-  ],
+  "build": {
+    "appId": "com.codecol.recordsmanagement",
+    "productName": "Records Management System",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "main.js",
+      "index.html",
+      "package.json",
+      "database/**/*"
+    ],
     "publish": [
       {
         "provider": "github",
