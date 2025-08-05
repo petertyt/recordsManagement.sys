@@ -51,17 +51,16 @@ const db = new sqlite3.Database(dbPath, (err) => {
   }
 });
 // Start Express server
-function startServer() {
-  const app = express();
-  const PORT = process.env.PORT || 49200;
+const serverApp = express();
+const PORT = process.env.PORT || 49200;
 
-  // Middleware setup
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware setup
+serverApp.use(bodyParser.json());
+serverApp.use(bodyParser.urlencoded({ extended: true }));
 
 
   // API route for user authentication (login)
-  app.post('/api/login', (req, res) => {
+  serverApp.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -85,7 +84,7 @@ function startServer() {
   });
 
   // Define routes here
-  app.get('/api/recent-entries', (req, res) => {
+  serverApp.get('/api/recent-entries', (req, res) => {
     const query = `
               SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
               FROM entries_tbl
@@ -101,7 +100,7 @@ function startServer() {
   });
 
   // REPORTS ROUTE
-  app.get('/api/make-reports', (req, res) => {
+  serverApp.get('/api/make-reports', (req, res) => {
     const { start_date, end_date, officer_assigned, status, file_number, category } = req.query;
     let query = `
         SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
@@ -149,7 +148,7 @@ function startServer() {
 
 
   // ENTIRES EJS ROUTE
-  app.get('/api/recent-entries-full', (req, res) => {
+  serverApp.get('/api/recent-entries-full', (req, res) => {
     const query = `
       SELECT *
       FROM entries_tbl
@@ -169,7 +168,7 @@ function startServer() {
 
   // FILES MANAGEMENT SECTION
   // GET FILE FROM TABLE
-  app.get('/api/get-files', (req, res) => {
+  serverApp.get('/api/get-files', (req, res) => {
     const query = `
       SELECT *
       FROM entries_tbl 
@@ -186,7 +185,7 @@ function startServer() {
   });
 
   // ADD FILE TO TABLE
-  app.post('/api/add-file', (req, res) => {
+  serverApp.post('/api/add-file', (req, res) => {
     const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
 
     // Check only for required fields
@@ -213,7 +212,7 @@ function startServer() {
   });
 
 // UPDATE FILE IN TABLE
-app.post('/api/update-file', (req, res) => {
+serverApp.post('/api/update-file', (req, res) => {
   const { 
     entry_id,
     entry_date,
@@ -268,7 +267,7 @@ app.post('/api/update-file', (req, res) => {
 
   // LETTER MANAGEMENT SECTION
   // GET LETTERS FROM TABLE
-  app.get('/api/get-letters', (req, res) => {
+  serverApp.get('/api/get-letters', (req, res) => {
     const query = `
             SELECT *
             FROM entries_tbl WHERE entry_category = 'Letter'
@@ -284,7 +283,7 @@ app.post('/api/update-file', (req, res) => {
   });
 
   // ADD LETTER TO TABLE
-  app.post('/api/add-letter', (req, res) => {
+  serverApp.post('/api/add-letter', (req, res) => {
     const { entry_date, file_number, subject, officer_assigned, status, recieved_date, letter_date, letter_type, folio_number, description } = req.body;
 
     // Check only for required fields
@@ -311,7 +310,7 @@ app.post('/api/update-file', (req, res) => {
 
 
   // UPDATE LETTER IN TABLE
-  app.post('/api/update-letter', (req, res) => {
+  serverApp.post('/api/update-letter', (req, res) => {
     const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, letter_date, letter_type, folio_number, description } = req.body;
 
     // Check only for required fields
@@ -339,7 +338,7 @@ app.post('/api/update-file', (req, res) => {
 
 
   // DELETE ENTRY IN TABLE
-  app.delete('/api/delete-file/:entry_id', (req, res) => {
+  serverApp.delete('/api/delete-file/:entry_id', (req, res) => {
     const entryId = req.params.entry_id;
     const query = `
           DELETE FROM entries_tbl
@@ -354,7 +353,7 @@ app.post('/api/update-file', (req, res) => {
     });
   });
   // DELETE ENTRY IN TABLE
-  app.delete('/api/delete-letter/:entry_id', (req, res) => {
+  serverApp.delete('/api/delete-letter/:entry_id', (req, res) => {
     const entryId = req.params.entry_id;
     const query = `
           DELETE FROM entries_tbl
@@ -372,7 +371,7 @@ app.post('/api/update-file', (req, res) => {
 
 
   // ALL ENTRIES ROUTE
-  app.get('/api/all-entries', (req, res) => {
+  serverApp.get('/api/all-entries', (req, res) => {
     const query = `
         SELECT entry_id, entry_date, entry_category, file_number, subject, officer_assigned, status
         FROM entries_tbl
@@ -391,7 +390,7 @@ app.post('/api/update-file', (req, res) => {
   });
 
   // Route to get summations for total entries, letters, and files from entries_tbl
-  app.get('/api/summations', (req, res) => {
+  serverApp.get('/api/summations', (req, res) => {
     const totalEntriesQuery = `SELECT COUNT(*) AS total_entries FROM entries_tbl`;
     const totalLettersQuery = `SELECT COUNT(*) AS total_letters FROM entries_tbl WHERE entry_category = 'Letter'`;
     const totalFilesQuery = `SELECT COUNT(*) AS total_files FROM entries_tbl WHERE entry_category = 'File'`;
@@ -425,7 +424,7 @@ app.post('/api/update-file', (req, res) => {
 
 
   // Server route modifications
-  app.post('/api/update-entry', (req, res) => {
+  serverApp.post('/api/update-entry', (req, res) => {
     const { entry_id, file_number, status } = req.body;
     if (!entry_id || !file_number || !status) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -448,13 +447,9 @@ app.post('/api/update-file', (req, res) => {
   });
 
   // Start the server and handle potential port conflict
-  const server = app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-}
-
-// Start the server when the app starts
-startServer();
+serverApp.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
 // END SERVER ROUTES
 
