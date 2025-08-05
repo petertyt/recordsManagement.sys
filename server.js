@@ -2,6 +2,7 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
+const { generateToken, authMiddleware } = require('./middleware/auth');
 
 // Start Express server
 function startServer() {
@@ -21,6 +22,34 @@ function startServer() {
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  // API login route
+  app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const query = `
+      SELECT * FROM users_tbl WHERE username = ? AND password = ?;
+    `;
+    db.get(query, [username, password], (err, row) => {
+      if (err) {
+        console.error('Error checking user credentials:', err.message);
+        return res.status(500).json({ error: err.message });
+      }
+
+      if (row) {
+        const token = generateToken({ id: row.user_id, username: row.username });
+        res.json({ message: 'Login successful', token, user: row });
+      } else {
+        res.status(401).json({ error: 'Invalid username or password' });
+      }
+    });
+  });
+
+  // Protect subsequent API routes
+  app.use('/api', authMiddleware);
 
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {

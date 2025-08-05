@@ -8,6 +8,7 @@ const fs = require("fs");
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const { generateToken, authMiddleware } = require('./middleware/auth');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
@@ -77,12 +78,16 @@ function startServer() {
       }
 
       if (row) {
-        res.json({ message: 'Login successful', user: row });
+        const token = generateToken({ id: row.user_id, username: row.username });
+        res.json({ message: 'Login successful', token, user: row });
       } else {
         res.status(401).json({ error: 'Invalid username or password' });
       }
     });
   });
+
+  // Protect subsequent API routes
+  app.use('/api', authMiddleware);
 
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
@@ -496,7 +501,8 @@ ipcMain.on('login-attempt', (event, credentials) => {
         username: row.username,
         role: row.user_role // Assuming you have a role field in your table
       };
-      event.reply('login-response', { success: true, userData });
+      const token = generateToken({ id: row.user_id, username: row.username });
+      event.reply('login-response', { success: true, userData, token });
       splashWindow.close();
       createMainWindow(userData); // Pass the userData to the main window
     } else {

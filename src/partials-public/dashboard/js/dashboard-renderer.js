@@ -1,3 +1,10 @@
+const token = localStorage.getItem('authToken');
+$.ajaxSetup({
+    headers: {
+        'Authorization': `Bearer ${token}`
+    }
+});
+
 // Define the truncate function
 function truncate(str, maxlength) {
     return (str.length > maxlength) ?

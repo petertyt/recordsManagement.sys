@@ -42,6 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (response && response.success) {
       // Successful login
       console.log("Login successful");
+      if (response.token) {
+        localStorage.setItem('authToken', response.token);
+      }
       // Optionally, you can add logic here, like transitioning to another window
       window.location.href = "index.ejs"; // Example: navigate to the main window
     } else if (response && response.message) {

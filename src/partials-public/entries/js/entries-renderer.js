@@ -1,3 +1,10 @@
+const token = localStorage.getItem('authToken');
+$.ajaxSetup({
+    headers: {
+        'Authorization': `Bearer ${token}`
+    }
+});
+
 $(document).ready(function () {
     // Initialize components on page load
     initializeDataTableforEntries();
