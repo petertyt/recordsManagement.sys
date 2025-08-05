@@ -2,6 +2,7 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
 
 // Start Express server
 function startServer() {
@@ -19,6 +20,7 @@ function startServer() {
   });
 
   // Middleware setup
+  app.use(cors({ origin: 'http://localhost:49200', credentials: true }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 

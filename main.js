@@ -8,6 +8,7 @@ const fs = require("fs");
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // Print userData path for debugging
 console.log('userData path:', app.getPath('userData'));
@@ -56,6 +57,7 @@ function startServer() {
   const PORT = process.env.PORT || 49200;
 
   // Middleware setup
+  app.use(cors({ origin: 'http://localhost:49200', credentials: true }));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
