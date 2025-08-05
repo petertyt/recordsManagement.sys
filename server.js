@@ -2,6 +2,8 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 
 // Start Express server
 function startServer() {
@@ -21,6 +23,45 @@ function startServer() {
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+  const uploadDir = path.join(__dirname, 'uploads');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      cb(null, uniqueSuffix + path.extname(file.originalname));
+    },
+  });
+  const upload = multer({
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+      const allowed = ['application/pdf', 'image/png', 'image/jpeg'];
+      if (allowed.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new Error('Invalid file type'));
+      }
+    },
+  });
+
+  app.get('/uploads/:filename', (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const filePath = path.join(uploadDir, req.params.filename);
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        return res.status(404).json({ error: 'File not found' });
+      }
+      res.sendFile(filePath);
+    });
+  });
 
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
@@ -114,7 +155,7 @@ app.get('/api/get-files', (req, res) => {
 });
 
 // ADD FILE TO TABLE
-app.post('/api/add-file', (req, res) => {
+app.post('/api/add-file', upload.single('file'), (req, res) => {
   const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
 
   // Check only for required fields
@@ -127,11 +168,12 @@ app.post('/api/add-file', (req, res) => {
   const recievedDateValue = recieved_date || null;
   const descriptionValue = description || null;
 
+  const filePathValue = req.file ? req.file.filename : null;
   const query = `
-    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status)
-    VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    INSERT INTO entries_tbl (entry_date, entry_category, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, reciepient, description, status, file_path)
+    VALUES (?, 'File', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
   `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status], function (err) {
+  db.run(query, [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, file_type, reciepientValue, descriptionValue, status, filePathValue], function (err) {
     if (err) {
       console.error("Error inserting new file:", err.message);
       return res.status(500).json({ error: err.message });
@@ -141,7 +183,7 @@ app.post('/api/add-file', (req, res) => {
 });
 
 // UPDATE FILE IN TABLE
-app.post('/api/update-file', (req, res) => {
+app.post('/api/update-file', upload.single('file'), (req, res) => {
   const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, reciepient, file_type, folio_number, description } = req.body;
 
   // Check only for required fields
@@ -151,21 +193,49 @@ app.post('/api/update-file', (req, res) => {
 
   // Use null for optional fields if not provided
   const reciepientValue = reciepient || null;
-  const recievedDateValue = folio_number || null;
+  const recievedDateValue = recieved_date || null;
+  const folioNumberValue = folio_number || null;
   const descriptionValue = description || null;
+  const newFilePath = req.file ? req.file.filename : null;
 
-  const query = `
+  let query = `
     UPDATE entries_tbl
-    SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, date_sent = ?, reciepient = ?, file_type = ?, folio_number = ?, description = ?, status = ?
-    WHERE entry_id = ? AND entry_category = 'File';
-  `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, recievedDateValue,reciepientValue, descriptionValue, status, entry_id], function (err) {
-    if (err) {
-      console.error("Error updating file:", err.message);
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(200).json({ message: 'File updated successfully' });
-  });
+    SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, date_sent = ?, reciepient = ?, file_type = ?, folio_number = ?, description = ?, status = ?`;
+  const params = [entry_date, file_number, subject, officer_assigned, recievedDateValue, date_sent, reciepientValue, file_type, folioNumberValue, descriptionValue, status];
+  if (newFilePath) {
+    query += ", file_path = ?";
+    params.push(newFilePath);
+  }
+  query += " WHERE entry_id = ? AND entry_category = 'File';";
+  params.push(entry_id);
+
+  const runUpdate = () => {
+    db.run(query, params, function (err) {
+      if (err) {
+        console.error("Error updating file:", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+      res.status(200).json({ message: 'File updated successfully' });
+    });
+  };
+
+  if (newFilePath) {
+    db.get('SELECT file_path FROM entries_tbl WHERE entry_id = ?', [entry_id], (err, row) => {
+      if (row && row.file_path) {
+        const oldPath = path.join(uploadDir, row.file_path);
+        fs.unlink(oldPath, (unlinkErr) => {
+          if (unlinkErr && unlinkErr.code !== 'ENOENT') {
+            console.error('Error removing old file:', unlinkErr.message);
+          }
+          runUpdate();
+        });
+      } else {
+        runUpdate();
+      }
+    });
+  } else {
+    runUpdate();
+  }
 });
 
   // LETTER MANAGEMENT SECTION
@@ -243,16 +313,37 @@ app.post('/api/update-letter', (req, res) => {
   // DELETE ENTRY IN TABLE
   app.delete('/api/delete-entry/:entry_id', (req, res) => {
     const entryId = req.params.entry_id;
-    const query = `
-          DELETE FROM entries_tbl
-          WHERE entry_id = ?;
-      `;
-    db.run(query, [entryId], function (err) {
+    db.get('SELECT file_path FROM entries_tbl WHERE entry_id = ?', [entryId], (err, row) => {
       if (err) {
-        console.error("Error deleting Entry:", err.message);
+        console.error('Error fetching entry:', err.message);
         return res.status(500).json({ error: err.message });
       }
-      res.status(200).json({ message: 'Entry deleted successfully' });
+
+      const deleteRecord = () => {
+        const query = `
+          DELETE FROM entries_tbl
+          WHERE entry_id = ?;
+        `;
+        db.run(query, [entryId], function (err) {
+          if (err) {
+            console.error('Error deleting Entry:', err.message);
+            return res.status(500).json({ error: err.message });
+          }
+          res.status(200).json({ message: 'Entry deleted successfully' });
+        });
+      };
+
+      if (row && row.file_path) {
+        const fileToRemove = path.join(uploadDir, row.file_path);
+        fs.unlink(fileToRemove, (unlinkErr) => {
+          if (unlinkErr && unlinkErr.code !== 'ENOENT') {
+            console.error('Error removing file:', unlinkErr.message);
+          }
+          deleteRecord();
+        });
+      } else {
+        deleteRecord();
+      }
     });
   });
 

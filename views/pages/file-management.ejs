@@ -38,7 +38,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="fileForm">
+                <form id="fileForm" enctype="multipart/form-data">
                     <div class="container">
                         <div class="row mb-3">
                             <!-- Entry Date -->
@@ -132,6 +132,11 @@
                                     <option value="OUT">OUT</option>
                                     <option value="IN">IN</option>
                                 </select>
+                            </div>
+                            <!-- Attachment -->
+                            <div class="col-md-6">
+                                <label for="attachment" class="form-label">Attachment</label>
+                                <input type="file" class="form-control" id="attachment" name="attachment">
                             </div>
                         </div>
                         <!-- Hidden Field for Entry ID -->
