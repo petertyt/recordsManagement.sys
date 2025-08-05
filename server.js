@@ -151,7 +151,8 @@ app.post('/api/update-file', (req, res) => {
 
   // Use null for optional fields if not provided
   const reciepientValue = reciepient || null;
-  const recievedDateValue = folio_number || null;
+  const recievedDateValue = recieved_date || null;
+  const folioNumberValue = folio_number || null;
   const descriptionValue = description || null;
 
   const query = `
@@ -159,7 +160,20 @@ app.post('/api/update-file', (req, res) => {
     SET entry_date = ?, file_number = ?, subject = ?, officer_assigned = ?, recieved_date = ?, date_sent = ?, reciepient = ?, file_type = ?, folio_number = ?, description = ?, status = ?
     WHERE entry_id = ? AND entry_category = 'File';
   `;
-  db.run(query, [entry_date, file_number, subject, officer_assigned, recieved_date, date_sent, file_type, recievedDateValue,reciepientValue, descriptionValue, status, entry_id], function (err) {
+  db.run(query, [
+    entry_date,
+    file_number,
+    subject,
+    officer_assigned,
+    recievedDateValue,
+    date_sent,
+    reciepientValue,
+    file_type,
+    folioNumberValue,
+    descriptionValue,
+    status,
+    entry_id
+  ], function (err) {
     if (err) {
       console.error("Error updating file:", err.message);
       return res.status(500).json({ error: err.message });
