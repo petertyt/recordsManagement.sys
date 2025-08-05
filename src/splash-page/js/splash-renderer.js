@@ -42,8 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (response && response.success) {
       // Successful login
       console.log("Login successful");
-      // Optionally, you can add logic here, like transitioning to another window
-      window.location.href = "index.ejs"; // Example: navigate to the main window
+      if (response.sessionToken) {
+        sessionStorage.setItem("sessionToken", response.sessionToken);
+      }
     } else if (response && response.message) {
       // Display error message
       showErrorState(response.message);
@@ -68,4 +69,15 @@ document.addEventListener("DOMContentLoaded", () => {
       errorMsg.textContent = "";
     }, 3000);
   }
+
+  // Show close button when instructed by the main process
+  window.electronAPI.onShowCloseButton(() => {
+    const closeBtn = document.getElementById("close-app-btn");
+    if (closeBtn) {
+      closeBtn.classList.add("visible");
+      closeBtn.addEventListener("click", () => {
+        window.electronAPI.closeApp();
+      });
+    }
+  });
 });
