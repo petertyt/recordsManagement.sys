@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", function () {
         dashboardLink.classList.add("active");
     }
 
+    // Simple in-memory cache for fetched view templates.
+    // Clear entries (e.g., delete viewCache[view]) when templates change to avoid serving stale content.
+    const viewCache = {};
+
     function addMenuEventListeners() {
         // Add click event listener to all menu items
         document.querySelectorAll(".menu-list").forEach((item) => {
@@ -51,6 +55,41 @@ document.addEventListener("DOMContentLoaded", function () {
     function loadContent(view) {
         const spinner = document.getElementById("spinner-event");
         const mainContent = document.getElementById("main-content");
+        const render = (html) => {
+            mainContent.innerHTML = html;
+
+            // Re-apply active class to the correct menu item
+            applyActiveClass(view);
+
+            // Re-attach event listeners after loading new content
+            addMenuEventListeners();
+            addActivityViewEventListeners();
+
+            // Initialize components based on the loaded view
+            if (view === 'dashboard') {
+                initializeDataTable();
+                fetchSummations();
+            } else if (view === 'reports') {
+                initializeReportManagement();
+            } else if (view === 'letter-management') {  // Add this condition
+                initializeLetterManagement(); // Call the initialization function
+            } else if (view === 'entries') {  // Add this condition
+                initializeEntriesManagement();
+            } else if (view === 'file-management') {  // Add this condition
+                initializeFileManagement();
+
+                // Hide the spinner and remove blur effect
+                // setTimeout(() => {
+                //     spinner.style.display = "none";
+                //     mainContent.classList.remove("blur-effect");
+                // }, 500); // Adjust timing as needed
+            }
+        };
+
+        if (viewCache[view]) {
+            render(viewCache[view]);
+            return;
+        }
 
         // Show the spinner and apply blur effect
         // spinner.style.display = "flex";
@@ -65,34 +104,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.text();
             })
             .then((html) => {
-                mainContent.innerHTML = html;
-
-                // Re-apply active class to the correct menu item
-                applyActiveClass(view);
-
-                // Re-attach event listeners after loading new content
-                addMenuEventListeners();
-                addActivityViewEventListeners();
-
-                // Initialize components based on the loaded view
-                if (view === 'dashboard') {
-                    initializeDataTable();
-                    fetchSummations();
-                } else if (view === 'reports') {
-                    initializeReportManagement();
-                } else if (view === 'letter-management') {  // Add this condition
-                    initializeLetterManagement(); // Call the initialization function
-                } else if (view === 'entries') {  // Add this condition
-                    initializeEntriesManagement();
-                } else if (view === 'file-management') {  // Add this condition
-                    initializeFileManagement();
-
-                    // Hide the spinner and remove blur effect
-                    // setTimeout(() => {
-                    //     spinner.style.display = "none";
-                    //     mainContent.classList.remove("blur-effect");
-                    // }, 500); // Adjust timing as needed
-                }
+                viewCache[view] = html;
+                render(html);
             })
             .catch((error) => {
                 console.error("Error loading content:", error);
