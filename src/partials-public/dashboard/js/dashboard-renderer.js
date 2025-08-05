@@ -6,7 +6,7 @@ function truncate(str, maxlength) {
 
 function fetchSummations() {
     $.ajax({
-        url: 'http://localhost:49200/api/summations',
+        url: `${API_BASE_URL}/api/summations`,
         type: 'GET',
         success: function (data) {
             $('#entries-count').text(data.total_entries);
@@ -48,7 +48,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: 'http://localhost:49200/api/update-entry',
+            url: `${API_BASE_URL}/api/update-entry`,
             type: 'POST',
             data: JSON.stringify(entryData),
             contentType: 'application/json',
@@ -67,7 +67,7 @@ $(document).ready(function () {
 function initializeDataTable() {
     $('#recentEntriesTable').DataTable({
         "ajax": {
-            "url": "http://localhost:49200/api/recent-entries",
+            "url": `${API_BASE_URL}/api/recent-entries`,
             "dataSrc": function (json) {
                 console.log("AJAX Response:", json);
                 return json.data;

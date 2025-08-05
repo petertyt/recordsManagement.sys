@@ -7,7 +7,7 @@ $(document).ready(function () {
 function initializeDataTableforFiles() {
     const filesTable = $('#file-table').DataTable({
         ajax: {
-            url: "http://localhost:49200/api/get-files",
+            url: `${API_BASE_URL}/api/get-files`,
             dataSrc: function (json) {
                 return json.data;
             }
@@ -72,7 +72,7 @@ function initializeDataTableforFiles() {
     $('#confirmDelete').on('click', function () {
         if (fileEntryToDelete) {
             $.ajax({
-                url: `http://localhost:49200/api/delete-file/${fileEntryToDelete}`,
+                url: `${API_BASE_URL}/api/delete-file/${fileEntryToDelete}`,
                 type: 'DELETE',
                 success: function (response) {
                     console.log("File deleted successfully:", response);
@@ -104,7 +104,7 @@ function setupFileModalActions() {
     $('#save-file').off('click').on('click', function () {
         const fileData = getFileFormData();
         $.ajax({
-            url: 'http://localhost:49200/api/add-file',
+            url: `${API_BASE_URL}/api/add-file`,
             type: 'POST',
             data: JSON.stringify(fileData),
             contentType: 'application/json',
@@ -123,7 +123,7 @@ function setupFileModalActions() {
     $('#update-file').off('click').on('click', function () {
         const fileData = getFileFormData();
         $.ajax({
-            url: 'http://localhost:49200/api/update-file',
+            url: `${API_BASE_URL}/api/update-file`,
             type: 'POST',
             data: JSON.stringify(fileData),
             contentType: 'application/json',

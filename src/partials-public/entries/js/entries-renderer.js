@@ -13,7 +13,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            url: 'http://localhost:49200/api/update-entry',
+            url: `${API_BASE_URL}/api/update-entry`,
             type: 'POST',
             data: JSON.stringify(entryData),
             contentType: 'application/json',
@@ -32,7 +32,7 @@ $(document).ready(function () {
 function initializeDataTableforEntries() {
     const entriesTable = $('#entries-table').DataTable({
         "ajax": {
-            "url": "http://localhost:49200/api/recent-entries-full",
+            "url": `${API_BASE_URL}/api/recent-entries-full`,
             "dataSrc": function (json) {
                 console.log("AJAX Response:", json);
                 return json.data; // Adjust based on your API response

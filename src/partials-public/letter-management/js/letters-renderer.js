@@ -6,7 +6,7 @@ $(document).ready(function () {
 function initializeDataTableforLetters() {
     const lettersTable = $('#letters-table').DataTable({
         ajax: {
-            url: "http://localhost:49200/api/get-letters",
+            url: `${API_BASE_URL}/api/get-letters`,
             dataSrc: function (json) {
                 return json.data;
             }
@@ -71,7 +71,7 @@ function initializeDataTableforLetters() {
     $('#confirmDelete').on('click', function () {
         if (letterEntryToDelete) {
             $.ajax({
-                url: `http://localhost:49200/api/delete-letter/${letterEntryToDelete}`,
+                url: `${API_BASE_URL}/api/delete-letter/${letterEntryToDelete}`,
                 type: 'DELETE',
                 success: function (result) {
                     // Reload DataTable and hide the modal
@@ -106,7 +106,7 @@ function setupLetterModalActions() {
     $('#save-letter').off('click').on('click', function () {
         const letterData = getLetterFormData();
         $.ajax({
-            url: 'http://localhost:49200/api/add-letter',
+            url: `${API_BASE_URL}/api/add-letter`,
             type: 'POST',
             data: JSON.stringify(letterData),
             contentType: 'application/json',
@@ -125,7 +125,7 @@ function setupLetterModalActions() {
     $('#update-letter').off('click').on('click', function () {
         const letterData = getLetterFormData();
         $.ajax({
-            url: 'http://localhost:49200/api/update-letter',
+            url: `${API_BASE_URL}/api/update-letter`,
             type: 'POST',
             data: JSON.stringify(letterData),
             contentType: 'application/json',

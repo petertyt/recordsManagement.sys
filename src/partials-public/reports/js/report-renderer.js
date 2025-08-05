@@ -17,7 +17,7 @@ function generateReport() {
     const category = $('#category').val();
 
     $.ajax({
-        url: 'http://localhost:49200/api/make-reports',
+        url: `${API_BASE_URL}/api/make-reports`,
         method: 'GET',
         data: {
             start_date: startDate,
