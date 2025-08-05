@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal Debug Test</title>
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Modal Debug Test</h1>
+      <button class="btn btn-primary" id="testModalBtn">
+        Test Add User Modal
+      </button>
+      <button class="btn btn-secondary" id="testEditBtn">
+        Test Edit User Modal
+      </button>
+    </div>
+
+    <!-- Test Add User Modal -->
+    <div
+      class="modal fade"
+      id="userModal"
+      tabindex="-1"
+      aria-labelledby="userModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userModalLabel">Add New User</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="userForm">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="username" class="form-label">Username *</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      name="username"
+                      required
+                    />
+                    <div class="invalid-feedback" id="usernameError"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fullName"
+                      name="full_name"
+                    />
+                    <div class="invalid-feedback" id="fullNameError"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="userRole" class="form-label">Role *</label>
+                    <select
+                      class="form-select"
+                      id="userRole"
+                      name="user_role"
+                      required
+                    >
+                      <option value="">Select Role</option>
+                      <option value="User">User</option>
+                      <option value="Administrator">Administrator</option>
+                    </select>
+                    <div class="invalid-feedback" id="roleError"></div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password *</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      required
+                    />
+                    <div class="invalid-feedback" id="passwordError"></div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="saveUserBtn">
+              Save User
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM loaded");
+        console.log("Bootstrap available:", typeof bootstrap !== "undefined");
+        console.log("Modal element:", document.getElementById("userModal"));
+
+        const testBtn = document.getElementById("testModalBtn");
+        const testEditBtn = document.getElementById("testEditBtn");
+
+        if (testBtn) {
+          testBtn.addEventListener("click", function () {
+            console.log("Test button clicked");
+            try {
+              const modal = new bootstrap.Modal(
+                document.getElementById("userModal")
+              );
+              console.log("Modal instance:", modal);
+              modal.show();
+            } catch (error) {
+              console.error("Error showing modal:", error);
+            }
+          });
+        }
+
+        if (testEditBtn) {
+          testEditBtn.addEventListener("click", function () {
+            console.log("Test edit button clicked");
+            try {
+              // Simulate populating form
+              document.getElementById("username").value = "testuser";
+              document.getElementById("fullName").value = "Test User";
+              document.getElementById("userRole").value = "User";
+              document.getElementById("userModalLabel").textContent =
+                "Edit User";
+              document.getElementById("saveUserBtn").textContent =
+                "Update User";
+
+              const modal = new bootstrap.Modal(
+                document.getElementById("userModal")
+              );
+              modal.show();
+            } catch (error) {
+              console.error("Error showing edit modal:", error);
+            }
+          });
+        }
+
+        // Test form submission
+        document
+          .getElementById("saveUserBtn")
+          ?.addEventListener("click", function () {
+            console.log("Save button clicked");
+            const formData = {
+              username: document.getElementById("username").value,
+              full_name: document.getElementById("fullName").value,
+              user_role: document.getElementById("userRole").value,
+              password: document.getElementById("password").value,
+            };
+            console.log("Form data:", formData);
+            alert("Form submitted with: " + JSON.stringify(formData));
+          });
+      });
+    </script>
+  </body>
+</html>

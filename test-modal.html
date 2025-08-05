@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal Test</title>
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="public/css/users-styles.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Modal Test</h1>
+      <button class="btn btn-primary" id="testModalBtn">Test Modal</button>
+    </div>
+
+    <!-- Test Modal -->
+    <div
+      class="modal fade"
+      id="testModal"
+      tabindex="-1"
+      aria-labelledby="testModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="testModalLabel">Test Modal</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              This is a test modal to check if Bootstrap modals work properly.
+            </p>
+            <input type="text" class="form-control" placeholder="Test input" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM loaded");
+        console.log("Bootstrap available:", typeof bootstrap !== "undefined");
+        console.log("Modal element:", document.getElementById("testModal"));
+
+        const testBtn = document.getElementById("testModalBtn");
+        if (testBtn) {
+          testBtn.addEventListener("click", function () {
+            console.log("Test button clicked");
+            const modal = new bootstrap.Modal(
+              document.getElementById("testModal")
+            );
+            console.log("Modal instance:", modal);
+            modal.show();
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Stats</title>
+    <style>
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 10px;
+        display: inline-block;
+        min-width: 200px;
+      }
+      .stat-content h3 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Test User Stats</h1>
+
+    <div class="stat-card">
+      <div class="stat-content">
+        <h3 id="totalUsers">-</h3>
+        <p>Total Users</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-content">
+        <h3 id="adminUsers">-</h3>
+        <p>Administrators</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-content">
+        <h3 id="regularUsers">-</h3>
+        <p>Regular Users</p>
+      </div>
+    </div>
+
+    <br /><br />
+    <button onclick="testLoadStats()">Test Load Stats</button>
+
+    <script>
+      async function testLoadStats() {
+        try {
+          console.log("Testing loadUserStats...");
+          const response = await fetch(
+            "http://localhost:49200/api/users/stats"
+          );
+          const data = await response.json();
+          console.log("User stats response:", data);
+
+          if (response.ok) {
+            const totalUsersEl = document.getElementById("totalUsers");
+            const adminUsersEl = document.getElementById("adminUsers");
+            const regularUsersEl = document.getElementById("regularUsers");
+
+            console.log("Found elements:", {
+              totalUsers: totalUsersEl,
+              adminUsers: adminUsersEl,
+              regularUsers: regularUsersEl,
+            });
+
+            if (totalUsersEl) {
+              totalUsersEl.textContent = String(data.total_users);
+              console.log("Set totalUsers to:", data.total_users);
+            }
+            if (adminUsersEl) {
+              adminUsersEl.textContent = String(data.admin_users);
+              console.log("Set adminUsers to:", data.admin_users);
+            }
+            if (regularUsersEl) {
+              regularUsersEl.textContent = String(data.regular_users);
+              console.log("Set regularUsers to:", data.regular_users);
+            }
+
+            console.log("Updated stats:", {
+              total: data.total_users,
+              admin: data.admin_users,
+              regular: data.regular_users,
+            });
+          } else {
+            console.error("Failed to load user stats:", data.error);
+          }
+        } catch (error) {
+          console.error("Error loading user stats:", error);
+        }
+      }
+    </script>
+  </body>
+</html>
