@@ -12,10 +12,26 @@ document.addEventListener("DOMContentLoaded", function () {
   // Get the element with the class 'dashboard-link'
   const dashboardLink = document.querySelector(".dashboard-link");
 
+<<<<<<< HEAD
   // Add the 'active' class to it on load
   if (dashboardLink) {
     dashboardLink.classList.add("active");
   }
+=======
+    // Handle sign-out button click
+    const signOutButton = document.getElementById('sign-out-button');
+    signOutButton?.addEventListener('click', () => {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.electronAPI.signOut();
+    });
+
+    function addMenuEventListeners() {
+        // Add click event listener to all menu items
+        document.querySelectorAll(".menu-list").forEach((item) => {
+            item.addEventListener("click", function (event) {
+                event.preventDefault();
+>>>>>>> f197a8349e23e151d20c4c876eafef3317f8bf7a
 
   function addMenuEventListeners() {
     // Add click event listener to all menu items
