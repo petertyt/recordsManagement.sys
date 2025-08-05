@@ -188,8 +188,8 @@ aside li {
   font-weight: bold;
   cursor: pointer;
   padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #f8f9fa;
+  border: 1px solid var(--gray-300);
+  background-color: var(--gray-50);
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
