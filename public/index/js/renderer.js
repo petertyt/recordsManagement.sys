@@ -1,15 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  // Listen for user data sent from the main process
-  window.electronAPI.onUserData((userData) => {
-    const usernameElement = document.getElementById('username');
-    const userRoleElement = document.getElementById('user_role');
+    let currentUserRole = null;
 
-    // Update the UI with the received user data
-    usernameElement.textContent = userData.username;
-    userRoleElement.textContent = userData.role;
-  });
-  
+    // Listen for user data sent from the main process
+    window.electronAPI.onUserData((userData) => {
+        const usernameElement = document.getElementById('username');
+        const userRoleElement = document.getElementById('user_role');
+
+        // Update the UI with the received user data
+        usernameElement.textContent = userData.username;
+        userRoleElement.textContent = userData.role;
+        currentUserRole = userData.role;
+        applyRoleVisibility();
+    });
+
+    function applyRoleVisibility() {
+        if (!currentUserRole) return;
+        document.querySelectorAll('[data-role]').forEach((el) => {
+            const roles = el.getAttribute('data-role').split(',');
+            if (!roles.includes(currentUserRole)) {
+                el.style.display = 'none';
+            } else {
+                el.style.display = '';
+            }
+        });
+    }
+
     // Get the element with the class 'dashboard-link'
     const dashboardLink = document.querySelector(".dashboard-link");
 
@@ -73,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Re-attach event listeners after loading new content
                 addMenuEventListeners();
                 addActivityViewEventListeners();
+                applyRoleVisibility();
 
                 // Initialize components based on the loaded view
                 if (view === 'dashboard') {

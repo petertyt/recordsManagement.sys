@@ -2,6 +2,7 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 const path = require('path');
+const { setUser, authorize } = require('./middleware/auth');
 
 // Start Express server
 function startServer() {
@@ -21,6 +22,7 @@ function startServer() {
   // Middleware setup
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(setUser);
 
   // Define routes here
   app.get('/api/recent-entries', (req, res) => {
@@ -114,7 +116,7 @@ app.get('/api/get-files', (req, res) => {
 });
 
 // ADD FILE TO TABLE
-app.post('/api/add-file', (req, res) => {
+app.post('/api/add-file', authorize(['admin']), (req, res) => {
   const { entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, file_type, reciepient, description } = req.body;
 
   // Check only for required fields
@@ -141,7 +143,7 @@ app.post('/api/add-file', (req, res) => {
 });
 
 // UPDATE FILE IN TABLE
-app.post('/api/update-file', (req, res) => {
+app.post('/api/update-file', authorize(['admin']), (req, res) => {
   const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, date_sent, reciepient, file_type, folio_number, description } = req.body;
 
   // Check only for required fields
@@ -186,7 +188,7 @@ app.post('/api/update-file', (req, res) => {
   });
 
 // ADD LETTER TO TABLE
-app.post('/api/add-letter', (req, res) => {
+app.post('/api/add-letter', authorize(['admin']), (req, res) => {
   const { entry_date, file_number, subject, officer_assigned, status, recieved_date, letter_date, letter_type, folio_number, description } = req.body;
 
   // Check only for required fields
@@ -213,7 +215,7 @@ app.post('/api/add-letter', (req, res) => {
 
 
   // UPDATE LETTER IN TABLE
-app.post('/api/update-letter', (req, res) => {
+app.post('/api/update-letter', authorize(['admin']), (req, res) => {
   const { entry_id, entry_date, file_number, subject, officer_assigned, status, recieved_date, letter_date, letter_type, folio_number, description } = req.body;
 
   // Check only for required fields
@@ -241,7 +243,7 @@ app.post('/api/update-letter', (req, res) => {
 
 
   // DELETE ENTRY IN TABLE
-  app.delete('/api/delete-entry/:entry_id', (req, res) => {
+  app.delete('/api/delete-entry/:entry_id', authorize(['admin']), (req, res) => {
     const entryId = req.params.entry_id;
     const query = `
           DELETE FROM entries_tbl
@@ -313,7 +315,7 @@ app.post('/api/update-letter', (req, res) => {
 
 
   // Server route modifications
-  app.post('/api/update-entry', (req, res) => {
+  app.post('/api/update-entry', authorize(['admin']), (req, res) => {
     const { entry_id, file_number, status } = req.body;
     if (!entry_id || !file_number || !status) {
       return res.status(400).json({ error: 'Missing required fields' });
