@@ -18,6 +18,14 @@ document.addEventListener("DOMContentLoaded", function () {
         dashboardLink.classList.add("active");
     }
 
+    // Handle sign-out button click
+    const signOutButton = document.getElementById('sign-out-button');
+    signOutButton?.addEventListener('click', () => {
+        sessionStorage.clear();
+        localStorage.clear();
+        window.electronAPI.signOut();
+    });
+
     function addMenuEventListeners() {
         // Add click event listener to all menu items
         document.querySelectorAll(".menu-list").forEach((item) => {
