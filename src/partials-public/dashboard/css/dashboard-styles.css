@@ -44,7 +44,7 @@
 
     button.dashboard-reload {
       background: none;
-      color: rgb(20, 35, 50);
+      color: var(--primary-blue-500);
       border: none;
       height: 40px;
       width: 40px;
@@ -54,8 +54,8 @@
     }
     
     button.dashboard-reload:hover {
-      background-color: rgb(20, 35, 50);
-      color: white;
+      background-color: var(--primary-blue-500);
+      color: var(--white);
     }
     
     button.dashboard-reload.rotate {
@@ -71,7 +71,7 @@
       width: 100%;
       border-radius: 5px;
       padding: 20px;
-      color: white;
+      color: var(--white);
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
     }
 
@@ -93,7 +93,7 @@
     }
 
     .activity-divider {
-      background-color: white;
+      background-color: var(--white);
       height: 2px;
       width: 100%;
       margin: 0 0 0 0;
@@ -123,7 +123,7 @@
 
     .activity-view-btn button:hover {
       opacity: 90%;
-      border: 2px solid #fff;
+      border: 2px solid var(--white);
       transition: all 60ms ease-out;
     }
 
@@ -176,7 +176,7 @@
       border-radius: 5px;
       width: 100vh;
       height: auto;
-      color: rgb(20, 35, 50);
+      color: var(--primary-blue-500);
       /* border: 1px solid blue; */
       overflow: auto;
     }
@@ -184,7 +184,7 @@
     /* Dropdown */
     /* Dropdown Button */
     .dropbtn {
-      color: white;
+      color: var(--white);
       padding: 5px;
       font-size: 16px;
       border: none;
@@ -237,7 +237,7 @@
     /* Dropdown */
     /* Dropdown Button */
     .dropbtn {
-      color: white;
+      color: var(--white);
       padding: 5px;
       font-size: 16px;
       border: none;
