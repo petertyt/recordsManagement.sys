@@ -20,7 +20,7 @@ $(document).ready(function () {
             success: function (response) {
                 console.log("Entry updated successfully:", response);
                 $('#entryModal').modal('hide');
-                $('#letters-table').DataTable().ajax.reload(); // Reload table to reflect changes
+                $('#entries-table').DataTable().ajax.reload(); // Reload table to reflect changes
             },
             error: function (xhr, status, error) {
                 console.error("Error updating entry:", error);
