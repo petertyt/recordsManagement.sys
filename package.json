@@ -39,6 +39,7 @@
     "jquery": "^3.7.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
+    "dompurify": "^2.5.4",
     "latest": "^0.2.0",
     "print-this": "^2.0.0",
     "puppeteer": "^23.3.0",

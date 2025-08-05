@@ -65,7 +65,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.text();
             })
             .then((html) => {
-                mainContent.innerHTML = html;
+                const sanitizedHtml = DOMPurify.sanitize(html);
+                mainContent.innerHTML = sanitizedHtml;
 
                 // Re-apply active class to the correct menu item
                 applyActiveClass(view);
@@ -98,7 +99,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Error loading content:", error);
                 spinner.style.display = "none";
                 mainContent.classList.remove("blur-effect");
-                mainContent.innerHTML = `<p class="error-message">Error loading content: ${error.message}</p>`;
+                const errorParagraph = document.createElement("p");
+                errorParagraph.className = "error-message";
+                const safeMessage = DOMPurify.sanitize(error.message);
+                errorParagraph.textContent = `Error loading content: ${safeMessage}`;
+                mainContent.innerHTML = "";
+                mainContent.appendChild(errorParagraph);
             });
     }
 
