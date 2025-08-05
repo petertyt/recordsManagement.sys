@@ -15,12 +15,12 @@ body {
   width: 100vw;
   height: 100vh;
   border-radius: 10px;
-  background: rgb(20, 35, 50);
+  background: var(--primary-blue-500);
   background: linear-gradient(
     43deg,
-    rgba(20, 35, 50, 1) 0%,
-    rgba(20, 35, 50, 0.9164040616246498) 60%,
-    rgba(25, 70, 112, 1) 100%
+    var(--primary-blue-500) 0%,
+    var(--primary-blue-500) 60%,
+    var(--primary-blue-400) 100%
   );
 }
 
