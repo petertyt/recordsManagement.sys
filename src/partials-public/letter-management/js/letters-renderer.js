@@ -68,25 +68,21 @@ function initializeDataTableforLetters() {
     });
 
     // Handle delete confirmation
-    $('#confirmDelete').on('click', function () {
+    $('#confirmDelete').on('click', async function () {
         if (letterEntryToDelete) {
-            $.ajax({
-                url: `http://localhost:49200/api/delete-letter/${letterEntryToDelete}`,
-                type: 'DELETE',
-                success: function (result) {
-                    // Reload DataTable and hide the modal
-                    $('#letters-table').DataTable().ajax.reload();
-                    $('#deleteModal').modal('hide');
-                    letterEntryToDelete = null;
-
-                    // Optional success message
-                    console.log('Letter deleted successfully!', response);
-                },
-                error: function (xhr, status, error) {
-                    // Handle errors
-                    console.error("Error deleting letter:", error);
-                }
-            });
+            try {
+                const response = await fetch(`http://localhost:49200/api/delete-letter/${letterEntryToDelete}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                $('#letters-table').DataTable().ajax.reload();
+                $('#deleteModal').modal('hide');
+                letterEntryToDelete = null;
+                console.log('Letter deleted successfully!', result);
+            } catch (error) {
+                // Handle errors
+                console.error("Error deleting letter:", error);
+            }
         }
     });
 
@@ -103,41 +99,39 @@ function setupLetterModalActions() {
     });
 
     // Remove existing event listeners and attach a new one for "Save"
-    $('#save-letter').off('click').on('click', function () {
+    $('#save-letter').off('click').on('click', async function () {
         const letterData = getLetterFormData();
-        $.ajax({
-            url: 'http://localhost:49200/api/add-letter',
-            type: 'POST',
-            data: JSON.stringify(letterData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log("Letter added successfully:", response);
-                $('#letterModal').modal('hide');
-                $('#letters-table').DataTable().ajax.reload();
-            },
-            error: function (xhr, status, error) {
-                console.error("Error adding letter:", error);
-            }
-        });
+        try {
+            const response = await fetch('http://localhost:49200/api/add-letter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(letterData)
+            });
+            const result = await response.json();
+            console.log("Letter added successfully:", result);
+            $('#letterModal').modal('hide');
+            $('#letters-table').DataTable().ajax.reload();
+        } catch (error) {
+            console.error("Error adding letter:", error);
+        }
     });
 
     // Remove existing event listeners and attach a new one for "Update"
-    $('#update-letter').off('click').on('click', function () {
+    $('#update-letter').off('click').on('click', async function () {
         const letterData = getLetterFormData();
-        $.ajax({
-            url: 'http://localhost:49200/api/update-letter',
-            type: 'POST',
-            data: JSON.stringify(letterData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log("Letter updated successfully:", response);
-                $('#letterModal').modal('hide');
-                $('#letters-table').DataTable().ajax.reload();
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating letter:", error);
-            }
-        });
+        try {
+            const response = await fetch('http://localhost:49200/api/update-letter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(letterData)
+            });
+            const result = await response.json();
+            console.log("Letter updated successfully:", result);
+            $('#letterModal').modal('hide');
+            $('#letters-table').DataTable().ajax.reload();
+        } catch (error) {
+            console.error("Error updating letter:", error);
+        }
     });
 }
 

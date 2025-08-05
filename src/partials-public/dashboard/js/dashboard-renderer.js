@@ -4,22 +4,19 @@ function truncate(str, maxlength) {
         str.slice(0, maxlength - 1) + '…' : str;
 }
 
-function fetchSummations() {
-    $.ajax({
-        url: 'http://localhost:49200/api/summations',
-        type: 'GET',
-        success: function (data) {
-            $('#entries-count').text(data.total_entries);
-            $('#letters-count').text(data.total_letters);
-            $('#files-count').text(data.total_files);
-        },
-        error: function (xhr, status, error) {
-            console.error("Error fetching summations:", error);
-            $('#entries-count').text('Error');
-            $('#letters-count').text('Error');
-            $('#files-count').text('Error');
-        }
-    });
+async function fetchSummations() {
+    try {
+        const response = await fetch('http://localhost:49200/api/summations');
+        const data = await response.json();
+        $('#entries-count').text(data.total_entries);
+        $('#letters-count').text(data.total_letters);
+        $('#files-count').text(data.total_files);
+    } catch (error) {
+        console.error("Error fetching summations:", error);
+        $('#entries-count').text('Error');
+        $('#letters-count').text('Error');
+        $('#files-count').text('Error');
+    }
 }
 
 $(document).ready(function () {
@@ -38,7 +35,7 @@ $(document).ready(function () {
         }, 500); // Timeout matches the CSS transition duration
     });
 
-    $('#entryForm').on('submit', function (e) {
+    $('#entryForm').on('submit', async function (e) {
         e.preventDefault();
 
         const entryData = {
@@ -47,20 +44,19 @@ $(document).ready(function () {
             status: $('#status').val()
         };
 
-        $.ajax({
-            url: 'http://localhost:49200/api/update-entry',
-            type: 'POST',
-            data: JSON.stringify(entryData),
-            contentType: 'application/json',
-            success: function (response) {
-                console.log("Entry updated successfully:", response);
-                $('#entryModal').modal('hide');
-                $('#recentEntriesTable').DataTable().ajax.reload();
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating entry:", error);
-            }
-        });
+        try {
+            const response = await fetch('http://localhost:49200/api/update-entry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(entryData)
+            });
+            const result = await response.json();
+            console.log("Entry updated successfully:", result);
+            $('#entryModal').modal('hide');
+            $('#recentEntriesTable').DataTable().ajax.reload();
+        } catch (error) {
+            console.error("Error updating entry:", error);
+        }
     });
 });
 
