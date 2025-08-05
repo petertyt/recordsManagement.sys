@@ -33,6 +33,15 @@ function initializeDataTableforEntries() {
     const entriesTable = $('#entries-table').DataTable({
         "ajax": {
             "url": "http://localhost:49200/api/recent-entries-full",
+            "data": function () {
+                return {
+                    keyword: $('#system-search').val(),
+                    category: $('#filter-category').val(),
+                    status: $('#filter-status').val(),
+                    start_date: $('#filter-start-date').val(),
+                    end_date: $('#filter-end-date').val()
+                };
+            },
             "dataSrc": function (json) {
                 console.log("AJAX Response:", json);
                 return json.data; // Adjust based on your API response
@@ -76,13 +85,16 @@ function attachRowClickListener(entriesTable) {
         $('#entryModal').modal('show');
     });
 
-    // Search functionality for the Letter Management
+    // Reload data when filters change
     let debounceTimeout;
     $('#system-search').on('keyup', function () {
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(() => {
-            entriesTable.search(this.value).draw();
-        }, 300); // Adjust delay as necessary
+            entriesTable.ajax.reload();
+        }, 300);
+    });
+    $('#filter-category, #filter-status, #filter-start-date, #filter-end-date').on('change', function () {
+        entriesTable.ajax.reload();
     });
 
     // Handle the View and Delete actions

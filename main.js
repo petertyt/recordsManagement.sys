@@ -50,6 +50,12 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.log('Connected to the SQLite database at', dbPath);
   }
 });
+// Ensure indexes for faster lookups
+db.serialize(() => {
+  db.run('CREATE INDEX IF NOT EXISTS idx_entries_file_number ON entries_tbl(file_number)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_entries_subject ON entries_tbl(subject)');
+  db.run('CREATE INDEX IF NOT EXISTS idx_entries_officer_assigned ON entries_tbl(officer_assigned)');
+});
 // Start Express server
 function startServer() {
   const app = express();
@@ -148,21 +154,45 @@ function startServer() {
   });
 
 
-  // ENTIRES EJS ROUTE
+  // ENTRIES ROUTE WITH FILTERS AND PAGINATION
   app.get('/api/recent-entries-full', (req, res) => {
-    const query = `
+    const { keyword, category, status, start_date, end_date, page = 1, limit = 20 } = req.query;
+    let query = `
       SELECT *
       FROM entries_tbl
-      ORDER BY entry_date DESC;
+      WHERE 1=1
     `;
+    const params = [];
 
-    db.all(query, [], (err, rows) => {
+    if (keyword) {
+      query += ' AND (file_number LIKE ? OR subject LIKE ? OR officer_assigned LIKE ?)';
+      params.push(`%${keyword}%`, `%${keyword}%`, `%${keyword}%`);
+    }
+    if (category) {
+      query += ' AND entry_category = ?';
+      params.push(category);
+    }
+    if (status) {
+      query += ' AND status = ?';
+      params.push(status);
+    }
+    if (start_date) {
+      query += ' AND entry_date >= ?';
+      params.push(start_date);
+    }
+    if (end_date) {
+      query += ' AND entry_date <= ?';
+      params.push(end_date);
+    }
+
+    query += ' ORDER BY entry_date DESC LIMIT ? OFFSET ?';
+    params.push(Number(limit), (Number(page) - 1) * Number(limit));
+
+    db.all(query, params, (err, rows) => {
       if (err) {
         console.error("Error executing SQL query:", err.message);
         return res.status(500).json({ error: err.message });
       }
-
-      // console.log("Retrieved rows:", rows); // Debugging output
       res.json({ data: rows });
     });
   });
