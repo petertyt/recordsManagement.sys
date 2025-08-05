@@ -19,10 +19,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Handle sign-out button click
   const signOutButton = document.getElementById("sign-out-button");
-  signOutButton?.addEventListener("click", () => {
+  signOutButton?.addEventListener("click", async () => {
+    const sessionToken = sessionStorage.getItem("sessionToken");
+    if (sessionToken) {
+      try {
+        await fetch("http://localhost:49200/api/session/logout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionToken }),
+        });
+      } catch (error) {
+        console.error("Failed to notify server about logout", error);
+      }
+    }
+
     sessionStorage.clear();
     localStorage.clear();
-    window.electronAPI.signOut();
+    window.electronAPI.signOut(sessionToken);
   });
 
   function addMenuEventListeners() {

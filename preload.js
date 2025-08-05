@@ -12,5 +12,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   onUpdateDownloaded: (callback) =>
     ipcRenderer.on("update-downloaded", () => callback()),
   restartApp: () => ipcRenderer.send("restart_app"),
-  signOut: () => ipcRenderer.send("sign-out"),
+  signOut: (sessionToken) => ipcRenderer.send("sign-out", sessionToken),
+  onShowCloseButton: (callback) =>
+    ipcRenderer.on("show-close-button", () => callback()),
+  closeApp: () => ipcRenderer.send("close-app"),
 });

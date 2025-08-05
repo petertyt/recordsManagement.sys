@@ -1541,6 +1541,7 @@ startServer();
 
 let splashWindow;
 let mainWindow;
+let currentUserId = null;
 
 // Helper function to send update status to whichever window is available
 function sendStatusToWindow(message) {
@@ -1605,7 +1606,7 @@ ipcMain.on("restart_app", () => {
   autoUpdater.quitAndInstall();
 });
 
-function createSplashWindow() {
+function createSplashWindow(showCloseButton = false) {
   try {
     splashWindow = new BrowserWindow({
       width: 900,
@@ -1617,7 +1618,7 @@ function createSplashWindow() {
         preload: path.join(__dirname, "preload.js"),
         contextIsolation: true,
         enableRemoteModule: false,
-        nodeIntegration: true,
+        nodeIntegration: false,
       },
       icon: path.join(__dirname, "assets/icons/ico/icon-exe.ico"),
     });
@@ -1628,6 +1629,13 @@ function createSplashWindow() {
     splashWindow.once("ready-to-show", () => {
       console.log("Splash window ready to show");
       splashWindow.show();
+      if (showCloseButton) {
+        splashWindow.webContents.send("show-close-button");
+      }
+    });
+
+    splashWindow.on("closed", () => {
+      splashWindow = null;
     });
 
     console.log("Splash window created successfully");
@@ -1685,11 +1693,34 @@ ipcMain.on("login-attempt", async (event, credentials) => {
 
           if (passwordValid) {
             // Successful login
+            const ipAddress = "127.0.0.1";
+            const userAgent =
+              splashWindow?.webContents.getUserAgent() || "unknown";
+            const session = await userManagement.createSession(
+              row.user_id,
+              ipAddress,
+              userAgent
+            );
+            await userManagement.logActivity(
+              row.user_id,
+              "login_success",
+              "User logged in successfully",
+              ipAddress,
+              userAgent
+            );
+
+            currentUserId = row.user_id;
+
             const userData = {
+              id: row.user_id,
               username: row.username,
               role: row.user_role, // Assuming you have a role field in your table
             };
-            event.reply("login-response", { success: true, userData });
+            event.reply("login-response", {
+              success: true,
+              userData,
+              sessionToken: session.sessionToken,
+            });
             splashWindow.close();
             createMainWindow(userData); // Pass the userData to the main window
           } else {
@@ -1755,10 +1786,35 @@ function createMainWindow(userData) {
 }
 
 // Handle the 'sign-out' event from the renderer
-ipcMain.on("sign-out", async () => {
+ipcMain.on("sign-out", async (_event, sessionToken) => {
   console.log("Sign out event received");
 
   try {
+    if (sessionToken) {
+      try {
+        await userManagement.invalidateSession(sessionToken);
+      } catch (err) {
+        console.error("Error invalidating session:", err);
+      }
+    }
+
+    const ipAddress = "127.0.0.1";
+    const userAgent = mainWindow?.webContents.getUserAgent() || "unknown";
+    if (currentUserId) {
+      try {
+        await userManagement.logActivity(
+          currentUserId,
+          "logout",
+          "User signed out",
+          ipAddress,
+          userAgent
+        );
+      } catch (err) {
+        console.error("Error logging sign out:", err);
+      }
+      currentUserId = null;
+    }
+
     // Clear session data and close the main window
     if (mainWindow) {
       try {
@@ -1772,26 +1828,14 @@ ipcMain.on("sign-out", async () => {
       mainWindow = null; // Clear the reference
     }
 
-    // Reopen the splash window
-    if (!splashWindow) {
-      console.log("Creating new splash window");
-      createSplashWindow();
-    } else {
-      console.log("Showing existing splash window");
-      splashWindow.show();
-    }
-
-    // Force show splash window after a short delay to ensure it's visible
-    setTimeout(() => {
-      if (splashWindow && !splashWindow.isDestroyed()) {
-        console.log("Force showing splash window");
-        splashWindow.show();
-        splashWindow.focus();
-      }
-    }, 500);
+    createSplashWindow(true);
   } catch (error) {
     console.error("Error in sign out process:", error);
   }
+});
+
+ipcMain.on("close-app", () => {
+  app.quit();
 });
 
 app.whenReady().then(() => {
