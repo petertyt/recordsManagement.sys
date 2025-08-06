@@ -119,7 +119,7 @@
 
     .activity-view-btn button:hover {
       opacity: 90%;
-      border: 2px solid #fff;
+      border: 2px solid var(--white);
       transition: all 60ms ease-out;
     }
 
@@ -187,7 +187,7 @@
     /* Dropdown button on hover & focus */
     .dropbtn:hover,
     .dropbtn:focus {
-      background-color: #2980b9;
+      background-color: var(--primary-blue-500);
     }
 
     /* The container <div> - needed to position the dropdown content */
@@ -201,7 +201,7 @@
       display: none;
       position: absolute;
       right: 6px;
-      background-color: #f1f1f1;
+      background-color: var(--gray-100);
       min-width: 160px;
       box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
       z-index: 1;
@@ -217,7 +217,7 @@
 
     /* Change color of dropdown links on hover */
     .dropdown-content a:hover {
-      background-color: #ddd;
+      background-color: var(--gray-200);
     }
 
     /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
@@ -240,7 +240,7 @@
     /* Dropdown button on hover & focus */
     .dropbtn:hover,
     .dropbtn:focus {
-      background-color: #2980b9;
+      background-color: var(--primary-blue-500);
     }
 
     /* The container <div> - needed to position the dropdown content */
@@ -254,7 +254,7 @@
       display: none;
       position: absolute;
       right: 6px;
-      background-color: #f1f1f1;
+      background-color: var(--gray-100);
       min-width: 160px;
       box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
       z-index: 1;
@@ -270,7 +270,7 @@
 
     /* Change color of dropdown links on hover */
     .dropdown-content a:hover {
-      background-color: #ddd;
+      background-color: var(--gray-200);
     }
 
     /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
@@ -290,21 +290,21 @@
 
     /* Define status color classes */
     .status-filed {
-      background-color: #d4edda;
+      background-color: var(--success-50);
       /* Light green for FILED */
     }
 
     .status-pending {
-      background-color: #fff3cd;
+      background-color: var(--warning-50);
       /* Light yellow for PENDING */
     }
 
     .status-out {
-      background-color: #f8d7da;
+      background-color: var(--error-50);
       /* Light red for OUT */
     }
 
     .status-in {
-      background-color: #d1ecf1;
+      background-color: var(--info-50);
       /* Light blue for IN */
     }
