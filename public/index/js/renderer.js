@@ -12,6 +12,26 @@ document.addEventListener("DOMContentLoaded", function () {
   // Get the element with the class 'dashboard-link'
   const dashboardLink = document.querySelector(".dashboard-link");
 
+  // Theme toggle setup
+  const themeToggle = document.getElementById("theme-toggle");
+  const root = document.documentElement;
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    root.setAttribute("data-theme", "dark");
+    if (themeToggle) {
+      themeToggle.checked = true;
+    }
+  }
+  themeToggle?.addEventListener("change", () => {
+    if (themeToggle.checked) {
+      root.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.removeAttribute("data-theme");
+      localStorage.setItem("theme", "light");
+    }
+  });
+
   // Add the 'active' class to it on load
   if (dashboardLink) {
     dashboardLink.classList.add("active");

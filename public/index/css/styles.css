@@ -8,6 +8,11 @@ body {
   height: 100vh;
 }
 
+[data-theme="dark"] body {
+  background-color: #121212;
+  color: #f8f9fa;
+}
+
 /* Second Navbar */
 nav {
   border-bottom: 1px solid rgba(20, 35, 50, 0.1);
