@@ -75,6 +75,11 @@ nav div.nav2-functions button {
   color: rgb(20, 35, 50);
 }
 
+nav div.nav2-functions button:focus {
+  outline: 2px solid rgb(20, 35, 50);
+  outline-offset: 2px;
+}
+
 nav div.nav2-functions button:hover {
   background-color: rgba(20, 35, 50, 0.1);
   transition: 0.3s ease-out;
