@@ -1799,7 +1799,7 @@ app.whenReady().then(() => {
   autoUpdater.checkForUpdates();
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createSplashWindow();
 });
 
