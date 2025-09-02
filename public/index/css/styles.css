@@ -188,20 +188,22 @@ aside li {
   font-weight: bold;
   cursor: pointer;
   padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #f8f9fa;
+  border: 1px solid var(--gray-300);
+  background-color: var(--gray-50);
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.active {
-  color: white;
-  background-color: rgb(20, 30, 52);
+.menu-list:hover,
+.menu-list:active {
+  background-color: var(--gray-100);
+  border-color: var(--gray-400);
 }
 
+.active,
 .focus {
-  color: white;
-  background-color: rgb(20, 30, 52);
+  color: var(--white);
+  background-color: var(--primary-blue-500);
 }
 
 .submenu {
