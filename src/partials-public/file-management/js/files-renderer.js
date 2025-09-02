@@ -186,7 +186,7 @@ function clearFileModalFields() {
     $('#recieved_date').val('');
     $('#date_sent').val('');
     $('#file_type').val('');
-    $('#reciepient').val('');
+    $('#reciepient_name').val('');
     $('#description').val('');
     $('#status').val('');
     $('#fileForm').data('entry_id', null);
