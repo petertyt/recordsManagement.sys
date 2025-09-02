@@ -1,0 +1,112 @@
+/* Design System Component Styles */
+
+/* Dark theme color variables */
+[data-theme="dark"] {
+  /* Dark theme colors */
+  --bg-primary: var(--gray-900);
+  --bg-secondary: var(--gray-800);
+  --bg-tertiary: var(--gray-700);
+
+  --text-primary: var(--gray-100);
+  --text-secondary: var(--gray-300);
+  --text-tertiary: var(--gray-500);
+
+  --border-primary: var(--gray-700);
+  --border-secondary: var(--gray-600);
+}
+
+/* Buttons */
+[data-theme="dark"] .btn {
+  background-color: var(--gray-700);
+  color: var(--gray-100);
+  border-color: var(--gray-600);
+}
+
+[data-theme="dark"] .btn-primary {
+  background-color: var(--primary-blue-600);
+  border-color: var(--primary-blue-600);
+}
+
+[data-theme="dark"] .btn-primary:hover {
+  background-color: var(--primary-blue-700);
+  border-color: var(--primary-blue-700);
+}
+
+[data-theme="dark"] .btn-secondary {
+  background-color: var(--gray-700);
+  color: var(--gray-100);
+  border-color: var(--gray-600);
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+  background-color: var(--gray-600);
+  border-color: var(--gray-500);
+}
+
+/* Cards */
+[data-theme="dark"] .card {
+  background-color: var(--gray-800);
+  border-color: var(--gray-700);
+  color: var(--gray-100);
+}
+
+[data-theme="dark"] .card-header,
+[data-theme="dark"] .card-footer {
+  background-color: var(--gray-700);
+  border-color: var(--gray-600);
+  color: var(--gray-100);
+}
+
+[data-theme="dark"] .card-title {
+  color: var(--gray-100);
+}
+
+[data-theme="dark"] .card-subtitle {
+  color: var(--gray-300);
+}
+
+/* Tables */
+[data-theme="dark"] .table {
+  color: var(--gray-100);
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+  border-color: var(--gray-700);
+}
+
+[data-theme="dark"] .table thead th {
+  background-color: var(--gray-800);
+  color: var(--gray-100);
+  border-bottom-color: var(--gray-700);
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+  background-color: var(--gray-800);
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-child(odd) {
+  background-color: var(--gray-800);
+}
+
+[data-theme="dark"] .table-bordered th,
+[data-theme="dark"] .table-bordered td {
+  border-color: var(--gray-700);
+}
+
+/* Modals */
+[data-theme="dark"] .modal-dialog {
+  background-color: var(--gray-800);
+  color: var(--gray-100);
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+  background-color: var(--gray-800);
+  border-color: var(--gray-700);
+  color: var(--gray-100);
+}
+
+[data-theme="dark"] .modal-title {
+  color: var(--gray-100);
+}
