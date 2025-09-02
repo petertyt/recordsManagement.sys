@@ -1,3 +1,7 @@
+:root {
+  --white-rgb: 255, 255, 255;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -51,7 +55,7 @@ body {
 }
 
 .splashContent-title h1 {
-  color: rgba(255, 255, 255, 0.1);
+  color: rgba(var(--white-rgb), 0.1);
   opacity: 40%;
   font-size: 8vw;
   font-weight: 100;
@@ -62,12 +66,12 @@ body {
 }
 
 .splashContent-title p {
-  color: rgba(255, 255, 255, 1);
+  color: var(--white);
   font-size: 1.2rem;
   font-weight: 500;
   margin: 0;
   padding: 0 0 3px 0;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--white);
   position: relative;
   top: -0.5vw;
 }
@@ -86,7 +90,7 @@ body {
 
 .splashContent-main p {
   text-align: center;
-  color: white;
+  color: var(--white);
   font-size: 2rem;
   font-weight: 400;
 }
@@ -103,8 +107,8 @@ body {
 }
 
 .splashContent-end p {
-  color: white;
-  /*   border:1px solid white; */
+  color: var(--white);
+  /*   border:1px solid var(--white); */
   position: relative;
   top: -0.7vw;
 }
@@ -132,10 +136,10 @@ body {
   top: 70%;
   left: 50%;
   transform: translateX(-50%);
-  color: white;
+  color: var(--white);
   height: 8vh;
   width: 2px;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: var(--white);
   opacity: 40%;
   z-index: 100;
 }
@@ -177,7 +181,7 @@ div.login-modalContainer {
   height: 400px;
   width: 600px;
   border-radius: 10px;
-  background-color: white;
+  background-color: var(--white);
   /* border: 1px solid black; */
 }
 
@@ -257,7 +261,7 @@ input.error {
 
 .modalContent-main input:focus {
   border: 1px solid #142332;
-  background-color: white;
+  background-color: var(--white);
   color: rgba(20, 35, 50, 1);
 }
 
@@ -285,7 +289,7 @@ input.error {
   width: 133px;
   font-size: 16pt;
   font-weight: 600;
-  color: white;
+  color: var(--white);
   background-color: #142332;
   border-radius: 5px;
   border: none;
