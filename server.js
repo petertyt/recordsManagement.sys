@@ -211,8 +211,9 @@ function startServer() {
     }
 
     // Use null for optional fields if not provided
+    const recievedDateValue = recieved_date || null;
     const reciepientValue = reciepient || null;
-    const recievedDateValue = folio_number || null;
+    const folioNumberValue = folio_number || null;
     const descriptionValue = description || null;
 
     const query = `
@@ -227,11 +228,11 @@ function startServer() {
         file_number,
         subject,
         officer_assigned,
-        recieved_date,
-        date_sent,
-        file_type,
         recievedDateValue,
+        date_sent,
         reciepientValue,
+        file_type,
+        folioNumberValue,
         descriptionValue,
         status,
         entry_id,
