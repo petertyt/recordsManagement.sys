@@ -533,9 +533,9 @@ function startServer() {
         return res.status(400).json({ error: validation.errors.join(", ") });
       }
 
-      // Sanitize inputs
-      const sanitizedUsername = sanitizeInput(username);
-      const sanitizedRole = sanitizeInput(user_role);
+      // Use validated and sanitized inputs
+      const sanitizedUsername = validation.sanitizedData.username;
+      const sanitizedRole = validation.sanitizedData.user_role;
 
       // Check if username already exists
       db.get(
@@ -599,14 +599,17 @@ function startServer() {
       const { username, password, user_role } = req.body;
 
       // Validate input data
-      const validation = validateUserData({ username, password, user_role });
+      const validation = validateUserData(
+        { username, password, user_role },
+        true
+      );
       if (!validation.isValid) {
         return res.status(400).json({ error: validation.errors.join(", ") });
       }
 
-      // Sanitize inputs
-      const sanitizedUsername = sanitizeInput(username);
-      const sanitizedRole = sanitizeInput(user_role);
+      // Use validated and sanitized inputs
+      const sanitizedUsername = validation.sanitizedData.username;
+      const sanitizedRole = validation.sanitizedData.user_role;
 
       // Check if user exists
       db.get(

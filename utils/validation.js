@@ -257,6 +257,8 @@ function validateUserData(userData, isUpdate = false) {
       // Preserve the original role value as stored in the database
       sanitizedData.user_role = sanitizedRole;
     }
+  } else {
+    errors.push("User role is required");
   }
 
   return {
