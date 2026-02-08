@@ -599,7 +599,10 @@ function startServer() {
       const { username, password, user_role } = req.body;
 
       // Validate input data
-      const validation = validateUserData({ username, password, user_role });
+      const validation = validateUserData(
+        { username, password, user_role },
+        true
+      );
       if (!validation.isValid) {
         return res.status(400).json({ error: validation.errors.join(", ") });
       }
